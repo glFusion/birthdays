@@ -1,0 +1,18 @@
+{# begin {templatelocation} #}
+{!if thismonth_count}
+<span class="bday_block_month">{$LANG_BD00['this_month']}</span>
+<ul>
+<!-- BEGIN thismonth -->
+  <li>{username}: {bday}</li>
+<!-- END thismonth -->
+</ul>
+{!endif}
+{!if nextmonth_count}
+<span class="bday_block_month">{$LANG_BD00['next_month']}</span>
+<ul>
+<!-- BEGIN nextmonth -->
+  <li>{username}: {bday}</li>
+<!-- END nextmonth -->
+</ul>
+{!endif}
+{# end {templatelocation} #}
