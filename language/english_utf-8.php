@@ -13,6 +13,7 @@
 *   @filesource
 */
 $LANG_BD00 = array (
+    'birthday'      => 'Birthday',
     'sel_month'     => 'Select Month',
     'this_month'    => 'This Month',
     'next_month'    => 'Next Month',
