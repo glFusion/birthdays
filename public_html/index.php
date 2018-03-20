@@ -74,12 +74,12 @@ function listbirthdays($filter_month)
     $text_arr = array(
         'form_url' => $_BD_CONF['url'] . '/index.php',
     );
-    $query_arr = array('table' => 'birthdays',
+    /*$query_arr = array('table' => 'birthdays',
         'sql' => "SELECT * FROM {$_TABLES['birthdays']}
                 WHERE 1=1 $filter",
         'query_fields' => array(),
         'default_filter' => ''
-    );
+    );*/
     $defsort_arr = array('field' => 'day', 'direction' => 'ASC');
     $data_arr = Birthdays\Birthday::getAll($filter_month);
     $form_arr = array(
@@ -116,7 +116,7 @@ function getField_bday_list($fieldname, $fieldvalue, $A, $icon_arr, $extra)
         break;
 
     case 'birthday':
-        $extra['dt']->setDate(2008, $A['month'], $A['day']);
+        $extra['dt']->setDate($A['year'], $A['month'], $A['day']);
         $retval .= $extra['dt']->Format($_BD_CONF['format'], true);
         break;
     }
@@ -132,13 +132,13 @@ function getField_bday_list($fieldname, $fieldvalue, $A, $icon_arr, $extra)
 */
 function select_month($month)
 {
-    global $_CONF, $LANG_MONTH, $LANG_ADMIN;
+    global $_CONF, $LANG_MONTH, $LANG_ADMIN, $LANG_BD00;
 
     if(empty($month)) {
         $month=strftime("%m")+0;
     }
-    $str = "<input type=hidden name=mode value='list'> " . $LANG_BD00['sel_month'] .
-        "<select name=\"filter_month\" onChange='javascript:this.form.submit();return true'><option value=\"all\">ALL";
+    $str = " <input type=hidden name=mode value='list'> " . $LANG_BD00['sel_month'] .
+        ": <select name=\"filter_month\" onChange='javascript:this.form.submit();return true'><option value=\"all\">ALL";
     for ($i = 1; $i < 13; $i++) {
         $sel = $i == $month ? 'selected="selected"' : '';
         $str .= "<option value=\"$i\" $sel>{$LANG_MONTH[$i]}</option>";

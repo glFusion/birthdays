@@ -149,6 +149,13 @@ class Birthday
     }
 
 
+    /**
+    *   Get all birthdays for one month, or for all.
+    *
+    *   @param  mixed   $month  Month number, or "all"
+    *   @param  mixed   $day    Optional day number
+    *   @return array           Array of birthday records
+    */
     public static function getAll($month = 'all', $day = 0)
     {
         global $_TABLES, $_CONF;
@@ -158,30 +165,34 @@ class Birthday
 
         $where = '';
         if ($month == 'all') {
-            $where .= ' AND month > 0';
+            $where .= ' AND b.month > 0';
         } else {
-            $where .= ' AND month = ' . (int)$month;
+            $where .= ' AND b.month = ' . (int)$month;
         }
         if ($day == 0) {
-            $where .= ' AND day > 0';
+            $where .= ' AND b.day > 0';
         } else {
-            $where .= ' AND day = ' . (int)$day;
+            $where .= ' AND b.day = ' . (int)$day;
         }
-        $sql = "SELECT * FROM {$_TABLES['birthdays']}
+        $sql = "SELECT 2016 as year, b.* FROM {$_TABLES['birthdays']} b
                 WHERE 1=1 $where
-                ORDER BY month, day";
+                ORDER BY b.month, b.day";
         //echo $sql;die;
         $res = DB_query($sql);
-        $retval = array();
-        while ($A = DB_fetchArray($res, false)) {
-            $key1 = sprintf('%d-%02d-%02d', $year, $A['month'], $A['day']);
-            if (!isset($retval[$key1])) $retval[$key1] = array();
-            $retval[$key1][] = $A['uid'];
-        }
+        $retval = DB_fetchAll($res, false);
         return $retval;
     } 
 
 
+    /**
+    *   Get a range of birthdays.
+    *   This is intended to be used with other plugins and returns only user
+    *   IDs indexed by date.
+    *
+    *   @param  string  $start  Starting date, YYYY-MM-DD
+    *   @param  string  $end    Ending date, YYYY-MM-DD
+    *   @return array           Array of date =>array(userids)
+    */
     public static function getRange($start, $end)
     {
         global $_TABLES, $_CONF;

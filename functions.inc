@@ -222,14 +222,11 @@ function phpblock_birthdays()
     $thismonth = Birthdays\Birthday::getAll($month);
 
     $T->set_block('block', 'thismonth', 'thism');
-    foreach($thismonth as $dt_str => $bdays) {
-        list($y, $m, $day) = explode('-', $dt_str);
-        $dt->setDate($year, $month, $day);
-        foreach ($bdays as $uid) {
-            $T->set_var('username', COM_getDisplayName($uid));
-            $T->set_var('bday', $dt->Format($_BD_CONF['format'], true));
-            $T->parse('thism', 'thismonth', true);
-        }
+    foreach($thismonth as $bday) {
+        $T->set_var('username', COM_getDisplayName($bday['uid']));
+        $dt->setDate($year, $bday['month'], $bday['day']);
+        $T->set_var('bday', $dt->Format($_BD_CONF['format'], true));
+        $T->parse('thism', 'thismonth', true);
     }
     $T->set_var('thismonth_count', count($thismonth));
 
@@ -241,17 +238,14 @@ function phpblock_birthdays()
     if (count($thismonth) == 0 && count($nextmonth) == 0) return '';
 
     $T->set_block('block', 'nextmonth', 'nextm');
-    foreach ($nextmonth as $dt_str=>$bdays) {
-        list($y, $m, $day) = explode('-', $dt_str);
-        $dt->setDate($year, $month, $day);
-        foreach ($bdays as $uid) {
-        $T->set_var('username', COM_getDisplayName($uid));
+    foreach ($nextmonth as $dt_str=>$bday) {
+        $dt->setDate($year, $bday['month'], $bday['day']);
+        $T->set_var('username', COM_getDisplayName($bday['uid']));
         $T->set_var('bday', $dt->Format($_BD_CONF['format'], true));
         $T->parse('nextm', 'nextmonth', true);
-        }
     }
-
     $T->set_var('nextmonth_count', count($nextmonth));
+
     $T->parse('output', 'block');
     $retval = $T->finish($T->get_var('output'));
     return $retval;
