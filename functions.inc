@@ -46,11 +46,6 @@ if (is_file(__DIR__ . '/config.php')) {
     include_once __DIR__ . '/config.php';
 }
 
-/*
-* Include birthdays config file
-*/
-require_once ($_CONF['path'] . 'plugins/birthdays/config.php');
-
 spl_autoload_register(function($class)
 {
     if (strpos($class, 'Birthdays\\') === 0) {
@@ -218,11 +213,14 @@ function phpblock_birthdays()
     $thismonth = Birthdays\Birthday::getAll($month);
 
     $T->set_block('block', 'thismonth', 'thism');
-    foreach($thismonth as $bday) {
-        $dt->setDate($year, $month, $bday['day']);
-        $T->set_var('username', COM_getDisplayName($bday['uid']));
-        $T->set_var('bday', $dt->Format($_BD_CONF['format'], true));
-        $T->parse('thism', 'thismonth', true);
+    foreach($thismonth as $dt_str => $bdays) {
+        list($y, $m, $day) = explode('-', $dt_str);
+        $dt->setDate($year, $month, $day);
+        foreach ($bdays as $uid) {
+            $T->set_var('username', COM_getDisplayName($uid));
+            $T->set_var('bday', $dt->Format($_BD_CONF['format'], true));
+            $T->parse('thism', 'thismonth', true);
+        }
     }
     $T->set_var('thismonth_count', count($thismonth));
 
@@ -234,12 +232,16 @@ function phpblock_birthdays()
     if (count($thismonth) == 0 && count($nextmonth) == 0) return '';
 
     $T->set_block('block', 'nextmonth', 'nextm');
-    foreach ($nextmonth as $bday) {
-        $dt->setDate($year, $month, $bday['day']);
-        $T->set_var('username', COM_getDisplayName($bday['uid']));
+    foreach ($nextmonth as $dt_str=>$bdays) {
+        list($y, $m, $day) = explode('-', $dt_str);
+        $dt->setDate($year, $month, $day);
+        foreach ($bdays as $uid) {
+        $T->set_var('username', COM_getDisplayName($uid));
         $T->set_var('bday', $dt->Format($_BD_CONF['format'], true));
         $T->parse('nextm', 'nextmonth', true);
+        }
     }
+
     $T->set_var('nextmonth_count', count($nextmonth));
     $T->parse('output', 'block');
     $retval = $T->finish($T->get_var('output'));
@@ -272,6 +274,32 @@ function plugin_getconfigelementhelp_birthdays($option, $doclang='english')
         $doc_url .= '#desc_' . $option;
     }
     return array($doc_url, 0);
+}
+
+
+function service_getBirthdays_birthdays($args, &$output, &$svc_msg)
+{
+    USES_lglib_class_datecalc();
+
+    if (isset($args['start'])) {
+        $start = $args['start'];
+        $end = isset($args['end']) ? $args['end'] : $start;
+        $output = \Birthdays\Birthday::getRange($start, $end);
+    } elseif (isset($args['month'])) {
+        $day = isset($args['day']) ? (int)$args['day'] : 0; // optional day
+        $dt = new Date('now', $_CONF['timezone']);
+        $year = $dt->Format('Y', true);
+        $start = sprintf('%4d-%02d-%02d', $year, $args['month'], $day ? $day : 1);
+        if ($day > 0) {
+            $end = $start;
+        } else {
+            $end = Date_Calc::endOfMonth($args['month'], $year, $args['month']);
+        }
+        $output = \Birthdays\Birthday::getAll($month, $day);
+    } else {
+        $output = \Birthdays\Birthday::getAll('all');
+    }
+    return PLG_RET_OK;
 }
 
 ?>
