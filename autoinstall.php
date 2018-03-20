@@ -95,7 +95,7 @@ function plugin_autouninstall_birthdays()
         'tables'    => array('birthdays'),
         'groups'    => array(),
         'features'  => array('birthdays.view'),
-        'php_blocks' => array('birthdays'),
+        'php_blocks' => array('phpblock_birthdays'),
         'vars'      => array(),
     );
     return $out;
