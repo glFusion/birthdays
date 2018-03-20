@@ -11,8 +11,9 @@ Use the glFusion automated installation.
 * Birthday Editing is done via the Account Settings. A &quot;Birthday&quot; field is shown under the &quot;About You&quot; tab.
 
 ## Configuration
-* Date Format: Enter the PHP date format to use when displaying dates. Note that the year is not supported.
-i
+* Date Format: Enter the PHP date format to use when displaying dates. Note that the year is not supported. The global &quot;dateonly&quot; date format is used if this is empty.
+  * Default: M d (Short month, 2-digit day)
+
 ## Credits
 * Original version for Geeklog (copyright 2003) by Mike Lynn (mike@mlynn.com).
 * This plugin was written using the Universal Plugin and the Plugin Developers API.

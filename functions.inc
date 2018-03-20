@@ -46,6 +46,15 @@ if (is_file(__DIR__ . '/config.php')) {
     include_once __DIR__ . '/config.php';
 }
 
+// Use the global dateonly format as a default if the format isn't defined
+if ($_BD_CONF['format'] == '') {
+    if ($_CONF['dateonly'] != '') {
+        $_BD_CONF['format'] = $_CONF['dateonly'];
+    } else {
+        $_BD_CONF['format'] = 'M d';    // final fallback
+    }
+}
+
 spl_autoload_register(function($class)
 {
     if (strpos($class, 'Birthdays\\') === 0) {
