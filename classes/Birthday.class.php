@@ -149,22 +149,82 @@ class Birthday
     }
 
 
-    public static function getAll($filter_month = 'all')
+    public static function getAll($month = 'all', $day = 0)
     {
-        global $_TABLES;
+        global $_TABLES, $_CONF;
 
-        if ($filter_month == 'all') {
-            $where = '';
+        $dt = new \Date('now', $_CONF['timezone']);
+        $year = $dt->Format('Y', true);
+
+        $where = '';
+        if ($month == 'all') {
+            $where .= ' AND month > 0';
         } else {
-            $where = " AND month = " . (int)$filter_month;
+            $where .= ' AND month = ' . (int)$month;
+        }
+        if ($day == 0) {
+            $where .= ' AND day > 0';
+        } else {
+            $where .= ' AND day = ' . (int)$day;
         }
         $sql = "SELECT * FROM {$_TABLES['birthdays']}
-                WHERE month > 0 AND day > 0 $where
+                WHERE 1=1 $where
                 ORDER BY month, day";
+        //echo $sql;die;
         $res = DB_query($sql);
-        $data = DB_fetchAll($res, false);
-        return $data;
+        $retval = array();
+        while ($A = DB_fetchArray($res, false)) {
+            $key1 = sprintf('%d-%02d-%02d', $year, $A['month'], $A['day']);
+            if (!isset($retval[$key1])) $retval[$key1] = array();
+            $retval[$key1][] = $A['uid'];
+        }
+        return $retval;
     } 
+
+
+    public static function getRange($start, $end)
+    {
+        global $_TABLES, $_CONF;
+
+        $dt_s = new \Date($start, $_CONF['timezone']);
+        $dt_e = new \Date($end, $_CONF['timezone']);
+        // Find the months to retrieve
+        $s_year = $dt_s->Format('Y');
+        $s_month = $dt_s->Format('n');
+        //$s_day = $dt_s->Format('d');
+        $e_year = $dt_e->Format('Y');
+        $e_month = $dt_e->Format('n');
+        //$e_day = $dt_e->Format('d');
+        $months = array();
+
+        if ($e_month < $s_month) {
+            // End month is less than start, must be wrapping the year
+            for ($i = $e_month; $i < 13; $i++) {
+                $months[] = $i;
+            }
+            for ($i = 1; $i < $s_month; $i++) {
+                $months[] = $i;
+            }
+        } else {
+            for ($i = $s_month; $i <= $e_month; $i++) {
+                $months[] = (int)$i;
+            }
+        }
+        $retval = array();
+        $month_str = implode(',', $months);
+        $sql = "SELECT * FROM {$_TABLES['birthdays']}
+                WHERE month IN ($month_str)
+                ORDER BY month, day";
+        //echo $sql;die;
+        $res = DB_query($sql);
+        while ($A = DB_fetchArray($res, false)) {
+            $year = $A['month'] < $s_month ? $e_year : $s_year;
+            $key1 = sprintf('%d-%02d-%02d', $year, $A['month'], $A['day']);
+            if (!isset($retval[$key1])) $retval[$key1] = array();
+            $retval[$key1][] = $A['uid'];
+        }
+        return $retval;
+    }
 
 
     /**
