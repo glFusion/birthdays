@@ -304,7 +304,11 @@ function BIRTHDAYS_canView()
 
 function service_getBirthdays_birthdays($args, &$output, &$svc_msg)
 {
-    USES_lglib_class_datecalc();
+    if (!BIRTHDAYS_canView()) {
+        // Not an error, but return nothing
+        $output = array();
+        return PLG_RET_OK;
+    }
 
     if (isset($args['start'])) {
         $start = $args['start'];
@@ -312,17 +316,9 @@ function service_getBirthdays_birthdays($args, &$output, &$svc_msg)
         $output = \Birthdays\Birthday::getRange($start, $end);
     } elseif (isset($args['month'])) {
         $day = isset($args['day']) ? (int)$args['day'] : 0; // optional day
-        $dt = new Date('now', $_CONF['timezone']);
-        $year = $dt->Format('Y', true);
-        $start = sprintf('%4d-%02d-%02d', $year, $args['month'], $day ? $day : 1);
-        if ($day > 0) {
-            $end = $start;
-        } else {
-            $end = Date_Calc::endOfMonth($args['month'], $year, $args['month']);
-        }
-        $output = \Birthdays\Birthday::getAll($month, $day);
+        $output = \Birthdays\Birthday::getAll($args['month'], $day);
     } else {
-        $output = \Birthdays\Birthday::getAll('all');
+        $output = \Birthdays\Birthday::getAll();
     }
     return PLG_RET_OK;
 }
