@@ -21,6 +21,7 @@ $LANG_BD00 = array (
     'none'          => '-- None --',
     'all'           => '-- All --',
     'uid'           => 'uid',
+    'view_all'      => 'View All',
 );
 
 // Localization of the Admin Configuration UI

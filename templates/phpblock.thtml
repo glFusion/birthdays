@@ -15,4 +15,5 @@
 <!-- END nextmonth -->
 </ul>
 {!endif}
+<a class="bday_blk_viewall"  href="{site-url}/birthdays">{$LANG_BD00['view_all']}</a>
 {# end {templatelocation} #}
