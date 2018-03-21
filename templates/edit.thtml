@@ -1,14 +1,16 @@
 {# begin {templatelocation} #}
-<div class="uk-form-row">
-  <label class="uk-form-label">{$LANG_BD00['birthday']}</label>
-  <div class="uk-form-controls">
-    <select name="birthday_month">
-      {month_select}
-    </select>
-    <select name="birthday_day">
-      {day_select}
-    </select>
-{#    <input type="text" name="birthday_year" value="{year}" size="4" />#}
+<br />
+<div class="uk-panel uk-panel-box uk-margin-bottom">
+  <div class="uk-form-row">
+    <label class="uk-form-label">{$LANG_BD00['birthday']}</label>
+    <div class="uk-form-controls">
+      <select name="birthday_month">
+        {month_select}
+      </select>
+      <select name="birthday_day">
+        {day_select}
+      </select>
+    </div>
   </div>
 </div>
 {# end {templatelocation} #}
