@@ -22,6 +22,9 @@ class Birthday
      *  @var array */
     var $properties;
 
+    private static $cache_tag = 'birthdays';
+    private static $cache_secs = 1800;
+
 
     /**
     *   Constructor.
@@ -145,6 +148,7 @@ class Birthday
                     day = {$this->day}";
         //echo $sql;die;
         $res = DB_query($sql);
+        self::clearCache();
         return DB_error() ? false : true;
     }
 
@@ -159,9 +163,6 @@ class Birthday
     public static function getAll($month = 0, $day = 0)
     {
         global $_TABLES, $_CONF;
-
-        $dt = new \Date('now', $_CONF['timezone']);
-        $year = $dt->Format('Y', true);
 
         $where = '';
         if ($month == 0) {
@@ -178,8 +179,13 @@ class Birthday
                 WHERE 1=1 $where
                 ORDER BY b.month, b.day";
         //echo $sql;die;
-        $res = DB_query($sql);
-        $retval = DB_fetchAll($res, false);
+        $cache_key = self::_makeKey(md5($sql));
+        $retval = self::getCache($cache_key);
+        if ($retval === NULL) {
+            $res = DB_query($sql);
+            $retval = DB_fetchAll($res, false);
+            self::setCache($cache_key, $retval);
+        }
         return $retval;
     } 
 
@@ -227,12 +233,17 @@ class Birthday
                 WHERE month IN ($month_str)
                 ORDER BY month, day";
         //echo $sql;die;
-        $res = DB_query($sql);
-        while ($A = DB_fetchArray($res, false)) {
-            $year = $A['month'] < $s_month ? $e_year : $s_year;
-            $key1 = sprintf('%d-%02d-%02d', $year, $A['month'], $A['day']);
-            if (!isset($retval[$key1])) $retval[$key1] = array();
-            $retval[$key1][] = $A['uid'];
+        $cache_key = self::_makeKey(md5($sql));
+        $retval = self::getCache($cache_key);
+        if ($retval === NULL) {
+            $res = DB_query($sql);
+            while ($A = DB_fetchArray($res, false)) {
+                $year = $A['month'] < $s_month ? $e_year : $s_year;
+                $key1 = sprintf('%d-%02d-%02d', $year, $A['month'], $A['day']);
+                if (!isset($retval[$key1])) $retval[$key1] = array();
+                $retval[$key1][] = $A['uid'];
+            }
+            self::setCache($cache_key, $retval);
         }
         return $retval;
     }
@@ -252,16 +263,7 @@ class Birthday
         $bday = self::getInstance($uid);
         $T = new \Template(__DIR__ . '/../templates');
         $T->set_file('edit', $tpl . '.thtml');
-        //$opt = '';
         $opt = self::selectMonth($bday->month, $LANG_BD00['none']);
-        /*for ($i = 0; $i < 13; $i++) {
-            $sel = $bday->month == $i ? 'selected="selected"' : '';
-            if ($i > 0) {
-                $opt .= "<option $sel value=\"$i\">{$LANG_MONTH[$i]}</option>";
-            } else {
-                $opt .= "<option $sel value=\"$i\">{$LANG_BD00['none']}</option>";
-            }
-        }*/
         $T->set_var('month_select', $opt);
         $opt = '';
         for ($i = 0; $i < 32; $i++) {
@@ -293,6 +295,15 @@ class Birthday
     }
 
 
+    /**
+    *   Create the option elements for a month selection.
+    *   This allows for a common function used for the month selection on the
+    *   home page and for the user-supplied birthday.
+    *
+    *   @param  integer $thismonth      Currently-selected month
+    *   @param  string  $all_prompt     String to show for "all" or "none"
+    *   @return string                  Option elements
+    */
     public static function selectMonth($thismonth = 0, $all_prompt = '')
     {
         global $LANG_BD00, $LANG_MONTH;
@@ -309,6 +320,74 @@ class Birthday
         }
         return $opt;
     }
+
+
+    /**
+    *   Update the cache
+    *
+    *   @param  string  $key    Item key
+    *   @param  mixed   $data   Data, typically an array
+    *   @param  
+    */
+    public static function setCache($key, $data, $tag='')
+    {
+        global $_EV_CONF;
+
+        if (version_compare(GVERSION, '1.8.0', '<')) return NULL;
+
+        if ($tag == '')
+            $tag = array(self::$cache_tag);
+        else
+            $tag = array($tag, self::$cache_tag);
+        $key = self::_makeKey($key, $tag);
+        \glFusion\Cache::getInstance()->set($key, $data, $tag, self::$cache_secs);
+    }
+
+
+    /**
+    *   Completely clear the cache.
+    *   Called after upgrade.
+    *   Entries matching all tags, including default tag, are removed.
+    *
+    *   @param  mixed   $tag    Single or array of tags
+    */
+    public static function clearCache($tag = '')
+    {
+        if (version_compare(GVERSION, '1.8.0', '<')) return;
+        
+        $tags = array(self::$cache_tag);
+        if (!empty($tag)) {
+            if (!is_array($tag)) $tag = array($tag);
+            $tags = array_merge($tags, $tag);
+        }
+        \glFusion\Cache::getInstance()->deleteItemsByTagsAll($tags);
+    }
+
+
+    /**
+    *   Create a unique cache key.
+    *
+    *   @return string          Encoded key string to use as a cache ID
+    */
+    private static function _makeKey($key)
+    {
+        return self::$cache_tag . '_' . $key;
+    }
+
+    
+    public static function getCache($key, $tag='')
+    {
+        global $_EV_CONF;
+
+        if (version_compare(GVERSION, '1.8.0', '<')) return;
+        $key = self::_makeKey($key, $tag);
+        if (\glFusion\Cache::getInstance()->has($key)) {
+            return \glFusion\Cache::getInstance()->get($key);
+        } else {
+            return NULL;
+        }
+    }
+
 }
 
 ?>
