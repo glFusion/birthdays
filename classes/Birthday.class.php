@@ -136,6 +136,7 @@ class Birthday
         // as a deletion request
         if ($this->month == 0 || $this->day == 0) {
             self::Delete($this->uid);
+            self::clearCache();
             return true;
         }
 
@@ -292,6 +293,7 @@ class Birthday
         global $_TABLES;
 
         DB_delete($_TABLES['birthdays'], 'uid', $uid);
+        self::clearCache();
     }
 
 

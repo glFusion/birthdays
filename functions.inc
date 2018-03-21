@@ -204,6 +204,17 @@ function plugin_profilesave_birthdays($uid = 0)
 
 
 /**
+*   Delete user-specific data when a user account is deleted.
+*
+*   @param  integer $uid    User ID being deleted
+*/
+function plugin_user_delete_birthdays($uid)
+{
+    \Birthdays\Birthday::Delete($uid);
+}
+
+
+/**
 *   Create the sideblock showin upcoming birthdays
 *
 *   @return string      HTML for the block
