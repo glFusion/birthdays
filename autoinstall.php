@@ -98,6 +98,7 @@ function plugin_autouninstall_birthdays()
         'php_blocks' => array('phpblock_birthdays'),
         'vars'      => array(),
     );
+    Birthdays\Birthday::clearCache();
     return $out;
 }
 

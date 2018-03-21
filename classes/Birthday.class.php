@@ -165,6 +165,12 @@ class Birthday
     {
         global $_TABLES, $_CONF;
 
+        $cache_key = $month . '_' . $day;
+        $retval = self::getCache($cache_key);
+        if ($retval !== NULL) {
+            return $retval;
+        }
+
         $where = '';
         if ($month == 0) {
             $where .= ' AND b.month > 0';
@@ -180,13 +186,9 @@ class Birthday
                 WHERE 1=1 $where
                 ORDER BY b.month, b.day";
         //echo $sql;die;
-        $cache_key = self::_makeKey(md5($sql));
-        $retval = self::getCache($cache_key);
-        if ($retval === NULL) {
-            $res = DB_query($sql);
-            $retval = DB_fetchAll($res, false);
-            self::setCache($cache_key, $retval);
-        }
+        $res = DB_query($sql);
+        $retval = DB_fetchAll($res, false);
+        self::setCache($cache_key, $retval);
         return $retval;
     } 
 
@@ -203,6 +205,12 @@ class Birthday
     public static function getRange($start, $end)
     {
         global $_TABLES, $_CONF;
+
+        $cache_key = $start . '_' . $end;
+        $retval = self::getCache($cache_key);
+        if ($retval !== NULL) {
+            return $retval;
+        }
 
         $dt_s = new \Date($start, $_CONF['timezone']);
         $dt_e = new \Date($end, $_CONF['timezone']);
@@ -234,18 +242,14 @@ class Birthday
                 WHERE month IN ($month_str)
                 ORDER BY month, day";
         //echo $sql;die;
-        $cache_key = self::_makeKey(md5($sql));
-        $retval = self::getCache($cache_key);
-        if ($retval === NULL) {
-            $res = DB_query($sql);
-            while ($A = DB_fetchArray($res, false)) {
-                $year = $A['month'] < $s_month ? $e_year : $s_year;
-                $key1 = sprintf('%d-%02d-%02d', $year, $A['month'], $A['day']);
-                if (!isset($retval[$key1])) $retval[$key1] = array();
-                $retval[$key1][] = $A['uid'];
-            }
-            self::setCache($cache_key, $retval);
+        $res = DB_query($sql);
+        while ($A = DB_fetchArray($res, false)) {
+            $year = $A['month'] < $s_month ? $e_year : $s_year;
+            $key1 = sprintf('%d-%02d-%02d', $year, $A['month'], $A['day']);
+            if (!isset($retval[$key1])) $retval[$key1] = array();
+            $retval[$key1][] = $A['uid'];
         }
+        self::setCache($cache_key, $retval);
         return $retval;
     }
 
@@ -333,22 +337,19 @@ class Birthday
     */
     public static function setCache($key, $data, $tag='')
     {
-        global $_EV_CONF;
-
         if (version_compare(GVERSION, '1.8.0', '<')) return NULL;
 
         if ($tag == '')
             $tag = array(self::$cache_tag);
         else
             $tag = array($tag, self::$cache_tag);
-        $key = self::_makeKey($key, $tag);
+        $key = self::_makeKey($key);
         \glFusion\Cache::getInstance()->set($key, $data, $tag, self::$cache_secs);
     }
 
 
     /**
-    *   Completely clear the cache.
-    *   Called after upgrade.
+    *   Clear the cache by tag. By default all plugin entries are removed.
     *   Entries matching all tags, including default tag, are removed.
     *
     *   @param  mixed   $tag    Single or array of tags
@@ -377,12 +378,10 @@ class Birthday
     }
 
     
-    public static function getCache($key, $tag='')
+    public static function getCache($key)
     {
-        global $_EV_CONF;
-
         if (version_compare(GVERSION, '1.8.0', '<')) return;
-        $key = self::_makeKey($key, $tag);
+        $key = self::_makeKey($key);
         if (\glFusion\Cache::getInstance()->has($key)) {
             return \glFusion\Cache::getInstance()->get($key);
         } else {
