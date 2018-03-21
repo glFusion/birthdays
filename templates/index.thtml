@@ -1,2 +1,18 @@
-<a href="{site_url}/{plugin}/index.php"><img src="{logo}" border="0"></a>
-&nbsp;&nbsp; <b><font size="4"> {header} </font></b>
+{# begin {templatelocation} #}
+<div style="float:right">
+{my_form}
+</div>
+<div style="float:left">
+  <a href="{site_url}/{pi_name}/index.php"><img src="{logo}" border="0"></a>
+  &nbsp;&nbsp; <b><font size="4"> {header} </font></b>
+  <div style="clear:both;"></div>
+  <form method="get" action="{site_url}/{pi_name}/index.php">
+    <input type="hidden" name="list">
+    {$LANG_BD00['sel_month']}:
+    <select name="filter_month" onChange='javascript:this.form.submit();return true'>
+      {month_select}
+    </select>
+  </form>
+</div>
+<div style="clear:both;"></div>
+{# end {templatelocation} #}

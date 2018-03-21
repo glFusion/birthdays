@@ -13,11 +13,13 @@
 *   @filesource
 */
 $LANG_BD00 = array (
+    'my_birthday'   => 'My Birthday',
     'birthday'      => 'Birthday',
     'sel_month'     => 'Select Month',
     'this_month'    => 'This Month',
     'next_month'    => 'Next Month',
     'none'          => '-- None --',
+    'all'           => '-- All --',
     'uid'           => 'uid',
 );
 
@@ -33,6 +35,11 @@ $LANG_fs['birthdays'] = array(
 
 $LANG_confignames['birthdays'] = array(
     'format'   => 'Date Display Format',
+    'login_required' => 'Login required to view?',
 );
 
+$LANG_configselects['birthdays'] = array(
+    0 => array('True' => 1, 'False' => 0),
+);
+ 
 ?>

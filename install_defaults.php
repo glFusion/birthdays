@@ -22,6 +22,7 @@ if (!defined ('GVERSION')) {
 global $_BD_DEFAULTS;
 $_BD_DEFAULTS = array(
     'format' => 'M d',
+    'login_required' => false,
 );
 
 /**
@@ -43,6 +44,8 @@ function plugin_initconfig_birthdays()
 
         $c->add('format', $_BD_DEFAULTS['format'],
                 'text', 0, 0, NULL, 10, true, $_BD_CONF['pi_name']);
+        $c->add('login_required', $_BD_DEFAULTS['login_required'], 
+                'select', 0, 0, 0, 20, true, $_BD_CONF['pi_name']);
      }
      return true;
 }

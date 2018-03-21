@@ -47,7 +47,7 @@ if (is_file(__DIR__ . '/config.php')) {
 }
 
 // Use the global dateonly format as a default if the format isn't defined
-if ($_BD_CONF['format'] == '') {
+if (isset($_BD_CONF['format']) && $_BD_CONF['format'] == '') {
     if ($_CONF['dateonly'] != '') {
         $_BD_CONF['format'] = $_CONF['dateonly'];
     } else {
@@ -95,7 +95,7 @@ function plugin_getmenuitems_birthdays()
 *
 *   @return boolean     True or False
 */
-function plugin_commentsupport_birthdays() 
+function plugin_commentsupport_birthdays()
 {
     return false;
 }
@@ -203,7 +203,6 @@ function plugin_profilesave_birthdays($uid = 0)
 }
 
 
-
 /**
 *   Create the sideblock showin upcoming birthdays
 *
@@ -277,6 +276,18 @@ function plugin_getconfigelementhelp_birthdays($option, $doclang='english')
         $doc_url .= '#desc_' . $option;
     }
     return array($doc_url, 0);
+}
+
+
+function BIRTHDAYS_canView()
+{
+    global $_BD_CONF;
+
+    if (COM_isAnonUser() && $_BD_CONF['login_required']) {
+        return false;
+    } else {
+        return true;
+    }
 }
 
 

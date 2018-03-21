@@ -156,7 +156,7 @@ class Birthday
     *   @param  mixed   $day    Optional day number
     *   @return array           Array of birthday records
     */
-    public static function getAll($month = 'all', $day = 0)
+    public static function getAll($month = 0, $day = 0)
     {
         global $_TABLES, $_CONF;
 
@@ -164,7 +164,7 @@ class Birthday
         $year = $dt->Format('Y', true);
 
         $where = '';
-        if ($month == 'all') {
+        if ($month == 0) {
             $where .= ' AND b.month > 0';
         } else {
             $where .= ' AND b.month = ' . (int)$month;
@@ -242,24 +242,26 @@ class Birthday
     *   Display the edit form within the profile editing screen
     *
     *   @param  integer $uid    User ID
+    *   @param  string  $tpl    Template name, default="edit"
     *   @return string      HTML for edit form
     */
-    public static function editForm($uid)
+    public static function editForm($uid, $tpl = 'edit')
     {
         global $LANG_MONTH, $LANG_BD00;
 
         $bday = self::getInstance($uid);
         $T = new \Template(__DIR__ . '/../templates');
-        $T->set_file('edit', 'edit.thtml');
-        $opt = '';
-        for ($i = 0; $i < 13; $i++) {
+        $T->set_file('edit', $tpl . '.thtml');
+        //$opt = '';
+        $opt = self::selectMonth($bday->month, $LANG_BD00['none']);
+        /*for ($i = 0; $i < 13; $i++) {
             $sel = $bday->month == $i ? 'selected="selected"' : '';
             if ($i > 0) {
                 $opt .= "<option $sel value=\"$i\">{$LANG_MONTH[$i]}</option>";
             } else {
                 $opt .= "<option $sel value=\"$i\">{$LANG_BD00['none']}</option>";
             }
-        }
+        }*/
         $T->set_var('month_select', $opt);
         $opt = '';
         for ($i = 0; $i < 32; $i++) {
@@ -290,6 +292,23 @@ class Birthday
         DB_delete($_TABLES['birthdays'], 'uid', $uid);
     }
 
+
+    public static function selectMonth($thismonth = 0, $all_prompt = '')
+    {
+        global $LANG_BD00, $LANG_MONTH;
+
+        if ($all_prompt == '') $all_prompt = $LANG_BD00['all'];
+        $opt = '';
+        for ($i = 0; $i < 13; $i++) {
+            $sel = $thismonth == $i ? 'selected="selected"' : '';
+            if ($i > 0) {
+                $opt .= "<option $sel value=\"$i\">{$LANG_MONTH[$i]}</option>";
+            } else {
+                $opt .= "<option $sel value=\"$i\">{$all_prompt}</option>";
+            }
+        }
+        return $opt;
+    }
 }
 
 ?>

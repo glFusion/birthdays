@@ -1,0 +1,12 @@
+{# begin {templatelocation} #}
+<form method="post" action="{site_url}/birthdays/index.php">
+  {$LANG_BD00['my_birthday']}:
+    <select name="birthday_month">
+      {month_select}
+    </select>
+    <select name="birthday_day">
+      {day_select}
+    </select>
+    <button type="submit" class="uk-button uk-button-small uk-button-success" name="addbday">Submit</button>
+</form>
+{# end {templatelocation} #}
