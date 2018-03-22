@@ -43,9 +43,7 @@ foreach($expected as $provided) {
     }
 }
 if (empty($action)) $action = 'list';
-$dt = new \Date('now', $_CONF['timezone']);
-$curmonth = $dt->Format('n', true);
-$year = $dt->Format('Y', true);     // just to have a value for later
+$curmonth = BIRTHDAYS_currentMonth();
 $filter_month = isset($_REQUEST['filter_month']) ? $_REQUEST['filter_month'] : $curmonth;
 if ($filter_month == -1) {
     $filter_month = $curmonth;
@@ -128,7 +126,7 @@ function listbirthdays($filter_month)
     $data_arr = Birthdays\Birthday::getAll($filter_month);
     $form_arr = array();
     $extra = array(
-        'dt'    => new Date('now', $_CONF['timezone']),
+        //'dt'    => new Date('now', $_CONF['timezone']),
     );
     $retval .= ADMIN_listArray('birthdays', 'getField_bday_list', $header_arr,
                 $text_arr, $data_arr, $defsort_arr, '', $extra, '', $form_arr);
@@ -146,7 +144,7 @@ function listbirthdays($filter_month)
 *   @param  array   $extra      Extra passthrough items (includes date obj)
 *   @return string              HTML for the field cell
 */
-function getField_bday_list($fieldname, $fieldvalue, $A, $icon_arr, $extra)
+function getField_bday_list($fieldname, $fieldvalue, $A, $icon_arr)
 {
     global $_CONF, $_BD_CONF;
 
@@ -158,8 +156,7 @@ function getField_bday_list($fieldname, $fieldvalue, $A, $icon_arr, $extra)
         break;
 
     case 'birthday':
-        $extra['dt']->setDate($A['year'], $A['month'], $A['day']);
-        $retval .= $extra['dt']->Format($_BD_CONF['format'], true);
+        $retval .= BIRTHDAYS_format($A);
         break;
     }
     return $retval;

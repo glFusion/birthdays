@@ -80,11 +80,11 @@ spl_autoload_register(function($class)
 */
 function plugin_getmenuitems_birthdays()
 {
-    global $_BD_CONF;
+    global $_BD_CONF, $LANG_BD00;
 
     $menuitems = array();
     if (SEC_hasRights('birthdays.view')) {
-        $menuitems[$_BD_CONF['pi_display_name']] = $_BD_CONF['url'];
+        $menuitems[$LANG_BD00['pi_title']] = $_BD_CONF['url'];
     }
     return $menuitems;
 }
@@ -169,7 +169,6 @@ function plugin_getheadercss_birthdays()
 function plugin_profileedit_birthdays($uid, $panel, $fieldset)
 {
     $retval = '';
-
     if ($panel == 'userinfo' && $fieldset == 'personalinfo') {
         $retval = Birthdays\Birthday::editForm($uid);
     //} elseif ($panel == '' && $fieldset == '') {
@@ -204,6 +203,37 @@ function plugin_profilesave_birthdays($uid = 0)
 
 
 /**
+*   Show the user's birthday in the public profile.
+*
+*   @param  integer $uid    User ID
+*   @param  object  $T      Template object
+*/
+function plugin_profilevariablesdisplay_birthdays($uid, &$T)
+{
+    global $_BD_CONF;
+
+    $retval = '';
+
+    // Make sure that a valid UID was passed in.
+    if (empty($uid) || !BIRTHDAYS_canView()) {
+        return '';
+    }
+
+    $LT = new Template(__DIR__ . '/templates');
+    $LT->set_file(array(
+        'block' => 'profileblock.thtml',
+    ));
+    $bday = Birthdays\Birthday::getUser($uid);
+    if (empty($bday)) return;
+    $LT->set_var('birthday', BIRTHDAYS_format($bday));
+    $LT->parse('output', 'block');
+    $existingFields = $T->get_var('plugin_fields');
+    $T->set_var('plugin_fields',
+                $existingFields . $T->finish($LT->get_var('output')));
+}
+
+
+/**
 *   Delete user-specific data when a user account is deleted.
 *
 *   @param  integer $uid    User ID being deleted
@@ -225,17 +255,13 @@ function phpblock_birthdays()
 
     $T = new Template(__DIR__ . '/templates');
     $T->set_file('block', 'phpblock.thtml');
-    $dt = new Date('now', $_CONF['timezone']);
-    $year = $dt->Format('Y', true);
-    $month = $dt->Format('n', true);
-    $day = $dt->Format('d', true);
+    $month = BIRTHDAYS_currentMonth();
     $thismonth = Birthdays\Birthday::getAll($month);
 
     $T->set_block('block', 'thismonth', 'thism');
     foreach($thismonth as $bday) {
         $T->set_var('username', COM_getDisplayName($bday['uid']));
-        $dt->setDate($year, $bday['month'], $bday['day']);
-        $T->set_var('bday', $dt->Format($_BD_CONF['format'], true));
+        $T->set_var('bday', BIRTHDAYS_format($bday));
         $T->parse('thism', 'thismonth', true);
     }
     $T->set_var('thismonth_count', count($thismonth));
@@ -249,9 +275,8 @@ function phpblock_birthdays()
 
     $T->set_block('block', 'nextmonth', 'nextm');
     foreach ($nextmonth as $dt_str=>$bday) {
-        $dt->setDate($year, $bday['month'], $bday['day']);
         $T->set_var('username', COM_getDisplayName($bday['uid']));
-        $T->set_var('bday', $dt->Format($_BD_CONF['format'], true));
+        $T->set_var('bday', BIRTHDAYS_format($bday));
         $T->parse('nextm', 'nextmonth', true);
     }
     $T->set_var('nextmonth_count', count($nextmonth));
@@ -290,11 +315,229 @@ function plugin_getconfigelementhelp_birthdays($option, $doclang='english')
 }
 
 
+/**
+*   Dispaly a Happy Birthday message when a user logs in.
+*
+*   @param  integer $uid    User ID
+*   @return void
+*/
+function plugin_user_login_birthdays($uid)
+{
+    global $_CONF, $LANG_BD00, $_BD_CONF;
+
+    // Show nothing if disabled
+    if (!$_BD_CONF['login_greeting']) return;
+
+    $month = BIRTHDAYS_currentDate()['month'];
+    $day = BIRTHDAYS_currentDate()['day'];
+    // Get all user birthdays for today. This allows the request
+    // to go through caching, and the result set should be small anyway.
+    $x = \Birthdays\Birthday::getAll($month, $day);
+    if ($x) {
+        foreach ($x as $data) {
+            if ($data['uid'] == $uid) {
+                COM_setMsg(sprintf($LANG_BD00['msg_happy_birthday'], COM_getDisplayName($uid)));
+                break;
+            }
+        }
+    }
+    return;
+}
+
+
+/**
+*   Perform scheduled functions, such as notifications and cancellations.
+*
+*/
+function plugin_runScheduledTask_birthdays()
+{
+    global $_TABLES, $_VARS, $_BD_CONF;
+
+    if (!$_BD_CONF['enable_subs'] && !$_BD_CONF['enable_cards']) {
+        return;     // don't go through the loop if nothing will be sent
+    }
+
+    $dt = BIRTHDAYS_currentDate();
+    $today = sprintf("%4d%02d%02d", $dt['year'], $dt['month'], $dt['day']);
+    $lastrun = isset($_VARS['birthdays_lastrun']) ? $_VARS['birthdays_lastrun'] : '';
+    if ($lastrun == $today) return;     // run once daily only
+    DB_query("INSERT INTO {$_TABLES['vars']}
+                VALUES('birthdays_lastrun', '$today')
+            ON DUPLICATE KEY UPDATE value = '$today'");
+    $bdays = Birthdays\Birthday::getAll($dt['month'], $dt['day']);
+    foreach ($bdays as $bday) {
+        $uid = (int)$bday['uid'];
+        $lang = BIRTHDAYS_loadLanguage($uid);
+        if ($_BD_CONF['enable_subs']) {
+            PLG_sendSubscriptionNotification('birthdays', 'birthday_sub', '', $uid, 0);
+        }
+
+        if ($_BD_CONF['enable_cards']) {
+            // Borrow the email format function to create the message
+            list($htmlmsg,$textmsg,$imageData) =
+                plugin_subscription_email_format_birthdays('birthday_card', '', $uid, '');
+            $name = COM_getDisplayName($uid);
+            $email = DB_getItem($_TABLES['users'], 'email', "uid = $uid");
+            if (empty($email)) continue;    // need a valid email
+            $msgData = array(
+                'htmlmessage'   => $htmlmsg,
+                'textmessage'   => $textmsg,
+                'subject'       => sprintf($lang['card_title'], $name),
+                'from'          => NULL,
+                'to'            => array(
+                    'name'  => $name,
+                    'email' => $email,
+                ),
+            );
+            COM_emailNotification($msgData);
+        }
+    }
+}
+
+
+/**
+*   Set the email format for birthday reminders.
+*
+*   @param  string  $category   Notification type, e.g. birthday_sub
+*   @param  string  $track_id   Item being tracked (not used)
+*   @param  integer $uid        Item ID (ID of birthday user in this case)
+*   @param  integer $poster_id  Poster ID (not used)
+*/
+function plugin_subscription_email_format_birthdays($category, $track_id, $uid, $poster_id)
+{
+    global $_CONF, $_BD_CONF;
+
+    $uid = (int)$uid;
+    $name = COM_getDisplayName($uid);
+    $name = @htmlspecialchars($name,ENT_QUOTES, COM_getEncodingt(),true);
+    $lang = BIRTHDAYS_loadLanguage($uid);
+
+    $T = new Template( __DIR__ . '/templates' );
+    $T->set_file (array(
+        'htmlemail'     => 'notifymessage_html.thtml',
+        'textemail'     => 'notifymessage_text.thtml',
+    ));
+    if ($category == 'birthday_sub') {
+        // Subscription notification
+        $T->set_var(array(
+            'site_name'     => $_CONF['site_name'],
+            'sub_title'     => sprintf($lang['sub_title'], $name),
+            'sub_message'   => sprintf($lang['sub_message'], $name),
+            'sub_reason'    => sprintf($lang['sub_reason'], $name),
+            'lang_to_unsub' => $lang['sub_unsub'],
+            'lang_unsub'    => $lang['unsubscribe'],
+            'lang_noreply'  => $lang['email_autogen'],
+            'lang_birthday_notif' => $lang['sub_title'],
+            'uid'           => $uid,
+        ));
+    } else {
+        // Happy Birthday message to users.
+        $T->set_var(array(
+            'site_name'     => $_CONF['site_name'],
+            'sub_title'     => sprintf($lang['card_title'], $name),
+            'sub_message'   => sprintf($lang['card_message'], $_CONF['site_name']),
+            'lang_to_unsub' => $lang['sub_unsub'],
+            'lang_unsub'    => $lang['unsubscribe'],
+            //'sub_reasion'   => sprintf($lang['card_reason'], $name),
+            'lang_noreply'  => $lang['email_autogen'],
+            'lang_birthday_notif' => $lang['card_title'],
+            'uid'           => $uid,
+        ));
+    }
+    $T->parse('htmloutput', 'htmlemail');
+    $message = $T->finish($T->get_var('htmloutput'));
+    $T->parse('textoutput', 'textemail');
+    $msgText = $T->finish($T->get_var('textoutput'));
+    $html2txt = new Html2Text\Html2Text($msgText, false);
+    $messageText = $html2txt->get_text();
+    return array($message, $messageText, array());
+}
+
+
+/**
+*   Get an array of values for the current date.
+*   Uses a static variable for repeated calls.
+*
+*   @return array   Array of year, month, day
+*/
+function BIRTHDAYS_currentDate()
+{
+    global $_CONF;
+    static $retval = NULL;
+
+    if ($retval === NULL) {
+        $dt = new \Date('now', $_CONF['timezone']);
+        $retval = array(
+            'year'  => $dt->Format('Y', true),
+            'month' => $dt->Format('m', true),
+            'day'   => $dt->Format('d', true),
+        );
+    }
+    return $retval;
+}
+
+
+/**
+*   Helper function to get the current month.
+*
+*   @uses   BIRTHDAYS_currentDate()
+*   @return integer     Current month
+*/
+function BIRTHDAYS_currentMonth()
+{
+    return BIRTHDAYS_currentDate()['month'];
+}
+
+
+/**
+*   Format a date according to the configured format.
+*   Allows a single array parameter, or individual values.
+*
+*   @param  mixed   $month  Month number or array of all values
+*   @param  integer $day    Day value, if $month is an integer
+*   @param  integer $year   Optional year value
+*   @return string          Formatted date string
+*/
+function BIRTHDAYS_format($month, $day = '', $year = '')
+{
+    global $_CONF, $_BD_CONF;
+    static $dt = NULL;
+
+    // For an array, load the vaues into individual fields
+    if (is_array($month)) {
+        $day = isset($month['day']) ? $month['day'] : '';
+        $year = isset($month['year']) ? $month['year'] : '';
+        $month = isset($month['month']) ? $month['month'] : '';
+    }
+
+    // At least month and day are required
+    if (empty($month) || empty($day)) {
+        return 'n/a';
+    }
+    // If the year is undefined, use the current year
+    if (empty($year)) $year = BIRTHDAYS_currentDate()['year'];
+
+    // Create a date object, if not already done.
+    if ($dt === NULL) {
+        $dt = new \Date('now', $_CONF['timezone']);
+    }
+
+    // Format the date
+    $dt->setDate($year, $month, $day);
+    return $dt->Format($_BD_CONF['format'], true);
+}
+
+
+/**
+*   Helper function to determine if the current user can view all birthdays
+*
+*   @return boolean     True if access is allowed, False if not.
+*/
 function BIRTHDAYS_canView()
 {
     global $_BD_CONF;
 
-    if (COM_isAnonUser() && $_BD_CONF['login_required']) {
+    if (!SEC_hasRights('birthdays.view')) {
         return false;
     } else {
         return true;
@@ -311,16 +554,62 @@ function service_getBirthdays_birthdays($args, &$output, &$svc_msg)
     }
 
     if (isset($args['start'])) {
+        // Get birthdays within a date range
         $start = $args['start'];
         $end = isset($args['end']) ? $args['end'] : $start;
         $output = \Birthdays\Birthday::getRange($start, $end);
     } elseif (isset($args['month'])) {
+        // Get birthdays for a single month or month/day
         $day = isset($args['day']) ? (int)$args['day'] : 0; // optional day
         $output = \Birthdays\Birthday::getAll($args['month'], $day);
     } else {
+        // Get all birthdays in the table
         $output = \Birthdays\Birthday::getAll();
     }
     return PLG_RET_OK;
+}
+
+
+/**
+*   Get a language file for a specific specific user ID.
+*   This is the same as the code at the top of the file, but the language
+*   strings are saved in a local array so the global $LANG_BD00 is unaffected.
+*
+*   @param  integer $uid    User ID
+*   @return array           Language array
+*/
+function BIRTHDAYS_loadLanguage($uid)
+{
+    global $_CONF, $_TABLES;
+
+    static $users = array();
+    static $langs = array();
+
+    $uid = (int)$uid;
+    if (!isset($users[$uid])) {
+        $users[$uid] = DB_getItem($_TABLES['users'], 'language', "uid = $uid");
+        if (!$users[$uid]) $users[$uid] = $_CONF['language'];
+    }
+    $lang = $users[$uid];
+    if (!isset($langs[$lang])) {
+        $langpath = __DIR__ . '/language';
+        if (is_file("{$langpath}/{$lang}.php")) {
+            $langfile = "{$lang}.php";
+        } else {
+            $langfile= 'english.php';
+        }
+        include "$langpath/$langfile";
+
+        if (is_file("$langpath/custom/$langfile")) {
+            /** Include any custom language file, if found */
+            include "$langpath/custom/$langfile";
+        }
+
+        // Now we have a $LANG_BD00 variable with the language,
+        // set it into the local static array
+        $langs[$lang] = $LANG_BD00;
+    }
+    return $langs[$lang];
 }
 
 ?>

@@ -1,0 +1,15 @@
+{site_name} {lang_birthday_notif}
+================================================================================
+{notify_msg}
+================================================================================
+{lang_to_unsub}: <a href="{site_url}/birthdays/index.php?unsubscribe={uid}" rel="nofollow">{lang_unsub}</a>
+
+{notify_msg}
+
+================================================================================
+<a href="{site_url}" style="font-family: Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 12px; color: #999; text-decoration: underline; margin: 0;">
+{site_name}
+</a>
+
+{lang_noreply}
+

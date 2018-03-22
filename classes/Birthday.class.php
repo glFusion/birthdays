@@ -190,7 +190,7 @@ class Birthday
         $retval = DB_fetchAll($res, false);
         self::setCache($cache_key, $retval);
         return $retval;
-    } 
+    }
 
 
     /**
@@ -250,6 +250,30 @@ class Birthday
             $retval[$key1][] = $A['uid'];
         }
         self::setCache($cache_key, $retval);
+        return $retval;
+    }
+
+
+    /**
+    *   Get a specific user's birthday for the profile page.
+    *
+    *   @param  integer $uid    User ID
+    *   @return array       Array of fields, NULL if not found.
+    */
+    public static function getUser($uid)
+    {
+        global $_TABLES;
+
+        $uid = (int)$uid;
+        $retval = self::getCache($uid);
+        if ($retval === NULL) {
+            $sql = "SELECT * FROM {$_TABLES['birthdays']}
+                    WHERE uid = $uid";
+            $res = DB_query($sql);
+            if (!DB_error()) {
+                $retval = DB_fetchArray($res, false);
+            }
+        }
         return $retval;
     }
 
@@ -333,7 +357,7 @@ class Birthday
     *
     *   @param  string  $key    Item key
     *   @param  mixed   $data   Data, typically an array
-    *   @param  
+    *   @param  mixed   $tag    Single or array of tags to apply
     */
     public static function setCache($key, $data, $tag='')
     {
@@ -357,7 +381,7 @@ class Birthday
     public static function clearCache($tag = '')
     {
         if (version_compare(GVERSION, '1.8.0', '<')) return;
-        
+
         $tags = array(self::$cache_tag);
         if (!empty($tag)) {
             if (!is_array($tag)) $tag = array($tag);
@@ -377,7 +401,13 @@ class Birthday
         return self::$cache_tag . '_' . $key;
     }
 
-    
+
+    /**
+    *   Get an entry from cache, if available.
+    *
+    *   @param  string  $key    Cache key
+    *   @return mixed           Cache contents, NULL if not found
+    */
     public static function getCache($key)
     {
         if (version_compare(GVERSION, '1.8.0', '<')) return;
