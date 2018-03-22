@@ -1,0 +1,7 @@
+{# begin {templatelocation} #}
+<nav class="uk-navbar uk-margin-top">
+  <div class="uk-navbar-content">
+  {$LANG_BD00['birthday']}: {birthday}
+  </div>
+</nav>
+{# end {templatelocation} #}
