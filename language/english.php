@@ -13,6 +13,7 @@
 *   @filesource
 */
 $LANG_BD00 = array (
+    'pi_title'      => 'Birthdays',
     'my_birthday'   => 'My Birthday',
     'birthday'      => 'Birthday',
     'sel_month'     => 'Select Month',
@@ -22,6 +23,15 @@ $LANG_BD00 = array (
     'all'           => '-- All --',
     'uid'           => 'uid',
     'view_all'      => 'View All',
+    'msg_happy_birthday' => 'Happy Birthday, %s!',
+    'sub_title'     => 'Birthday Notification',
+    'sub_message'   => 'It&apos;s %s&apos;s birthday today. Join us in saying &quot;Happy Birthday!&quot;',
+    'sub_reason'   => 'You are receiving this email because you have chosen to be notified when %s has a birthday.',
+    'sub_unsub'     => 'To unsubscribe from these notifications, please click this link',
+    'card_title'    => 'Happy Birthday from ' . $_CONF['site_name'] . '!',
+    'card_message'  => 'Happy Birthday from %s',
+    'unsubscribe'   => 'Unsubscribe',
+    'email_autogen' => 'This email was generated automatically. Please do not reply to this email.',
 );
 
 // Localization of the Admin Configuration UI
@@ -37,6 +47,9 @@ $LANG_fs['birthdays'] = array(
 $LANG_confignames['birthdays'] = array(
     'format'   => 'Date Display Format',
     'login_required' => 'Login required to view?',
+    'login_greeting' => 'Greeing message upon login?',
+    'enable_subs' => 'Allow subscripttions to birthday announcements?',
+    'enable_cards' => 'Enable birthday cards?',
 );
 
 $LANG_configselects['birthdays'] = array(
