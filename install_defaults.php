@@ -22,7 +22,9 @@ if (!defined ('GVERSION')) {
 global $_BD_DEFAULTS;
 $_BD_DEFAULTS = array(
     'format' => 'M d',
-    'login_required' => false,
+    'login_greeting'    => 1,
+    'enable_subs'       => 1,
+    'enable_cards'      => 1,
 );
 
 /**
@@ -44,8 +46,12 @@ function plugin_initconfig_birthdays()
 
         $c->add('format', $_BD_DEFAULTS['format'],
                 'text', 0, 0, NULL, 10, true, $_BD_CONF['pi_name']);
-        $c->add('login_required', $_BD_DEFAULTS['login_required'], 
+        $c->add('login_greeting', $_BD_DEFAULTS['login_greeting'],
                 'select', 0, 0, 0, 20, true, $_BD_CONF['pi_name']);
+        $c->add('enable_subs', $_BD_DEFAULTS['enable_subs'],
+                'select', 0, 0, 0, 30, true, $_BD_CONF['pi_name']);
+        $c->add('enable_cards', $_BD_DEFAULTS['enable_cares'],
+                'select', 0, 0, 0, 40, true, $_BD_CONF['pi_name']);
      }
      return true;
 }

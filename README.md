@@ -8,10 +8,15 @@ Use the glFusion automated installation.
 ## Functionality
 * Displays birthday records for members for a selected month or for all months.
 * Shows a block listing member birthdays for the current and upcoming months.
-* Birthday Editing is done via the Account Settings. A &quot;Birthday&quot; field is shown under the &quot;About You&quot; tab.
+* Birthday Editing is done via the Account Settings. A &quot;Birthday&quot;
+field is shown under the &quot;About You&quot; tab.
+* Display a &quot;Happy Birthday&quot; message when a user logs in on their birthday.
+* Send an e-mail birthday card to users on their birthday.
 
 ## Configuration
-* Date Format: Enter the PHP date format to use when displaying dates. Note that the year is not supported. The global &quot;dateonly&quot; date format is used if this is empty.
+* Date Format: Enter the PHP date format to use when displaying dates.
+Note that the year is not supported. The global &quot;dateonly&quot; date
+format is used if this is empty.
   * Default: M d (Short month, 2-digit day)
 
 ## Credits

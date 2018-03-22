@@ -56,9 +56,9 @@ $INSTALL_plugin[$_BD_CONF['pi_name']] = array(
             'variable' => 'view_feature_id',
     ),
     array('type' => 'mapping',
-            'findgroup' => 'Logged-in Users',
+            'findgroup' => 'All Users',
             'feature' => 'view_feature_id',
-            'log' => 'Adding birthdays.view feature to the logged-in users group',
+            'log' => 'Adding birthdays.view feature to the All Users group',
     ),
 
 );
@@ -96,7 +96,7 @@ function plugin_autouninstall_birthdays()
         'groups'    => array(),
         'features'  => array('birthdays.view'),
         'php_blocks' => array('phpblock_birthdays'),
-        'vars'      => array(),
+        'vars'      => array('birthdays_lastrun'),
     );
     Birthdays\Birthday::clearCache();
     return $out;
