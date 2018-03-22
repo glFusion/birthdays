@@ -159,6 +159,23 @@ function plugin_getheadercss_birthdays()
 
 
 /**
+*   Get additional Javascript into the site header
+*
+*   @return array   List of paths to Javascript files
+*/
+function plugin_getheaderjs_birthdays()
+{
+    global $_CONF;
+
+    $js_dir = __DIR__ . '/js';
+    $files = array(
+        "$js_dir/bday_misc.js",
+    );
+    return $files;
+}
+
+
+/**
 *   Create an edit form in the Account Settings section.
 *
 *   @param  integer $uid        User ID

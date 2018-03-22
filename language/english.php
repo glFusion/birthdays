@@ -32,6 +32,10 @@ $LANG_BD00 = array (
     'card_message'  => 'Happy Birthday from %s',
     'unsubscribe'   => 'Unsubscribe',
     'email_autogen' => 'This email was generated automatically. Please do not reply to this email.',
+    'click_to'      => 'Click to ',
+    'subscribe'     => 'Subscribe',
+    'subscr_updated' => 'Subscription Updated',
+    'subscr_err'    => 'Error updating subscription',
 );
 
 // Localization of the Admin Configuration UI

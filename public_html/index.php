@@ -105,31 +105,23 @@ function listbirthdays($filter_month)
             'align' => 'center',
         ),
     );
+    if ($_BD_CONF['enable_subs']) {
+        $header_arr[] =  array('text' => 'Subscribe',
+            'field' => 'subscribe',
+            'sort' => false,
+            'align' => 'center',
+        );
+    }
 
-/*    $dt = new \Date('now', $_CONF['timezone']);
-    $curmonth = $dt->Format('n', true);
-    $year = $dt->Format('Y', true);     // just to have a value for later
-    if ($filter_month == -1) {
-        $filter_month = $curmonth;
-    }*/
     $filter = $filter_month == 0 ? '' : " AND month = $filter_month";
     $text_arr = array(
         'form_url' => $_BD_CONF['url'] . '/index.php',
     );
-    /*$query_arr = array('table' => 'birthdays',
-        'sql' => "SELECT * FROM {$_TABLES['birthdays']}
-                WHERE 1=1 $filter",
-        'query_fields' => array(),
-        'default_filter' => ''
-    );*/
     $defsort_arr = array('field' => 'day', 'direction' => 'ASC');
     $data_arr = Birthdays\Birthday::getAll($filter_month);
     $form_arr = array();
-    $extra = array(
-        //'dt'    => new Date('now', $_CONF['timezone']),
-    );
     $retval .= ADMIN_listArray('birthdays', 'getField_bday_list', $header_arr,
-                $text_arr, $data_arr, $defsort_arr, '', $extra, '', $form_arr);
+                $text_arr, $data_arr, $defsort_arr, '', '', '', $form_arr);
     return $retval;
 }
 
@@ -146,7 +138,7 @@ function listbirthdays($filter_month)
 */
 function getField_bday_list($fieldname, $fieldvalue, $A, $icon_arr)
 {
-    global $_CONF, $_BD_CONF;
+    global $_CONF, $_BD_CONF, $LANG_BD00, $_USER;
 
     $retval = '';
 
@@ -157,6 +149,23 @@ function getField_bday_list($fieldname, $fieldvalue, $A, $icon_arr)
 
     case 'birthday':
         $retval .= BIRTHDAYS_format($A);
+        break;
+
+    case 'subscribe':
+        if (PLG_isSubscribed('birthdays', 'birthday_sub', $A['uid'], $_USER['uid'])) {
+            $text = $LANG_BD00['unsubscribe'];
+            //$icon_cls = 'uk-text-success';
+            $current_val = 1;
+            $chk = 'checked="checked"';
+        } else {
+            $text = $LANG_BD00['subscribe'];
+            //$icon_cls = '';
+            $current_val = 0;
+            $chk = '';
+        }
+        $retval = '<input type="checkbox" value="1" ' . $chk .
+                ' data-uk-tooltip title="' . $LANG_BD00['click_to'] . $text .
+                    '" onclick="javascript:BDAY_toggleSub(this, ' . $A['uid'] . ', ' . $current_val . ');" />';
         break;
     }
     return $retval;
