@@ -370,6 +370,9 @@ function plugin_runScheduledTask_birthdays()
 {
     global $_TABLES, $_VARS, $_BD_CONF;
 
+    // New return type from email_format function requires 1.7.4 or higher
+    if (GVERSION < '1.7.4') return;
+
     if (!$_BD_CONF['enable_subs'] && !$_BD_CONF['enable_cards']) {
         return;     // don't go through the loop if nothing will be sent
     }
@@ -391,15 +394,14 @@ function plugin_runScheduledTask_birthdays()
 
         if ($_BD_CONF['enable_cards']) {
             // Borrow the email format function to create the message
-            list($htmlmsg,$textmsg,$imageData) =
-                plugin_subscription_email_format_birthdays('birthday_card', '', $uid, '');
+            $msg = plugin_subscription_email_format_birthdays('birthday_card', '', $uid, '');
             $name = COM_getDisplayName($uid);
             $email = DB_getItem($_TABLES['users'], 'email', "uid = $uid");
             if (empty($email)) continue;    // need a valid email
             $msgData = array(
-                'htmlmessage'   => $htmlmsg,
-                'textmessage'   => $textmsg,
-                'subject'       => sprintf($lang['card_title'], $name),
+                'htmlmessage'   => $msg['msghtml'],
+                'textmessage'   => $msg['msgtext'],
+                'subject'       => $msg['subject'],
                 'from'          => NULL,
                 'to'            => array(
                     'name'  => $name,
@@ -436,6 +438,7 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
     ));
     if ($category == 'birthday_sub') {
         // Subscription notification
+        $subject = sprintf($lang['sub_title'], $name);
         $T->set_var(array(
             'site_name'     => $_CONF['site_name'],
             'sub_title'     => sprintf($lang['sub_title'], $name),
@@ -449,9 +452,10 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
         ));
     } else {
         // Happy Birthday message to users.
+        $subject = sprintf($lang['card_title'], $name);
         $T->set_var(array(
             'site_name'     => $_CONF['site_name'],
-            'sub_title'     => sprintf($lang['card_title'], $name),
+            'sub_title'     => $subject,
             'sub_message'   => sprintf($lang['card_message'], $_CONF['site_name']),
             'lang_to_unsub' => $lang['sub_unsub'],
             'lang_unsub'    => $lang['unsubscribe'],
@@ -467,7 +471,11 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
     $msgText = $T->finish($T->get_var('textoutput'));
     $html2txt = new Html2Text\Html2Text($msgText, false);
     $messageText = $html2txt->get_text();
-    return array($message, $messageText, array());
+    return array(
+        'msghtml' => $message,
+        'msgtext' => $messageText,
+        'subject' => $subject,
+    );
 }
 
 
