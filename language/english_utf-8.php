@@ -51,7 +51,7 @@ $LANG_fs['birthdays'] = array(
 $LANG_confignames['birthdays'] = array(
     'format'   => 'Date Display Format',
     'login_required' => 'Login required to view?',
-    'login_greeting' => 'Greeing message upon login?',
+    'login_greeting' => 'Greeting message upon login?',
     'enable_subs' => 'Allow subscripttions to birthday announcements?',
     'enable_cards' => 'Enable birthday cards?',
 );
