@@ -124,7 +124,7 @@ function plugin_chkVersion_birthdays()
 function plugin_geticon_birthdays()
 {
     global $_CONF, $_BD_CONF;
-    return "{$_CONF['site_url']}/{$_BD_CONF['pi_name']}/images/birthdays.gif";
+    return "{$_CONF['site_url']}/{$_BD_CONF['pi_name']}/images/birthdays.png";
 }
 
 
