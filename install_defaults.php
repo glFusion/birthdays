@@ -23,8 +23,8 @@ global $_BD_DEFAULTS;
 $_BD_DEFAULTS = array(
     'format' => 'M d',
     'login_greeting'    => 1,
-    'enable_subs'       => 1,
-    'enable_cards'      => 1,
+    'enable_subs'       => 0,
+    'enable_cards'      => 0,
 );
 
 /**
@@ -50,7 +50,7 @@ function plugin_initconfig_birthdays()
                 'select', 0, 0, 0, 20, true, $_BD_CONF['pi_name']);
         $c->add('enable_subs', $_BD_DEFAULTS['enable_subs'],
                 'select', 0, 0, 0, 30, true, $_BD_CONF['pi_name']);
-        $c->add('enable_cards', $_BD_DEFAULTS['enable_cares'],
+        $c->add('enable_cards', $_BD_DEFAULTS['enable_cards'],
                 'select', 0, 0, 0, 40, true, $_BD_CONF['pi_name']);
      }
      return true;
