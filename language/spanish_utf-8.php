@@ -51,7 +51,6 @@ $LANG_fs['birthdays'] = array(
 
 $LANG_confignames['birthdays'] = array(
     'format'   => 'Mostrar formato de Fecha',
-    'login_required' => '¿Autenticación requerida para ver?',
     'login_greeting' => 'Mensaje de bienvenida al iniciar sesión?',
     'enable_subs' => 'Permitir suscripciones a anuncios de cumpleaños?',
     'enable_cards' => 'Habilitar tarjetas de cumpleaños?',

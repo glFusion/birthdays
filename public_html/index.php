@@ -1,6 +1,6 @@
 <?php
 /**
-*   glFusion API functions for the Birthdays plugin.
+*   Public entry point for the Birthdays plugin.
 *
 *   @author     Lee Garner <lee@leegarner.com>
 *   @author     Mike Lynn <mike@mlynn.com>
