@@ -41,13 +41,20 @@ if (is_file("$langpath/custom/$langfile")) {
 // Set commonly-used variables from the config
 $_BD_CONF['url'] = "{$_CONF['site_url']}/{$_BD_CONF['pi_name']}";
 
-/** Include the user-supplied configuration file, if any */
+// Include the user-supplied configuration file, if any
 if (is_file(__DIR__ . '/config.php')) {
     include_once __DIR__ . '/config.php';
 }
 
+// Disable features that don't work in older glFusion versions
+if (version_compare(GVERSION, '1.7.4', '<')) {
+    // Cards work, but Subscriptions require an update to
+    // PLG_sendSubscriptionNotification()
+    $_BD_CONF['enable_subs'] = 0;
+}
+
 // Use the global dateonly format as a default if the format isn't defined
-if (isset($_BD_CONF['format']) && $_BD_CONF['format'] == '') {
+if (!isset($_BD_CONF['format']) || empty($_BD_CONF['format'])) {
     if ($_CONF['dateonly'] != '') {
         $_BD_CONF['format'] = $_CONF['dateonly'];
     } else {
@@ -67,10 +74,6 @@ spl_autoload_register(function($class)
 });
 
 
-// +---------------------------------------------------------------------------+
-// | Geeklog Plugin API Implementations                                        |
-// +---------------------------------------------------------------------------+
-
 /**
 *   Returns the items for this plugin that should appear on the main menu
 *   NOTE: this MUST return the url/value pairs in the following format
@@ -83,7 +86,7 @@ function plugin_getmenuitems_birthdays()
     global $_BD_CONF, $LANG_BD00;
 
     $menuitems = array();
-    if (SEC_hasRights('birthdays.view')) {
+    if (BIRTHDAYS_canView()) {
         $menuitems[$LANG_BD00['pi_title']] = $_BD_CONF['url'];
     }
     return $menuitems;
@@ -102,9 +105,7 @@ function plugin_commentsupport_birthdays()
 
 
 /**
-*   Called by the plugin Editor to display the current plugin code version
-*   This may be different than the version installed and registered currently.
-*   If newer then you may want to run the update
+*   Get the current code version of the plugin.
 *
 *   @return string  version number
 */
@@ -188,8 +189,6 @@ function plugin_profileedit_birthdays($uid, $panel, $fieldset)
     $retval = '';
     if ($panel == 'userinfo' && $fieldset == 'personalinfo') {
         $retval = Birthdays\Birthday::editForm($uid);
-    //} elseif ($panel == '' && $fieldset == '') {
-    //    $retval = Birthdays\Birthday::editForm($uid);
     }
     return $retval;
 }
@@ -369,9 +368,6 @@ function plugin_user_login_birthdays($uid)
 function plugin_runScheduledTask_birthdays()
 {
     global $_TABLES, $_VARS, $_BD_CONF;
-
-    // New return type from email_format function requires 1.7.4 or higher
-    if (GVERSION < '1.7.4') return;
 
     if (!$_BD_CONF['enable_subs'] && !$_BD_CONF['enable_cards']) {
         return;     // don't go through the loop if nothing will be sent
@@ -561,15 +557,25 @@ function BIRTHDAYS_format($month, $day = '', $year = '')
 function BIRTHDAYS_canView()
 {
     global $_BD_CONF;
+    static $canView = NULL;
 
-    if (!SEC_hasRights('birthdays.view')) {
-        return false;
-    } else {
-        return true;
+    if ($canView === NULL) {
+        $canView = SEC_hasRights('birthdays.view');
     }
+    return $canView;
 }
 
 
+/**
+*   Service function to get birthdays for a time period.
+*   Args can be an array of start and end dates, or a month
+*   and day.
+*
+*   @param  array   $args       Array of arguments
+*   @param  array   $output     Array to be populated with data
+*   @param  string  $svc_msg    Not used
+*   @return integer     Status indicator
+*/
 function service_getBirthdays_birthdays($args, &$output, &$svc_msg)
 {
     if (!BIRTHDAYS_canView()) {
