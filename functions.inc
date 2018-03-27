@@ -262,55 +262,60 @@ function plugin_user_delete_birthdays($uid)
 
 /**
 *   Create the sideblock showin upcoming birthdays
+*   The plugin installs a block with no arguments but the site admin can
+*   create or edit the block with an argument for the number of months to show.
 *
+*   @param  array   $blkinfo    Block Info
+*   @param  integer $months     Number of months to show
 *   @return string      HTML for the block
 */
-function phpblock_birthdays()
+function phpblock_birthdays($blkinfo=array(), $months=2)
 {
-    global $_BD_CONF, $LANG_BD00, $_CONF;
+    global $_BD_CONF, $LANG_BD00, $_CONF, $LANG_MONTH;
+
+    USES_lglib_class_datecalc();
+    $Y = BIRTHDAYS_currentDate()['year'];   // maybe care if it's Feb.
+    $M = BIRTHDAYS_currentMonth();          // starting month
+    $have_data = false;
+    $retval = '';
 
     $T = new Template(__DIR__ . '/templates');
     $T->set_file('block', 'phpblock.thtml');
-    $month = BIRTHDAYS_currentMonth();
-    $thismonth = Birthdays\Birthday::getAll($month);
-
-    $T->set_block('block', 'thismonth', 'thism');
-    foreach($thismonth as $bday) {
-        $T->set_var('username', COM_getDisplayName($bday['uid']));
-        $T->set_var('bday', BIRTHDAYS_format($bday));
-        $T->parse('thism', 'thismonth', true);
+    $T->set_block('block', 'month', 'mon');
+    for ($i = 0; $i < $months; $i++) {
+        $thismonth = Birthdays\Birthday::getAll($M);
+        if (!empty($thismonth)) $have_data = true;
+        $T->set_var('monthname', $LANG_MONTH[(int)$M]);
+        $T->set_block('block', 'bdays', 'bd');
+        foreach($thismonth as $bday) {
+            $T->set_var('username', COM_getDisplayName($bday['uid']));
+            $T->set_var('birthday', BIRTHDAYS_format($bday));
+            $T->parse('bd', 'bdays', true);
+        }
+        $T->parse('mon', 'month', true);
+        $T->clear_var('bd');
+        // Get the next month
+        $dt = \Date_Calc::beginOfNextMonth(1, $M, $Y);
+        list($Y, $M, $D) = explode('-', $dt);
     }
-    $T->set_var('thismonth_count', count($thismonth));
-
-    ++$month;
-    if ($month > 12) {
-        $month = 1;
+    if ($have_data) {
+        $T->parse('output', 'block');
+        $retval = $T->finish($T->get_var('output'));
     }
-    $nextmonth = Birthdays\Birthday::getAll($month);
-    if (count($thismonth) == 0 && count($nextmonth) == 0) return '';
-
-    $T->set_block('block', 'nextmonth', 'nextm');
-    foreach ($nextmonth as $dt_str=>$bday) {
-        $T->set_var('username', COM_getDisplayName($bday['uid']));
-        $T->set_var('bday', BIRTHDAYS_format($bday));
-        $T->parse('nextm', 'nextmonth', true);
-    }
-    $T->set_var('nextmonth_count', count($nextmonth));
-
-    $T->parse('output', 'block');
-    $retval = $T->finish($T->get_var('output'));
     return $retval;
 }
 
 
 /**
-*   Create the sideblock showin upcoming birthdays
+*   Create the sideblock showin upcoming birthdays by week
+*   The plugin installs the function with no arguments but the site admin
+*   can add functions with an argument for the desired number of weeks.
 *
 *   @param  array   $blkinfo    All block information
 *   @param  integer $weeks      Number of weeks
 *   @return string      HTML for the block
 */
-function phpblock_birthdays_week($blkinfo, $weeks)
+function phpblock_birthdays_week($blkinfo=array(), $weeks=2)
 {
     global $_BD_CONF, $LANG_BD00, $_CONF;
 

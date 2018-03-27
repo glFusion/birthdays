@@ -1,19 +1,11 @@
 {# begin {templatelocation} #}
-{!if thismonth_count}
-<span class="bday_block_month">{$LANG_BD00['this_month']}</span>
+<!-- BEGIN month -->
+<span class="bday_block_month">{monthname}</span>
 <ul>
-<!-- BEGIN thismonth -->
-  <li>{username}: {bday}</li>
-<!-- END thismonth -->
+<!-- BEGIN bdays -->
+  <li>{username}: {birthday}</li>
+<!-- END bdays-->
 </ul>
-{!endif}
-{!if nextmonth_count}
-<span class="bday_block_month">{$LANG_BD00['next_month']}</span>
-<ul>
-<!-- BEGIN nextmonth -->
-  <li>{username}: {bday}</li>
-<!-- END nextmonth -->
-</ul>
-{!endif}
+<!-- END month -->
 <a class="bday_blk_viewall"  href="{site-url}/birthdays">{$LANG_BD00['view_all']}</a>
 {# end {templatelocation} #}

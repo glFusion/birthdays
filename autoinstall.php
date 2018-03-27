@@ -53,7 +53,7 @@ $INSTALL_plugin[$_BD_CONF['pi_name']] = array(
     array('type' => 'block',
             'name' => 'birthdays_week',
             'title' => $_BD_CONF['pi_display_name'],
-            'phpblockfn' => 'phpblock_birthdays_week(2)',
+            'phpblockfn' => 'phpblock_birthdays_week',
             'block_type' => 'phpblock',
             'group_id' => 'admin_group_id',
     ),
