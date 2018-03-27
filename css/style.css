@@ -12,3 +12,6 @@ a.bday_blk_viewall {
   float: left;
   margin-bottom: 10px;
 }
+#birthdays_week ul, #birthdays ul {
+  margin-top: 1px;
+}
