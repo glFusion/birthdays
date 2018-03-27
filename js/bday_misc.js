@@ -26,3 +26,18 @@ var BDAY_toggleSub = function(cbox, uid) {
     });
     return false;
 };
+
+function BDAY_updateDay(value)
+{
+    if (value == 2) {
+        document.getElementById("bday_day_30").style.display = "none";
+        document.getElementById("bday_day_31").style.display = "none";
+    } else if (value == 4 || value == 6 || value == 9 || value == 11) {
+        document.getElementById("bday_day_30").style.display = "";
+        document.getElementById("bday_day_31").style.display = "none";
+    } else {
+        document.getElementById("bday_day_30").style.display = "";
+        document.getElementById("bday_day_31").style.display = "";
+    }
+}
+
