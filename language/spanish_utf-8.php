@@ -61,4 +61,3 @@ $LANG_configselects['birthdays'] = array(
 );
  
 ?>
-
