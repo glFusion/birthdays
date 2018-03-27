@@ -246,6 +246,10 @@ class Birthday
         while ($A = DB_fetchArray($res, false)) {
             $year = $A['month'] < $s_month ? $e_year : $s_year;
             $key1 = sprintf('%d-%02d-%02d', $year, $A['month'], $A['day']);
+            // Return only dates within the range
+            if ($key1 < $dt_s->format('Y-m-d') || $key1 > $dt_e->format('Y-m-d')) {
+                continue;
+            }
             if (!isset($retval[$key1])) $retval[$key1] = array();
             $retval[$key1][] = $A['uid'];
         }
