@@ -42,16 +42,24 @@ $INSTALL_plugin[$_BD_CONF['pi_name']] = array(
             'table'     => $_TABLES['birthdays'],
             'sql'       => $_SQL['birthdays'],
     ),
-    array('type' => 'block', 
-            'name' => 'birthdays', 
+    array('type' => 'block',
+            'name' => 'birthdays',
             'title' => $_BD_CONF['pi_display_name'],
-            'phpblockfn' => 'phpblock_birthdays', 
+            'phpblockfn' => 'phpblock_birthdays',
             'block_type' => 'phpblock',
             'group_id' => 'admin_group_id',
     ),
 
-    array('type' => 'feature', 
-            'feature' => 'birthdays.view', 
+    array('type' => 'block',
+            'name' => 'birthdays_week',
+            'title' => $_BD_CONF['pi_display_name'],
+            'phpblockfn' => 'phpblock_birthdays_week(2)',
+            'block_type' => 'phpblock',
+            'group_id' => 'admin_group_id',
+    ),
+
+    array('type' => 'feature',
+            'feature' => 'birthdays.view',
             'desc' => 'View birthdays',
             'variable' => 'view_feature_id',
     ),
@@ -90,12 +98,12 @@ function plugin_install_birthdays()
 *   @return array       Array of items to be removed.
 */
 function plugin_autouninstall_birthdays()
-{  
+{
     $out = array (
         'tables'    => array('birthdays'),
         'groups'    => array(),
         'features'  => array('birthdays.view'),
-        'php_blocks' => array('phpblock_birthdays'),
+        'php_blocks' => array('phpblock_birthdays', 'phpblock_birthdays_week'),
         'vars'      => array('birthdays_lastrun'),
     );
     Birthdays\Birthday::clearCache();

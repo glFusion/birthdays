@@ -304,6 +304,62 @@ function phpblock_birthdays()
 
 
 /**
+*   Create the sideblock showin upcoming birthdays
+*
+*   @param  array   $blkinfo    All block information
+*   @param  integer $weeks      Number of weeks
+*   @return string      HTML for the block
+*/
+function phpblock_birthdays_week($blkinfo, $weeks)
+{
+    global $_BD_CONF, $LANG_BD00, $_CONF;
+
+    USES_lglib_class_datecalc();
+    $Y = \Date_Calc::getYear();
+    $M = \Date_Calc::getMonth();
+    $D = \Date_Calc::getDay();
+    $have_data = false;
+
+    $T = new Template(__DIR__ . '/templates');
+    $T->set_file('block', 'phpblock_week.thtml');
+    $T->set_block('block', 'week', 'wk');
+    for ($i = 0; $i < $weeks; $i++) {
+        $start = \Date_Calc::beginOfWeek($D, $M, $Y);
+        $end = \Date_Calc::endOfWeek($D, $M, $Y);
+        $thisweek = Birthdays\Birthday::getRange($start, $end);
+        if (empty($thisweek)) {
+            continue;
+        } else {
+            $have_data = true;
+        }
+        $T->set_var(array(
+            'start' => BIRTHDAYS_format($start),
+            'end'   => BIRTHDAYS_format($end),
+        ) );
+        $T->set_block('block', 'week_bdays', 'wk_bdays');
+        foreach($thisweek as $bday=>$bdays) {
+            foreach ($bdays as $uid) {
+                $T->set_var('username', COM_getDisplayName($uid));
+                $T->set_var('bday', BIRTHDAYS_format($bday));
+                $T->parse('wk_bdays', 'week_bdays', true);
+            }
+        }
+        $T->parse('wk', 'week', true);
+        $T->clear_var('wk_bdays');
+        $nextw = \Date_Calc::beginOfNextWeek($D, $M, $Y);
+        list($Y, $M, $D) = explode('-', $nextw);
+    }
+    if ($have_data) {
+        $T->parse('output', 'block');
+        $retval = $T->finish($T->get_var('output'));
+    } else {
+        $retval = '';
+    }
+    return $retval;
+}
+
+
+/**
 *   Get the URL to the configuration help file.
 *
 *   @param  string  $option     Config option selected
@@ -529,6 +585,16 @@ function BIRTHDAYS_format($month, $day = '', $year = '')
         $day = isset($month['day']) ? $month['day'] : '';
         $year = isset($month['year']) ? $month['year'] : '';
         $month = isset($month['month']) ? $month['month'] : '';
+    } elseif (strpos($month, '-')) {   // YYYY-MM-DD format
+        $A = explode('-', $month);
+        if (count($A) == 3) {
+            $year = $A[0];
+            $month = $A[1];
+            $day = $A[2];
+        } else {
+            $month = $A[0];
+            $day = $A[1];
+        }
     }
 
     // At least month and day are required

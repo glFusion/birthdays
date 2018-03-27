@@ -8,6 +8,8 @@ Use the glFusion automated installation.
 ## Functionality
 * Displays birthday records for members for a selected month or for all months.
 * Shows a block listing member birthdays for the current and upcoming months.
+* Shows a block with birthdays by week. Edit the &quot;birthdays_week&quot block
+and provide the number of weeks as a function argument.
 * Birthday Editing is done via the Account Settings. A &quot;Birthday&quot;
 field is shown under the &quot;About You&quot; tab.
 * Display a &quot;Happy Birthday&quot; message when a user logs in on their birthday.
