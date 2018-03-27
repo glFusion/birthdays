@@ -388,6 +388,34 @@ function plugin_getconfigelementhelp_birthdays($option, $doclang='english')
 
 
 /**
+*   Disable this plugin's blocks when the plugin is disabled.
+*
+*   @param  boolean $enabled    Plugin's "enabled" state
+*/
+function plugin_enablestatechange_birthdays($enabled)
+{
+    global $_TABLES, $_PLUGINS, $_BD_CONF;
+
+    $enabled = $enabled == true ? 1 : 0;
+
+    // If trying to enable the plugin but lgLib is not available,
+    // take no action and return
+    if ($enabled && !in_array('lglib', $_PLUGINS)) {
+        // Re-disable the plugin
+        DB_change($_TABLES['plugins'], 'pi_enabled', 0, 'pi_name', $_BD_CONF['pi_name']);
+        $enabled = 0;
+    }
+
+    if (!$enabled) {
+        $blocks = array('birthdays', 'birthdays_week');
+        foreach ($blocks as $block) {
+            DB_change($_TABLES['blocks'], 'is_enabled', $enabled, 'name', $block);
+        }
+    }
+}
+
+
+/**
 *   Dispaly a Happy Birthday message when a user logs in.
 *
 *   @param  integer $uid    User ID
