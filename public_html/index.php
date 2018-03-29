@@ -43,7 +43,7 @@ foreach($expected as $provided) {
     }
 }
 if (empty($action)) $action = 'list';
-$curmonth = BIRTHDAYS_currentMonth();
+$curmonth = BIRTHDAYS_currentDate()['month'];
 $filter_month = isset($_REQUEST['filter_month']) ? $_REQUEST['filter_month'] : $curmonth;
 if ($filter_month == -1) {
     $filter_month = $curmonth;

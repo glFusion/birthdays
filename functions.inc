@@ -274,7 +274,7 @@ function phpblock_birthdays($blkinfo=array(), $months=2)
     global $_BD_CONF, $LANG_BD00, $_CONF, $LANG_MONTH;
 
     $Y = BIRTHDAYS_currentDate()['year'];   // maybe care if it's Feb.
-    $M = BIRTHDAYS_currentMonth();          // starting month
+    $M = BIRTHDAYS_currentDate()['month'];  // starting month
     $have_data = false;
     $retval = '';
 
@@ -586,18 +586,6 @@ function BIRTHDAYS_currentDate()
 
 
 /**
-*   Helper function to get the current month.
-*
-*   @uses   BIRTHDAYS_currentDate()
-*   @return integer     Current month
-*/
-function BIRTHDAYS_currentMonth()
-{
-    return BIRTHDAYS_currentDate()['month'];
-}
-
-
-/**
 *   Format a date according to the configured format.
 *   Allows a single array parameter, or individual values.
 *
@@ -611,12 +599,13 @@ function BIRTHDAYS_format($month, $day = '', $year = '')
     global $_CONF, $_BD_CONF;
     static $dt = NULL;
 
-    // For an array, load the vaues into individual fields
     if (is_array($month)) {
+        // For an array, load the vaues into individual fields
         $day = isset($month['day']) ? $month['day'] : '';
         $year = isset($month['year']) ? $month['year'] : '';
         $month = isset($month['month']) ? $month['month'] : '';
-    } elseif (strpos($month, '-')) {   // YYYY-MM-DD format
+    } elseif (strpos($month, '-')) {
+        // YYYY-MM-DD format, separate into component parts
         $A = explode('-', $month);
         if (count($A) == 3) {
             $year = $A[0];
