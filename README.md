@@ -7,9 +7,13 @@ Use the glFusion automated installation.
 
 ## Functionality
 * Displays birthday records for members for a selected month or for all months.
-* Shows a block listing member birthdays for the current and upcoming months(s).
-Edit or duplicate the phpblock_birthdays block to add an argument for the desired
-number of months. Default is 2.
+* Site members can update their birthday on the plugin index page or from their
+Account Settings page.
+* Shows a block listing member birthdays for the current and upcoming months and weeks.
+  * Edit or duplicate the phpblock_birthdays or phpblock_birthdays_week block
+to add an argument for the desired number of months or weeks. Default is 2.
+  * Note: If you add a parameter to these functions, they will not be deleted
+when the plugin is deleted and must be deleted manually.
 * Shows a block with birthdays by week. Edit the &quot;birthdays_week&quot; block
 and provide the number of weeks as a function argument.
 * Birthday Editing is done via the Account Settings. A &quot;Birthday&quot;

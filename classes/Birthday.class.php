@@ -225,13 +225,16 @@ class Birthday
 
         if ($e_month < $s_month) {
             // End month is less than start, must be wrapping the year
+            // First get ending months up to the end of the year
             for ($i = $e_month; $i < 13; $i++) {
                 $months[] = $i;
             }
+            // Then get ending months in the next year, up to starting month
             for ($i = 1; $i < $s_month; $i++) {
                 $months[] = $i;
             }
         } else {
+            // Ending > starting, just get the months between them (inclusive)
             for ($i = $s_month; $i <= $e_month; $i++) {
                 $months[] = (int)$i;
             }
@@ -302,7 +305,7 @@ class Birthday
         for ($i = 0; $i < 32; $i++) {
             $sel = $bday->day == $i ? 'selected="selected"' : '';
             if ($i > 0) {
-                $opt .= "<option $sel value=\"$i\">$i</option>";
+                $opt .= "<option id=\"bday_day_$i\" $sel value=\"$i\">$i</option>";
             } else {
                 $opt .= "<option $sel value=\"$i\">{$LANG_BD00['none']}</option>";
             }
