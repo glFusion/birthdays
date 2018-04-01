@@ -658,16 +658,14 @@ function BIRTHDAYS_canView()
 *   and day.
 *
 *   @param  array   $args       Array of arguments
-*   @param  array   $output     Array to be populated with data
-*   @param  string  $svc_msg    Not used
-*   @return integer     Status indicator
+*   @return array       Array of birthdays by date
 */
-function service_getBirthdays_birthdays($args, &$output, &$svc_msg)
+function plugin_getBirthdays_birthdays($args)
 {
+    $output = array();
     if (!BIRTHDAYS_canView()) {
         // Not an error, but return nothing
-        $output = array();
-        return PLG_RET_OK;
+        return $output;
     }
 
     if (isset($args['start'])) {
@@ -683,7 +681,7 @@ function service_getBirthdays_birthdays($args, &$output, &$svc_msg)
         // Get all birthdays in the table
         $output = \Birthdays\Birthday::getAll();
     }
-    return PLG_RET_OK;
+    return $output;
 }
 
 
