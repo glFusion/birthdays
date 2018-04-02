@@ -115,7 +115,7 @@ function listbirthdays($filter_month)
 
     $filter = $filter_month == 0 ? '' : " AND month = $filter_month";
     $text_arr = array(
-        'form_url' => $_BD_CONF['url'] . '/index.php',
+        'form_url' => $_BD_CONF['url'] . '/index.php?filter_month=' . $filter_month,
     );
     $defsort_arr = array('field' => 'day', 'direction' => 'ASC');
     $data_arr = Birthdays\Birthday::getAll($filter_month);

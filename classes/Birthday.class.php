@@ -182,7 +182,10 @@ class Birthday
         } else {
             $where .= ' AND b.day = ' . (int)$day;
         }
-        $sql = "SELECT 2016 as year, b.* FROM {$_TABLES['birthdays']} b
+        $sql = "SELECT 2016 as year, CONCAT(
+                    LPAD(b.month,2,0),LPAD(b.day,2,0)
+                ) as birthday, b.*
+                FROM {$_TABLES['birthdays']} b
                 WHERE 1=1 $where
                 ORDER BY b.month, b.day";
         //echo $sql;die;
