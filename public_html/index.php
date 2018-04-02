@@ -113,15 +113,34 @@ function listbirthdays($filter_month)
         );
     }
 
+    $defsort_arr = array('field' => 'birthday', 'direction' => 'ASC');
+    $text_arr = array(
+        'has_menu'     => false,
+        'has_extras'   => false,
+        'title'        => $LANG_BD00['pi_title'],
+        'form_url'     => $_BD_CONF['url'] . '/index.php?filter_month=' . $filter_month,
+        'help_url'     => ''
+    );
     $filter = $filter_month == 0 ? '' : " AND month = $filter_month";
+    $sql = "SELECT 2016 as year, CONCAT(
+                    LPAD(b.month,2,0),LPAD(b.day,2,0)
+                ) as birthday, b.*
+                FROM {$_TABLES['birthdays']} b
+                WHERE 1=1 $filter";
+
+    $query_arr = array('table' => 'birthdays',
+            'sql' => $sql,
+            'query_fields' => array(),
+    );
     $text_arr = array(
         'form_url' => $_BD_CONF['url'] . '/index.php?filter_month=' . $filter_month,
+        'has_search' => false,
+        'has_limit'     => true,
+        'has_paging'    => true,
     );
-    $defsort_arr = array('field' => 'day', 'direction' => 'ASC');
-    $data_arr = Birthdays\Birthday::getAll($filter_month);
-    $form_arr = array();
-    $retval .= ADMIN_listArray('birthdays', 'getField_bday_list', $header_arr,
-                $text_arr, $data_arr, $defsort_arr, '', '', '', $form_arr);
+
+    $retval .= ADMIN_list('birthdays', 'getField_bday_list',
+            $header_arr, $text_arr, $query_arr, $defsort_arr);
     return $retval;
 }
 
