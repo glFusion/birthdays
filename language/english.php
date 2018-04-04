@@ -37,6 +37,10 @@ $LANG_BD00 = array (
     'subscr_updated' => 'Subscription Updated',
     'subscr_err'    => 'Error updating subscription',
     'dscp'          => '%s&apos;s Birthday',
+    'sync_all'      => 'Sync All',
+    'conf_del'      => 'Do you really want to delete this item?',
+    'name'          => 'Name',
+    'user_id'       => 'User ID',
 );
 
 // Localization of the Admin Configuration UI

@@ -40,6 +40,8 @@ if (is_file("$langpath/custom/$langfile")) {
 
 // Set commonly-used variables from the config
 $_BD_CONF['url'] = "{$_CONF['site_url']}/{$_BD_CONF['pi_name']}";
+$_BD_CONF['admin_url'] = "{$_CONF['site_admin_url']}/plugins/{$_BD_CONF['pi_name']}";
+$_BD_CONF['pi_path'] = __DIR__;
 
 // Include the user-supplied configuration file, if any
 if (is_file(__DIR__ . '/config.php')) {
@@ -90,6 +92,46 @@ function plugin_getmenuitems_birthdays()
         $menuitems[$LANG_BD00['pi_title']] = $_BD_CONF['url'];
     }
     return $menuitems;
+}
+
+
+/**
+*   Returns the administrative option for this plugin
+*
+*   @return mixed   array(title, url, num. astore), or false when not allowed
+*/
+function plugin_getadminoption_birthdays()
+{
+    global $LANG_BD00, $_BD_CONF;
+
+    if (plugin_ismoderator_birthdays()) {
+        return array ($LANG_BD00['pi_title'],
+                      $_BD_CONF['admin_url'] . '/index.php'
+                      );
+    } else {
+        return false;
+    }
+}
+
+
+
+/**
+*   This will put an option for astore in the command and control block on
+*   moderation.php
+*
+*   @return mixed   array(title, url, icon), or boolean false when not allowed
+*/
+function plugin_cclabel_birthdays()
+{
+    global $LANG_BD00, $_BD_CONF;
+
+    if (plugin_ismoderator_birthdays()) {
+        return array($LANG_BD00['pi_title'],
+                      $_BD_CONF['admin_url'] . '/index.php',
+                      plugin_geticon_birthdays());
+    } else {
+        return false;
+    }
 }
 
 
@@ -445,6 +487,21 @@ function plugin_user_login_birthdays($uid)
         }
     }
     return;
+}
+
+
+/**
+*   Check if the current is a moderator
+*
+*   @return boolean     True if a moderator, False if not
+*/
+function plugin_ismoderator_birthdays()
+{
+    if (SEC_inGroup('Root')) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 

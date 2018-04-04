@@ -38,6 +38,9 @@ $LANG_BD00 = array (
     'subscr_updated' => 'Suscripción actualizada',
     'subscr_err'    => 'Error al actualizar la suscripción',
     'dscp'          => 'Cumpleaños de %s',
+    'conf_del'      => '¿De verdad quieres borrar este artículo?',
+    'name'          => 'Nombre',
+    'user_id'       => 'Id de usuario',
 );
 
 // Localization of the Admin Configuration UI
