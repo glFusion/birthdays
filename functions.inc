@@ -449,6 +449,126 @@ function plugin_user_login_birthdays($uid)
 
 
 /**
+*   Provides the getItemInfo function for birthdays
+*
+*   @param  string  $id         Product ID
+*   @param  string  $fields     Comma-separated list of fields to return
+*   @param  integer $uid        User ID
+*   @param  array   $options    Not used
+*   @return array           Array of product information
+*/
+function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
+{
+    global $_TABLES, $_BD_CONF, $LANG_BD00;
+
+    $properties = explode(',', $what);
+    $fields = array();
+    $retval = array();
+    $buildingSearchIndex = false;
+    foreach ($properties as $p) {
+        switch ($p) {
+        case 'id':
+            $fields[] = 'uid';
+            break;
+        case 'content':
+        case 'description':
+        case 'date':
+        case 'title':
+            $fields[] = 'month';
+            $fields[] = 'day';
+            break;
+        case 'month':
+            $fields[] = 'month';
+            break;
+        case 'day':
+            $fields[] = 'day';
+            break;
+        case 'author':
+        case 'author_name':
+            $fields[] = 'uid';
+            break;
+        }
+    }
+    if (count($fields) == 0) {
+        return $retval;
+    }
+    $fields = array_unique($fields);
+    $fields = implode(',', $fields);
+    $retval = array();
+    $sql = "SELECT $fields
+            FROM {$_TABLES['birthdays']} ";
+    if ($id != '*') {
+        $sql .= " WHERE (uid = '" . (int)$id . "')";
+    }
+    //echo $sql;die;
+    $res = DB_query($sql);
+    while ($A = DB_fetchArray($res, false)) {
+        foreach ($properties as $p) {
+            switch ($p) {
+            case 'group_id':
+                $props[$p] = $_BD_CONF['grp_access'];
+                break;
+            case 'id':
+                $props[$p] = $A['uid'];
+                break;
+            case 'month':
+                $props[$p] = $A['month'];
+                break;
+            case 'day':
+                $props[$p] = $A['day'];
+                break;
+            case 'content':
+            case 'date':
+                $props[$p] = BIRTHDAYS_format($A['month'], $A['day']);
+                break;
+            case 'title':
+            case 'description':
+            case 'excerpt':
+                $props[$p] = sprintf($LANG_BD00['dscp'], COM_getDisplayName($A['uid']));
+                break;
+            case 'author':
+                $props[$p] = $A['uid'];
+                break;
+            case 'author_name':
+                $props[$p] = COM_getDisplayName($A['uid']);
+                break;
+            default:
+                $props[$p] = isset($A[$p]) ? $A[$p] : NULL;
+                break;
+            }
+        }
+        $mapped = array();
+        foreach ($props as $key => $value) {
+            if ($id == '*') {
+                if ($value != '') {
+                    $mapped[$key] = $value;
+                }
+            } else {
+                $mapped[$key] = $value;
+            }
+        }
+
+        if ($id == '*') {
+            $retval[] = $mapped;
+        } else {
+            $retval = $mapped;
+            break;
+        }
+    }
+
+    if (($id != '*') && (count($retval) == 1)) {
+        $tRet = array_values($retval);
+        $retval = $tRet[0];
+    }
+    if ($retval === '' || (is_array($retval) && count($retval) == 0)) {
+        return NULL;
+    } else {
+        return $retval;
+    }
+}
+
+
+/**
 *   Perform scheduled functions, such as notifications and cancellations.
 *
 */
