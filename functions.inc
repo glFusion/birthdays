@@ -517,6 +517,12 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
             case 'day':
                 $props[$p] = $A['day'];
                 break;
+            case 'recur_type':
+                $props[$p] = 3;     // Evlist code for Yearly
+                break;
+            case 'recur_interval':
+                $props[$p] = 1;     // Recurs every one year
+                break;
             case 'content':
             case 'date':
                 $props[$p] = BIRTHDAYS_format($A['month'], $A['day']);
