@@ -126,7 +126,7 @@ class Birthday
     */
     public function Save($vals = NULL)
     {
-        global $_TABLES;
+        global $_TABLES, $_BD_CONF;;
 
         if (is_array($vals)) {
             $this->SetVars($vals);
@@ -137,6 +137,7 @@ class Birthday
         if ($this->month == 0 || $this->day == 0) {
             self::Delete($this->uid);
             self::clearCache();
+            PLG_itemDeleted($this->uid, $_BD_CONF['pi_name']);
             return true;
         }
 
@@ -149,8 +150,13 @@ class Birthday
                     day = {$this->day}";
         //echo $sql;die;
         $res = DB_query($sql);
-        self::clearCache();
-        return DB_error() ? false : true;
+        if (!DB_error()) {
+            self::clearCache();
+            PLG_itemSaved($this->uid, $_BD_CONF['pi_name']);
+            return true;
+        } else {
+            return false;
+        }
     }
 
 

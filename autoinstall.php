@@ -106,6 +106,7 @@ function plugin_autouninstall_birthdays()
         'php_blocks' => array('phpblock_birthdays', 'phpblock_birthdays_week'),
         'vars'      => array('birthdays_lastrun'),
     );
+    PLG_itemDeleted('*', 'birthdays');
     Birthdays\Birthday::clearCache();
     return $out;
 }
