@@ -36,6 +36,7 @@ $LANG_BD00 = array (
     'subscribe'     => 'Subscribe',
     'subscr_updated' => 'Subscription Updated',
     'subscr_err'    => 'Error updating subscription',
+    'dscp'          => '%s&apos;s Birthday',
 );
 
 // Localization of the Admin Configuration UI
@@ -58,5 +59,5 @@ $LANG_confignames['birthdays'] = array(
 $LANG_configselects['birthdays'] = array(
     0 => array('True' => 1, 'False' => 0),
 );
- 
+
 ?>
