@@ -538,6 +538,9 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
             case 'author_name':
                 $props[$p] = COM_getDisplayName($A['uid']);
                 break;
+            case 'is_event':
+                $props[$p] = true;
+                break;
             default:
                 $props[$p] = isset($A[$p]) ? $A[$p] : NULL;
                 break;
