@@ -48,6 +48,13 @@ class Birthday
     }
 
 
+    /**
+    *   Get an instance of a birthday object.
+    *   Saves objects in a static variable for subsequent use.
+    *
+    *   @param  integer $uid    User ID
+    *   @return object          Birthday object for the user
+    */
     public static function getInstance($uid)
     {
         static $bdays = array();
@@ -58,6 +65,12 @@ class Birthday
     }
 
 
+    /**
+    *   Set a value into the property array
+    *
+    *   @param  string  $key    Property name
+    *   @param  mixed           Property value
+    */
     public function __set($key, $value)
     {
         switch ($key) {
@@ -70,6 +83,13 @@ class Birthday
         }
     }
 
+
+    /**
+    *   Getter function.
+    *
+    *   @param  string  $key    Name of property
+    *   @param  mixed           Value of property, NULL if not set
+    */
     public function __get($key)
     {
         if (isset($this->properties[$key]))
@@ -337,6 +357,7 @@ class Birthday
         global $_TABLES;
 
         DB_delete($_TABLES['birthdays'], 'uid', $uid);
+        PLG_itemDeleted($uid, 'birthdays');
         self::clearCache();
     }
 
