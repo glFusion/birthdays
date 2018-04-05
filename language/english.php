@@ -58,6 +58,7 @@ $LANG_confignames['birthdays'] = array(
     'login_greeting' => 'Greeting message upon login?',
     'enable_subs' => 'Allow subscripttions to birthday announcements?',
     'enable_cards' => 'Enable birthday cards?',
+    'grp_access' => 'Group allowed to view birthdays',
 );
 
 $LANG_configselects['birthdays'] = array(

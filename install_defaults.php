@@ -25,6 +25,7 @@ $_BD_DEFAULTS = array(
     'login_greeting'    => 1,
     'enable_subs'       => 0,
     'enable_cards'      => 0,
+    'grp_access'        => 13,  // default = Logged-In users
 );
 
 /**
@@ -52,6 +53,8 @@ function plugin_initconfig_birthdays()
                 'select', 0, 0, 0, 30, true, $_BD_CONF['pi_name']);
         $c->add('enable_cards', $_BD_DEFAULTS['enable_cards'],
                 'select', 0, 0, 0, 40, true, $_BD_CONF['pi_name']);
+        $c->add('grp_access', $_BD_DEFAULTS['grp_access'],
+                'select', 0, 0, 0, 50, true, $_BD_CONF['pi_name']);
      }
      return true;
 }

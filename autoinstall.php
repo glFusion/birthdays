@@ -47,6 +47,7 @@ $INSTALL_plugin[$_BD_CONF['pi_name']] = array(
             'title' => $_BD_CONF['pi_display_name'],
             'phpblockfn' => 'phpblock_birthdays',
             'block_type' => 'phpblock',
+            'is_enabled' => 0,
             'group_id' => 'admin_group_id',
     ),
 
@@ -55,18 +56,8 @@ $INSTALL_plugin[$_BD_CONF['pi_name']] = array(
             'title' => $_BD_CONF['pi_display_name'],
             'phpblockfn' => 'phpblock_birthdays_week',
             'block_type' => 'phpblock',
+            'is_enabled' => 0,
             'group_id' => 'admin_group_id',
-    ),
-
-    array('type' => 'feature',
-            'feature' => 'birthdays.view',
-            'desc' => 'View birthdays',
-            'variable' => 'view_feature_id',
-    ),
-    array('type' => 'mapping',
-            'findgroup' => 'All Users',
-            'feature' => 'view_feature_id',
-            'log' => 'Adding birthdays.view feature to the All Users group',
     ),
 
 );
@@ -102,7 +93,7 @@ function plugin_autouninstall_birthdays()
     $out = array (
         'tables'    => array('birthdays'),
         'groups'    => array(),
-        'features'  => array('birthdays.view'),
+        'features'  => array('birthdays.view'),     // temp during alpha testing
         'php_blocks' => array('phpblock_birthdays', 'phpblock_birthdays_week'),
         'vars'      => array('birthdays_lastrun'),
     );

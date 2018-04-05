@@ -580,8 +580,11 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
                 $props[$p] = 1;     // Recurs every one year
                 break;
             case 'content':
-            case 'date':
                 $props[$p] = BIRTHDAYS_format($A['month'], $A['day']);
+                break;
+            case 'date':
+                // Use 2016 as year since it's a leap year, allow for 29 Feb.
+                $props[$p] = sprintf('2016-%02d-%02d', $A['month'], $A['day']);
                 break;
             case 'title':
             case 'description':
@@ -831,7 +834,7 @@ function BIRTHDAYS_canView()
     static $canView = NULL;
 
     if ($canView === NULL) {
-        $canView = SEC_hasRights('birthdays.view');
+        $canView = SEC_inGroup($_BD_CONF['grp_access']);
     }
     return $canView;
 }
@@ -870,6 +873,34 @@ function plugin_getBirthdays_birthdays($args)
         $output = \Birthdays\Birthday::getAll();
     }
     return $output;
+}
+
+
+/**
+*   Create an array of groups for the configmanager
+*
+*   @param  boolean $nogroup    True if "No Group" is an option.
+*   @param  string  $grplist    Comma-separated list of groups, SQL format
+*   @param  string  $NOT        "NOT" to exclude $grplist, blank to include it.
+*   $param  mixeed  $prepend    Array of gid=>grp_names to prepend to the list.
+*   @return array               Array of groups as name=>ID
+*/
+function plugin_configmanager_select_grp_access_birthdays()
+{
+    global $_TABLES;
+
+    $A = array();
+
+    $sql = "SELECT grp_id, grp_name FROM {$_TABLES['groups']}
+            ORDER BY grp_name ASC";
+    $res = DB_query($sql);
+    if ($res && DB_numRows($res) > 0) {
+        while ($row = DB_fetchArray($res, false)) {
+            $row['grp_name'] = htmlspecialchars($row['grp_name']);
+            $A[$row['grp_name']] = $row['grp_id'];
+        }
+    }
+    return $A;
 }
 
 
