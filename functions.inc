@@ -114,7 +114,6 @@ function plugin_getadminoption_birthdays()
 }
 
 
-
 /**
 *   This will put an option for astore in the command and control block on
 *   moderation.php
@@ -853,6 +852,9 @@ function plugin_getBirthdays_birthdays($args)
         // Not an error, but return nothing
         return $output;
     }
+
+    // Args must be an array
+    if (!is_array($args)) $args = array($args);
 
     if (isset($args['start'])) {
         // Get birthdays within a date range
