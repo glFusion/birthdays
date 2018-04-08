@@ -310,11 +310,10 @@ function plugin_user_delete_birthdays($uid)
 *   @param  integer $months     Number of months to show
 *   @return string      HTML for the block
 */
-function phpblock_birthdays($blkinfo=array(), $months=2)
+function phpblock_birthdays_month($blkinfo=array(), $months=2)
 {
     global $_BD_CONF, $LANG_BD00, $_CONF, $LANG_MONTH;
 
-    $Y = BIRTHDAYS_currentDate()['year'];   // maybe care if it's Feb.
     $M = BIRTHDAYS_currentDate()['month'];  // starting month
     $have_data = false;
     $retval = '';
@@ -335,8 +334,11 @@ function phpblock_birthdays($blkinfo=array(), $months=2)
         $T->parse('mon', 'month', true);
         $T->clear_var('bd');
         // Get the next month
-        $dt = Birthdays\Date_Calc::beginOfNextMonth(1, $M, $Y);
-        list($Y, $M, $D) = explode('-', $dt);
+        if ($M < 12) {
+            $M++;
+        } else {
+            $M = 1;
+        }
     }
     if ($have_data) {
         $T->parse('output', 'block');
@@ -359,39 +361,40 @@ function phpblock_birthdays_week($blkinfo=array(), $weeks=2)
 {
     global $_BD_CONF, $LANG_BD00, $_CONF;
 
-    $Y = Birthdays\Date_Calc::getYear();
-    $M = Birthdays\Date_Calc::getMonth();
-    $D = Birthdays\Date_Calc::getDay();
+    $s_dt = new \Date('now', $_CONF['timezone']);
+    $e_dt = new \Date();      // Just create a date object for later
     $have_data = false;
 
     $T = new Template(__DIR__ . '/templates');
-    $T->set_file('block', 'phpblock_week.thtml');
-    $T->set_block('block', 'week', 'wk');
+    $T->set_file('block', 'phpblock.thtml');
+    $T->set_block('block', 'month', 'mon');
     for ($i = 0; $i < $weeks; $i++) {
-        $start = Birthdays\Date_Calc::beginOfWeek($D, $M, $Y);
-        $end = Birthdays\Date_Calc::endOfWeek($D, $M, $Y);
+        // Set ending date to today + 6 days
+        $e_dt->setTimestamp($s_dt->toUnix() + 518400);
+        $start = $s_dt->format('Y-m-d');
+        $end = $e_dt->format('Y-m-d');
         $thisweek = Birthdays\Birthday::getRange($start, $end);
+        // Change starting date here in case the continue clause is invoked
+        $s_dt->setTimestamp($s_dt->toUnix() + 604800);
         if (empty($thisweek)) {
             continue;
         } else {
             $have_data = true;
         }
         $T->set_var(array(
-            'start' => BIRTHDAYS_format($start),
-            'end'   => BIRTHDAYS_format($end),
+            'monthname' => BIRTHDAYS_format($start) . ' - ' .
+                        BIRTHDAYS_format($end),
         ) );
-        $T->set_block('block', 'week_bdays', 'wk_bdays');
+        $T->set_block('block', 'bdays', 'bd');
         foreach($thisweek as $bday=>$bdays) {
             foreach ($bdays as $uid) {
                 $T->set_var('username', COM_getDisplayName($uid));
                 $T->set_var('bday', BIRTHDAYS_format($bday));
-                $T->parse('wk_bdays', 'week_bdays', true);
+                $T->parse('bd', 'bdays', true);
             }
         }
-        $T->parse('wk', 'week', true);
-        $T->clear_var('wk_bdays');
-        $nextw = Birthdays\Date_Calc::beginOfNextWeek($D, $M, $Y);
-        list($Y, $M, $D) = explode('-', $nextw);
+        $T->parse('mon', 'month', true);
+        $T->clear_var('bd');
     }
     if ($have_data) {
         $T->parse('output', 'block');

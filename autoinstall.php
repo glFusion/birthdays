@@ -43,9 +43,9 @@ $INSTALL_plugin[$_BD_CONF['pi_name']] = array(
             'sql'       => $_SQL['birthdays'],
     ),
     array('type' => 'block',
-            'name' => 'birthdays',
-            'title' => $_BD_CONF['pi_display_name'],
-            'phpblockfn' => 'phpblock_birthdays',
+            'name' => 'birthdays_month',
+            'title' => $LANG_BD00['birthdays_month'],
+            'phpblockfn' => 'phpblock_birthdays_month',
             'block_type' => 'phpblock',
             'is_enabled' => 0,
             'group_id' => 'admin_group_id',
@@ -53,7 +53,7 @@ $INSTALL_plugin[$_BD_CONF['pi_name']] = array(
 
     array('type' => 'block',
             'name' => 'birthdays_week',
-            'title' => $_BD_CONF['pi_display_name'],
+            'title' => $LANG_BD00['birthdays_week'],
             'phpblockfn' => 'phpblock_birthdays_week',
             'block_type' => 'phpblock',
             'is_enabled' => 0,
@@ -94,7 +94,7 @@ function plugin_autouninstall_birthdays()
         'tables'    => array('birthdays'),
         'groups'    => array(),
         'features'  => array('birthdays.view'),     // temp during alpha testing
-        'php_blocks' => array('phpblock_birthdays', 'phpblock_birthdays_week'),
+        'php_blocks' => array('phpblock_birthdays', 'phpblock_birthdays_week', 'phpblock_birthdays_month'),
         'vars'      => array('birthdays_lastrun'),
     );
     PLG_itemDeleted('*', 'birthdays');

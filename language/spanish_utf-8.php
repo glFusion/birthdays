@@ -41,6 +41,8 @@ $LANG_BD00 = array (
     'conf_del'      => '¿De verdad quieres borrar este artículo?',
     'name'          => 'Nombre',
     'user_id'       => 'Id de usuario',
+    'birthdays_month' => 'Cumpleañeste mes',
+    'birthdays_week'  => 'Cumpleañesta semana',
 );
 
 // Localization of the Admin Configuration UI

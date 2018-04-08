@@ -55,8 +55,8 @@ function plugin_initconfig_birthdays()
                 'select', 0, 0, 0, 40, true, $_BD_CONF['pi_name']);
         $c->add('grp_access', $_BD_DEFAULTS['grp_access'],
                 'select', 0, 0, 0, 50, true, $_BD_CONF['pi_name']);
-     }
-     return true;
+    }
+    return true;
 }
 
 ?>
