@@ -30,6 +30,4 @@ $_BD_CONF['pi_url']             = 'http://www.glfusion.org';
 
 $_TABLES['birthdays']      = $_DB_table_prefix . 'birthdays';
 
-$_BD_CONF['enable_subs'] = 0;
-
 ?>
