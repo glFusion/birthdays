@@ -345,7 +345,7 @@ function phpblock_birthdays_month($blkinfo=array(), $months=2)
         } else {
             $have_data = true;
         }
-        $T->set_var('monthname', $LANG_MONTH[(int)$M]);
+        $T->set_var('period', $LANG_MONTH[(int)$M]);
         $T->set_block('block', 'bdays', 'bd');
         foreach($thismonth as $bday) {
             $T->set_var('username', COM_getDisplayName($bday['uid']));
@@ -403,7 +403,7 @@ function phpblock_birthdays_week($blkinfo=array(), $weeks=2)
             $have_data = true;
         }
         $T->set_var(array(
-            'monthname' => BIRTHDAYS_format($start) . ' - ' .
+            'period' => BIRTHDAYS_format($start) . ' - ' .
                         BIRTHDAYS_format($end),
         ) );
         $T->set_block('block', 'bdays', 'bd');

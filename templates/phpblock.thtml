@@ -1,7 +1,7 @@
 {# begin {templatelocation} #}
 <!-- BEGIN month -->
-<span class="bday_block_month">{monthname}</span>
-<ul>
+<span class="bday_block">{period}</span>
+<ul class="bday_block">
 <!-- BEGIN bdays -->
   <li>{username}: {birthday}</li>
 <!-- END bdays -->

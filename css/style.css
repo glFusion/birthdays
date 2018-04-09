@@ -1,5 +1,5 @@
-.bday_block_month {
-  font-weight: bold;
+ul.bday_block {
+  margin-top: 1px;
 }
 a.bday_blk_viewall {
   font-style: italic;
@@ -11,7 +11,4 @@ a.bday_blk_viewall {
 .bday_index_header_left{
   float: left;
   margin-bottom: 10px;
-}
-#birthdays_week ul, #birthdays ul {
-  margin-top: 1px;
 }
