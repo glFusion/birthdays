@@ -323,7 +323,11 @@ function phpblock_birthdays_month($blkinfo=array(), $months=2)
     $T->set_block('block', 'month', 'mon');
     for ($i = 0; $i < $months; $i++) {
         $thismonth = Birthdays\Birthday::getAll($M);
-        if (!empty($thismonth)) $have_data = true;
+        if (empty($thismonth)) {
+            continue;
+        } else {
+            $have_data = true;
+        }
         $T->set_var('monthname', $LANG_MONTH[(int)$M]);
         $T->set_block('block', 'bdays', 'bd');
         foreach($thismonth as $bday) {
@@ -389,7 +393,7 @@ function phpblock_birthdays_week($blkinfo=array(), $weeks=2)
         foreach($thisweek as $bday=>$bdays) {
             foreach ($bdays as $uid) {
                 $T->set_var('username', COM_getDisplayName($uid));
-                $T->set_var('bday', BIRTHDAYS_format($bday));
+                $T->set_var('birthday', BIRTHDAYS_format($bday));
                 $T->parse('bd', 'bdays', true);
             }
         }
