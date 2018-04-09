@@ -43,6 +43,7 @@ $LANG_BD00 = array (
     'user_id'       => 'User ID',
     'birthdays_month' => 'Birthdays This Month',
     'birthdays_week'  => 'Birthdays This Week',
+    'subscribe'     => 'Subscribe',
 );
 
 // Localization of the Admin Configuration UI

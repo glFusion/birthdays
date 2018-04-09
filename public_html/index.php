@@ -21,8 +21,6 @@ if (!BIRTHDAYS_canView()) {
 
 USES_lib_admin();
 
-//global $T, $_TABLES, $PHP_SELF, $_CONF, $HTTP_POST_VARS, $_USER, $LANG_STATIC,$_SP_CONF;
-
 /*
 * Main Function
 */
@@ -88,8 +86,7 @@ exit;
 */
 function listbirthdays($filter_month)
 {
-    global $T, $_TABLES, $PHP_SELF, $_CONF, $HTTP_POST_VARS, $_USER, $LANG_STATIC,$_SP_CONF;
-    global $LANG_BD00, $_BD_CONF, $LANG04, $LANG_ADMIN;
+    global $_TABLES, $LANG_BD00, $_BD_CONF, $LANG04;
 
     $retval = '';
 
@@ -106,7 +103,7 @@ function listbirthdays($filter_month)
         ),
     );
     if ($_BD_CONF['enable_subs']) {
-        $header_arr[] =  array('text' => 'Subscribe',
+        $header_arr[] =  array('text' => $LANG_BD00['subscribe'],
             'field' => 'subscribe',
             'sort' => false,
             'align' => 'center',
