@@ -52,6 +52,10 @@ $LANG_configsections['birthdays'] = array(
     'title' => 'Configuración del Plugin Cumpleaños',
 );
 
+$LANG_configsubgroups['birthdays'] = array(
+    'sg_main'               => 'Ajustes principales',
+);
+
 $LANG_fs['birthdays'] = array(
     'fs_main' => 'Configuración Principal',
 );
