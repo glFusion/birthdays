@@ -10,17 +10,17 @@ Use the glFusion automated installation.
 * Site members can update their birthday on the plugin index page or from their
 Account Settings page.
 * Shows a block listing member birthdays for the current and upcoming months and weeks.
-  * Edit or duplicate the phpblock_birthdays or phpblock_birthdays_week block
+  * Edit or duplicate the phpblock_birthdays_month or phpblock_birthdays_week block
 to add an argument for the desired number of months or weeks. Default is 2.
   * Note: If you add a parameter to these functions, they will not be deleted
 when the plugin is deleted and must be deleted manually.
-* Shows a block with birthdays by week. Edit the &quot;birthdays_week&quot; block
-and provide the number of weeks as a function argument.
-* Birthday Editing is done via the Account Settings. A &quot;Birthday&quot;
-field is shown under the &quot;About You&quot; tab.
+* Birthday submission and editing can be done from the plugin's homepage, or
+in the Account Settings. A &quot;Birthday&quot; field is shown under the
+&quot;About You&quot; tab.
 * Display a &quot;Happy Birthday&quot; message when a user logs in on their birthday.
 * Send an e-mail birthday card to users on their birthday.
 * Users can subscribe to notifications for other users' birthdays (glFusion 1.7.4+)
+* Calls PLG_itemSaved() to notify other plugins when a birthday is submitted.
 
 ## Configuration
 * Date Format: Enter the PHP date format to use when displaying dates.
@@ -36,6 +36,9 @@ other users' birthdays.
 * Enable Birthday Cards? Set to true to have a &quot;Happy Birthday&quot; message sent to
 site users on their birthday.
   * Default: true
+* Group allowed to view birthdays. Set the group that can see the plugin homepage
+and the birthday field in other users' profiles.
+  * Default: All logged-in users
 
 ## Credits
 * Original version for Geeklog (copyright 2003) by Mike Lynn (mike@mlynn.com).

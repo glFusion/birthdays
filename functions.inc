@@ -17,7 +17,6 @@
 $config = \config::get_instance();
 $_BD_CONF = $config->get_config('birthdays');
 
-// TODO: Load from configuration system
 require_once __DIR__ . '/birthdays.php';
 
 /**
@@ -596,6 +595,7 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
             case 'title':
             case 'description':
             case 'excerpt':
+            case 'summary':
                 $props[$p] = sprintf($LANG_BD00['dscp'], COM_getDisplayName($A['uid']));
                 break;
             case 'author':
