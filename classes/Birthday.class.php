@@ -63,7 +63,7 @@ class Birthday
             $bdays[$uid] = self::getCache($key);
             if (!$bdays[$uid]) {
                 $bdays[$uid] = new self($uid);
-                self::setCache($key, $bdays[$uid]);
+                self::setCache($key, $bdays[$uid], 'uid_' . $uid);
             }
         }
         return $bdays[$uid];
@@ -161,7 +161,6 @@ class Birthday
         // as a deletion request
         if ($this->month == 0 || $this->day == 0) {
             self::Delete($this->uid);
-            self::clearCache();
             PLG_itemDeleted($this->uid, $_BD_CONF['pi_name']);
             return true;
         }
@@ -176,9 +175,9 @@ class Birthday
         //echo $sql;die;
         $res = DB_query($sql);
         if (!DB_error()) {
-            self::clearCache();
+            self::clearCache('range');
             // Put this in cache to save a lookup in plugin_getiteminfo
-            self::setCache('uid_' . $this->uid, $this);
+            self::setCache('uid_' . $this->uid, $this, 'uid_' . $this->uid);
             PLG_itemSaved($this->uid, $_BD_CONF['pi_name']);
             return true;
         } else {
@@ -224,7 +223,7 @@ class Birthday
         //echo $sql;die;
         $res = DB_query($sql);
         $retval = DB_fetchAll($res, false);
-        self::setCache($cache_key, $retval);
+        self::setCache($cache_key, $retval, 'range');
         return $retval;
     }
 
@@ -292,7 +291,7 @@ class Birthday
             if (!isset($retval[$key1])) $retval[$key1] = array();
             $retval[$key1][] = $A['uid'];
         }
-        self::setCache($cache_key, $retval);
+        self::setCache($cache_key, $retval, 'range');
         return $retval;
     }
 
@@ -365,7 +364,8 @@ class Birthday
 
         DB_delete($_TABLES['birthdays'], 'uid', $uid);
         PLG_itemDeleted($uid, 'birthdays');
-        self::clearCache();
+        self::clearCache('range');
+        self::clearCache('uid_' . $uid);
     }
 
 
