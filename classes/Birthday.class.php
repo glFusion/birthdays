@@ -58,8 +58,13 @@ class Birthday
     public static function getInstance($uid)
     {
         static $bdays = array();
+        $key = 'uid_' . $uid;
         if (!array_key_exists($uid, $bdays)) {
-            $bdays[$uid] = new self($uid);
+            $bdays[$uid] = self::getCache($key);
+            if (!$bdays[$uid]) {
+                $bdays[$uid] = new self($uid);
+                self::setCache($key, $bdays[$uid]);
+            }
         }
         return $bdays[$uid];
     }
@@ -172,6 +177,8 @@ class Birthday
         $res = DB_query($sql);
         if (!DB_error()) {
             self::clearCache();
+            // Put this in cache to save a lookup in plugin_getiteminfo
+            self::setCache('uid_' . $this->uid, $this);
             PLG_itemSaved($this->uid, $_BD_CONF['pi_name']);
             return true;
         } else {

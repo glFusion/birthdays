@@ -355,11 +355,12 @@ function phpblock_birthdays_month($blkinfo=array(), $months=2)
         $T->parse('mon', 'month', true);
         $T->clear_var('bd');
         // Get the next month
-        if ($M < 12) {
+        if ((int)$M < 12) {
             $M++;
         } else {
             $M = 1;
         }
+        $M = sprintf('%02d', $M);
     }
     if ($have_data) {
         $T->parse('output', 'block');
@@ -542,60 +543,26 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
     global $_TABLES, $_BD_CONF, $LANG_BD00;
 
     $properties = explode(',', $what);
-    $fields = array();
     $retval = array();
-    $buildingSearchIndex = false;
-    foreach ($properties as $p) {
-        switch ($p) {
-        case 'id':
-            $fields[] = 'uid';
-            break;
-        case 'content':
-        case 'description':
-        case 'date':
-        case 'title':
-            $fields[] = 'month';
-            $fields[] = 'day';
-            break;
-        case 'month':
-            $fields[] = 'month';
-            break;
-        case 'day':
-            $fields[] = 'day';
-            break;
-        case 'author':
-        case 'author_name':
-            $fields[] = 'uid';
-            break;
-        }
-    }
-    if (count($fields) == 0) {
-        return $retval;
-    }
-    $fields = array_unique($fields);
-    $fields = implode(',', $fields);
-    $retval = array();
-    $sql = "SELECT $fields
-            FROM {$_TABLES['birthdays']} ";
-    if ($id != '*') {
-        $sql .= " WHERE (uid = '" . (int)$id . "')";
-    }
-    //echo $sql;die;
-    $res = DB_query($sql);
-    while ($A = DB_fetchArray($res, false)) {
+    if ($id == '*') return $retval; // getAll not supported
+    // Use an array in case getAll is supported later
+    $bdays = array(Birthdays\Birthday::getInstance($id));
+
+    foreach ($bdays as $bday) {
         foreach ($properties as $p) {
             switch ($p) {
             case 'group_id':
                 $props[$p] = $_BD_CONF['grp_access'];
                 break;
             case 'id':
-                $props[$p] = $A['uid'];
+            case 'author':
+                $props[$p] = $bday->uid;
                 break;
             case 'month':
-                $props[$p] = $A['month'];
+                $props[$p] = $bday->month;
                 break;
             case 'day':
-                $props[$p] = $A['day'];
+                $props[$p] = $bday->day;
                 break;
             case 'recur_type':
                 $props[$p] = 3;     // Evlist code for Yearly
@@ -604,29 +571,26 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
                 $props[$p] = 1;     // Recurs every one year
                 break;
             case 'content':
-                $props[$p] = BIRTHDAYS_format($A['month'], $A['day']);
+                $props[$p] = BIRTHDAYS_format($bday->month, $bday->day);
                 break;
             case 'date':
                 // Use 2016 as year since it's a leap year, allow for 29 Feb.
-                $props[$p] = sprintf('2016-%02d-%02d', $A['month'], $A['day']);
+                $props[$p] = sprintf('2016-%02d-%02d', $bday->month, $bday->day);
                 break;
             case 'title':
             case 'description':
             case 'excerpt':
             case 'summary':
-                $props[$p] = sprintf($LANG_BD00['dscp'], COM_getDisplayName($A['uid']));
-                break;
-            case 'author':
-                $props[$p] = $A['uid'];
+                $props[$p] = sprintf($LANG_BD00['dscp'], COM_getDisplayName($bday->uid));
                 break;
             case 'author_name':
-                $props[$p] = COM_getDisplayName($A['uid']);
+                $props[$p] = COM_getDisplayName($bday->uid);
                 break;
             case 'is_event':
                 $props[$p] = true;
                 break;
             default:
-                $props[$p] = isset($A[$p]) ? $A[$p] : NULL;
+                $props[$p] = NULL;
                 break;
             }
         }
@@ -648,7 +612,6 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
             break;
         }
     }
-
     if (($id != '*') && (count($retval) == 1)) {
         $tRet = array_values($retval);
         $retval = $tRet[0];
