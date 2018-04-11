@@ -556,6 +556,7 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
                 break;
             case 'id':
             case 'author':
+            case 'owner_id':
                 $props[$p] = $bday->uid;
                 break;
             case 'month':
