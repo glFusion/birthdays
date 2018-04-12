@@ -590,6 +590,9 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
             case 'is_event':
                 $props[$p] = true;
                 break;
+            case 'url':
+                $props[$p] = '%site_url%/users.php?mode=profile&uid=' . $bday->uid;
+                break;
             default:
                 $props[$p] = NULL;
                 break;
