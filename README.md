@@ -40,6 +40,13 @@ site users on their birthday.
 and the birthday field in other users' profiles.
   * Default: All logged-in users
 
+## Management
+The only option in the Administration area is to sync all birthdays.
+This simply re-saves all records, thus forcing other plugins to be
+notified of the birthdays. You may wish to do this if you do not have Evlist
+installed when you start using Birthdays but then wish to have existing
+birthdays appear in the calendar.
+
 ## Credits
 * Original version for Geeklog (copyright 2003) by Mike Lynn (mike@mlynn.com).
 * This plugin was written using the Universal Plugin and the Plugin Developers API.
