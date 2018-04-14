@@ -24,7 +24,7 @@ global $_BD_CONF;
 
 $_BD_CONF['pi_name']            = 'birthdays';
 $_BD_CONF['pi_display_name']    = 'Birthdays';
-$_BD_CONF['pi_version']         = '0.0.2';
+$_BD_CONF['pi_version']         = '0.1.0';
 $_BD_CONF['gl_version']         = '1.7.0';
 $_BD_CONF['pi_url']             = 'http://www.glfusion.org';
 
