@@ -222,7 +222,12 @@ class Birthday
                 ORDER BY b.month, b.day";
         //echo $sql;die;
         $res = DB_query($sql);
-        $retval = DB_fetchAll($res, false);
+        // Some issues observed with PHP not supporting mysqli_result::fetch_all()
+        //$retval = DB_fetchAll($res, false);
+        $retval = array();
+        while ($A = DB_fetchArray($res, false)) {
+            $retval[] = $A;
+        }
         self::setCache($cache_key, $retval, 'range');
         return $retval;
     }
