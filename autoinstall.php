@@ -93,8 +93,8 @@ function plugin_autouninstall_birthdays()
     $out = array (
         'tables'    => array('birthdays'),
         'groups'    => array(),
-        'features'  => array('birthdays.view'),     // temp during alpha testing
-        'php_blocks' => array('phpblock_birthdays', 'phpblock_birthdays_week', 'phpblock_birthdays_month'),
+        'features'  => array(),
+        'php_blocks' => array('phpblock_birthdays_week', 'phpblock_birthdays_month'),
         'vars'      => array('birthdays_lastrun'),
     );
     PLG_itemDeleted('*', 'birthdays');
