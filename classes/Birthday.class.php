@@ -63,7 +63,7 @@ class Birthday
             $bdays[$uid] = self::getCache($key);
             if (!$bdays[$uid]) {
                 $bdays[$uid] = new self($uid);
-                self::setCache($key, $bdays[$uid], 'uid_' . $uid);
+                self::setCache($key, $bdays[$uid]);
             }
         }
         return $bdays[$uid];
@@ -177,7 +177,7 @@ class Birthday
         if (!DB_error()) {
             self::clearCache('range');
             // Put this in cache to save a lookup in plugin_getiteminfo
-            self::setCache('uid_' . $this->uid, $this, 'uid_' . $this->uid);
+            self::setCache('uid_' . $this->uid, $this);
             PLG_itemSaved($this->uid, $_BD_CONF['pi_name']);
             return true;
         } else {
@@ -197,6 +197,8 @@ class Birthday
     {
         global $_TABLES, $_CONF;
 
+        $month = (int)$month;
+        $day = (int)$day;
         $cache_key = $month . '_' . $day;
         $retval = self::getCache($cache_key);
         if ($retval !== NULL) {
@@ -207,17 +209,19 @@ class Birthday
         if ($month == 0) {
             $where .= ' AND b.month > 0';
         } else {
-            $where .= ' AND b.month = ' . (int)$month;
+            $where .= ' AND b.month = ' . $month;
         }
         if ($day == 0) {
             $where .= ' AND b.day > 0';
         } else {
-            $where .= ' AND b.day = ' . (int)$day;
+            $where .= ' AND b.day = ' . $day;
         }
         $sql = "SELECT 2016 as year, CONCAT(
                     LPAD(b.month,2,0),LPAD(b.day,2,0)
-                ) as birthday, b.*
+                ) as birthday, b.*, u.username, u.fullname
                 FROM {$_TABLES['birthdays']} b
+                LEFT JOIN  {$_TABLES['users']} u
+                    ON u.uid = b.uid
                 WHERE 1=1 $where
                 ORDER BY b.month, b.day";
         //echo $sql;die;
@@ -370,7 +374,7 @@ class Birthday
         DB_delete($_TABLES['birthdays'], 'uid', $uid);
         PLG_itemDeleted($uid, 'birthdays');
         self::clearCache('range');
-        self::clearCache('uid_' . $uid);
+        self::deleteCache('uid_' . $uid);
     }
 
 
@@ -437,6 +441,18 @@ class Birthday
             $tags = array_merge($tags, $tag);
         }
         \glFusion\Cache::getInstance()->deleteItemsByTagsAll($tags);
+    }
+
+
+    /**
+    *   Delete a single item from the cache
+    *
+    *   @param  string  $key    Item key to delete
+    */
+    public static function deleteCache($key)
+    {
+        $key = self::_makeKey($key);
+        \glFusion\Cache::getInstance()->delete($key);
     }
 
 
