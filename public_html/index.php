@@ -121,8 +121,10 @@ function listbirthdays($filter_month)
     $filter = $filter_month == 0 ? '' : " AND month = $filter_month";
     $sql = "SELECT 2016 as year, CONCAT(
                     LPAD(b.month,2,0),LPAD(b.day,2,0)
-                ) as birthday, b.*
+                ) as birthday, b.*, u.username, u.fullname
                 FROM {$_TABLES['birthdays']} b
+                LEFT JOIN {$_TABLES['users']} u
+                    ON u.uid = b.uid
                 WHERE 1=1 $filter";
 
     $query_arr = array('table' => 'birthdays',
@@ -160,7 +162,7 @@ function getField_bday_list($fieldname, $fieldvalue, $A, $icon_arr)
 
     switch($fieldname) {
     case 'fullname':
-        $retval .= COM_getDisplayName($A['uid']);
+        $retval .= COM_getDisplayName($A['uid'], $A['username'], $A['fullname']);
         break;
 
     case 'birthday':
