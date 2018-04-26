@@ -1,4 +1,9 @@
 # Changelog for the Birthdays plugin
+
+## Version 0.1.2
+Release TBD
+- Use plugin language for Name column header to allow customization
+
 ## Version 0.1.1
 Release 2018-04-14
 - Change DB_fetchAll() to get results in a loop
