@@ -86,12 +86,12 @@ exit;
 */
 function listbirthdays($filter_month)
 {
-    global $_TABLES, $LANG_BD00, $_BD_CONF, $LANG04;
+    global $_TABLES, $LANG_BD00, $_BD_CONF;
 
     $retval = '';
 
     $header_arr = array(
-        array('text' => $LANG04[3],
+        array('text' => $LANG_BD00['name'],
             'field' => 'fullname',
             'sort' => false,
             'align' => '',
