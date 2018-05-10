@@ -2,6 +2,7 @@
 
 ## Version 0.1.2
 Release TBD
+- Add privacy export function
 - Use plugin language for Name column header to allow customization
 
 ## Version 0.1.1

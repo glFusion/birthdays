@@ -897,6 +897,30 @@ function plugin_configmanager_select_grp_access_birthdays()
 
 
 /**
+*   Export user data when requested.
+*
+*   @param  integer $uid        User ID
+*   @param  string  $email      User Email Address (not used)
+*   @param  string  $username   User Name (not used)
+*   @param  string  $ip         IP address (not used)
+*   @return string              XML-formatted data
+*/
+function plugin_privacy_export_birthdays($uid,$email='',$username='',$ip='')
+{
+    global $_USER;
+
+    $retval = "<birthdays>\n";
+    $bday = Birthdays\Birthday::getUser($uid);
+    $retval .= '<birthday>' . BIRTHDAYS_format($bday) . '</birthday>' . "\n";
+    $retval .= "</birthdays>\n";
+    if ( function_exists('tidy_repair_string')) {
+        $retval = tidy_repair_string($retval, ['input-xml' => 1]);
+    }
+    return $retval;
+}
+
+
+/**
 *   Get a language file for a specific specific user ID.
 *   This is the same as the code at the top of the file, but the language
 *   strings are saved in a local array so the global $LANG_BD00 is unaffected.
