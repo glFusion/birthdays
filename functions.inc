@@ -914,7 +914,7 @@ function plugin_privacy_export_birthdays($uid,$email='',$username='',$ip='')
     $retval .= '<birthday>' . BIRTHDAYS_format($bday) . '</birthday>' . "\n";
     $retval .= "</birthdays>\n";
     if ( function_exists('tidy_repair_string')) {
-        $retval = tidy_repair_string($retval, ['input-xml' => 1]);
+        $retval = tidy_repair_string($retval, array('input-xml' => 1));
     }
     return $retval;
 }
