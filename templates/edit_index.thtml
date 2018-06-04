@@ -9,4 +9,7 @@
     </select>
     <button type="submit" class="uk-button uk-button-small uk-button-success" name="addbday">Submit</button>
 </form>
+<script type="text/javascript">
+BDAY_updateDay({month});
+</script>
 {# end {templatelocation} #}

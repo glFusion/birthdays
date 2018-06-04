@@ -355,6 +355,7 @@ class Birthday
             }
         }
         $T->set_var('day_select', $opt);
+        $T->set_var('month', $bday->month);
         //$T->set_var('year', $bday->year);
         $T->parse('output', 'edit');
         return $T->finish($T->get_var('output'));

@@ -2,6 +2,7 @@
 
 ## Version 0.1.2
 Release TBD
+- Show only allowed days when birthday form is first displayed
 - Add privacy export function
 - Use plugin language for Name column header to allow customization
 
