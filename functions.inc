@@ -540,7 +540,11 @@ function plugin_ismoderator_birthdays()
 */
 function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
 {
-    global $_TABLES, $_BD_CONF, $LANG_BD00;
+    global $_TABLES, $_BD_CONF, $LANG_BD00, $_CONF;
+
+    if (!SEC_inGroup($_BD_CONF['grp_access'])) {
+        return NULL;
+    }
 
     $properties = explode(',', $what);
     $retval = array();
@@ -591,7 +595,7 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
                 $props[$p] = true;
                 break;
             case 'url':
-                $props[$p] = '%site_url%/users.php?mode=profile&uid=' . $bday->uid;
+                $props[$p] = $_CONF['site_url'] . '/users.php?mode=profile&uid=' . $bday->uid;
                 break;
             default:
                 $props[$p] = NULL;
