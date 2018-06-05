@@ -24,7 +24,14 @@ case 'toggleSub':
 
     switch ($_POST['oldval']) {
     case 0:         // was unsubscribed, now subscribing
-        $newval = PLG_subscribe('birthdays', 'birthday_sub', $_POST['uid'], $_USER['uid']) ? 1 : 0;
+        $newval = PLG_subscribe(
+                'birthdays',
+                'birthday_sub',
+                $_POST['uid'],
+                $_USER['uid'],
+                $_BD_CONF['pi_display_name'],
+                sprintf($LANG_BD00['dscp'], COM_getDisplayName($_POST['uid']))
+        ) ? 1 : 0;
         break;
     case 1:         // was subscribed, now unsubscribing
         $newval = PLG_unsubscribe('birthdays', 'birthday_sub', $_POST['uid'], $_USER['uid']) ? 0 : 1;

@@ -650,7 +650,6 @@ function plugin_runScheduledTask_birthdays()
     $bdays = Birthdays\Birthday::getAll($dt['month'], $dt['day']);
     foreach ($bdays as $bday) {
         $uid = (int)$bday['uid'];
-        $lang = BIRTHDAYS_loadLanguage($uid);
         if ($_BD_CONF['enable_subs']) {
             PLG_sendSubscriptionNotification('birthdays', 'birthday_sub', '', $uid, 0);
         }
@@ -756,6 +755,7 @@ function BIRTHDAYS_currentDate()
     if ($retval === NULL) {
         $dt = new \Date('now', $_CONF['timezone']);
         $retval = array(
+            'dt'    => $dt,
             'year'  => $dt->Format('Y', true),
             'month' => $dt->Format('m', true),
             'day'   => $dt->Format('d', true),
