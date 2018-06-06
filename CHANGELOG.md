@@ -6,7 +6,7 @@ Release TBD
 - Add privacy export function
 - Use plugin language for Name column header to allow customization
 - Add plugin and user name to subscription record
-- Respect grp_access in searching
+- Disable search indexing
 
 ## Version 0.1.1
 Release 2018-04-14

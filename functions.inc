@@ -542,10 +542,6 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
 {
     global $_TABLES, $_BD_CONF, $LANG_BD00, $_CONF;
 
-    if (!SEC_inGroup($_BD_CONF['grp_access'])) {
-        return NULL;
-    }
-
     $properties = explode(',', $what);
     $retval = array();
     if ($id == '*') return $retval; // getAll not supported
@@ -596,6 +592,9 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
                 break;
             case 'url':
                 $props[$p] = $_CONF['site_url'] . '/users.php?mode=profile&uid=' . $bday->uid;
+                break;
+            case 'search_index':
+                return NULL;        // Birthdays does not support searching
                 break;
             default:
                 $props[$p] = NULL;
