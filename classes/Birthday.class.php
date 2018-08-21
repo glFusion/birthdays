@@ -22,9 +22,8 @@ class Birthday
      *  @var array */
     var $properties;
 
-    private static $cache_tag = 'birthdays';
-    private static $cache_secs = 1800;
-
+    const TAG = 'birthdays';
+    const CACHE_GVERSION = '2.0.0';
 
     /**
     *   Constructor.
@@ -415,14 +414,14 @@ class Birthday
     */
     public static function setCache($key, $data, $tag='')
     {
-        if (version_compare(GVERSION, '1.8.0', '<')) return NULL;
+        if (version_compare(GVERSION, self::CACHE_GVERSION, '<')) return NULL;
 
         if ($tag == '')
-            $tag = array(self::$cache_tag);
+            $tag = array(self::TAG);
         else
-            $tag = array($tag, self::$cache_tag);
+            $tag = array($tag, self::TAG);
         $key = self::_makeKey($key);
-        \glFusion\Cache::getInstance()->set($key, $data, $tag, self::$cache_secs);
+        \glFusion\Cache::getInstance()->set($key, $data, $tag);
     }
 
 
@@ -434,9 +433,9 @@ class Birthday
     */
     public static function clearCache($tag = '')
     {
-        if (version_compare(GVERSION, '1.8.0', '<')) return;
+        if (version_compare(GVERSION, self::CACHE_GVERSION, '<')) return;
 
-        $tags = array(self::$cache_tag);
+        $tags = array(self::TAG);
         if (!empty($tag)) {
             if (!is_array($tag)) $tag = array($tag);
             $tags = array_merge($tags, $tag);
@@ -464,7 +463,7 @@ class Birthday
     */
     private static function _makeKey($key)
     {
-        return self::$cache_tag . '_' . $key;
+        return self::TAG . '_' . $key;
     }
 
 
@@ -476,7 +475,7 @@ class Birthday
     */
     public static function getCache($key)
     {
-        if (version_compare(GVERSION, '1.8.0', '<')) return;
+        if (version_compare(GVERSION, self::CACHE_GVERSION, '<')) return;
         $key = self::_makeKey($key);
         if (\glFusion\Cache::getInstance()->has($key)) {
             return \glFusion\Cache::getInstance()->get($key);
