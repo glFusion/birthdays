@@ -30,7 +30,7 @@ if (!SEC_inGroup('Root')) {
 }
 require_once $_BD_CONF['pi_path'] . '/upgrade.php';   // needed for set_version()
 CACHE_clear();
-Birthdays\Birthday::clearCache();
+\Birthdays\Birthday::clearCache();
 
 function BIRTHDAYS_dvlp_002()
 {

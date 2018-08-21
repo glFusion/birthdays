@@ -98,7 +98,7 @@ function plugin_autouninstall_birthdays()
         'vars'      => array('birthdays_lastrun'),
     );
     PLG_itemDeleted('*', 'birthdays');
-    Birthdays\Birthday::clearCache();
+    \Birthdays\Birthday::clearCache();
     return $out;
 }
 

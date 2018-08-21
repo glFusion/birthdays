@@ -39,8 +39,8 @@ foreach($expected as $provided) {
 switch ($action) {
 case 'syncall':
     // Re-save all items to sync with other plugins
-    $BD = Birthdays\Birthday::getAll();
-    $B = new Birthdays\Birthday();
+    $BD = \Birthdays\Birthday::getAll();
+    $B = new \Birthdays\Birthday();
     foreach ($BD as $vals) {
         $B->Save($vals);
     }

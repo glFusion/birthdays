@@ -246,7 +246,7 @@ function plugin_profileedit_birthdays($uid, $panel, $fieldset)
 {
     $retval = '';
     if ($panel == 'userinfo' && $fieldset == 'personalinfo') {
-        $retval = Birthdays\Birthday::editForm($uid);
+        $retval = \Birthdays\Birthday::editForm($uid);
     }
     return $retval;
 }
@@ -268,7 +268,7 @@ function plugin_profilesave_birthdays($uid = 0)
         $uid = (int)$_USER['uid'];
     }
 
-    $bday = Birthdays\Birthday::getInstance($uid);
+    $bday = \Birthdays\Birthday::getInstance($uid);
     $bday->Save(array(
             'month' => $_POST['birthday_month'],
             'day' => $_POST['birthday_day'],
@@ -297,7 +297,7 @@ function plugin_profilevariablesdisplay_birthdays($uid, &$T)
     $LT->set_file(array(
         'block' => 'profileblock.thtml',
     ));
-    $bday = Birthdays\Birthday::getUser($uid);
+    $bday = \Birthdays\Birthday::getUser($uid);
     if (empty($bday)) return;
     $LT->set_var('birthday', BIRTHDAYS_format($bday));
     $LT->parse('output', 'block');
@@ -339,7 +339,7 @@ function phpblock_birthdays_month($blkinfo=array(), $months=2)
     $T->set_file('block', 'phpblock.thtml');
     $T->set_block('block', 'month', 'mon');
     for ($i = 0; $i < $months; $i++) {
-        $thismonth = Birthdays\Birthday::getAll($M);
+        $thismonth = \Birthdays\Birthday::getAll($M);
         if (empty($thismonth)) {
             continue;
         } else {
@@ -395,7 +395,7 @@ function phpblock_birthdays_week($blkinfo=array(), $weeks=2)
         $e_dt->setTimestamp($s_dt->toUnix() + 518400);
         $start = $s_dt->format('Y-m-d');
         $end = $e_dt->format('Y-m-d');
-        $thisweek = Birthdays\Birthday::getRange($start, $end);
+        $thisweek = \Birthdays\Birthday::getRange($start, $end);
         // Change starting date here in case the continue clause is invoked
         $s_dt->setTimestamp($s_dt->toUnix() + 604800);
         if (empty($thisweek)) {
@@ -546,7 +546,7 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
     $retval = array();
     if ($id == '*') return $retval; // getAll not supported
     // Use an array in case getAll is supported later
-    $bdays = array(Birthdays\Birthday::getInstance($id));
+    $bdays = array(\Birthdays\Birthday::getInstance($id));
 
     foreach ($bdays as $bday) {
         foreach ($properties as $p) {
@@ -650,7 +650,7 @@ function plugin_runScheduledTask_birthdays()
     DB_query("INSERT INTO {$_TABLES['vars']}
                 VALUES('birthdays_lastrun', '$today')
             ON DUPLICATE KEY UPDATE value = '$today'");
-    $bdays = Birthdays\Birthday::getAll($dt['month'], $dt['day']);
+    $bdays = \Birthdays\Birthday::getAll($dt['month'], $dt['day']);
     foreach ($bdays as $bday) {
         $uid = (int)$bday['uid'];
         if ($_BD_CONF['enable_subs']) {
@@ -913,7 +913,7 @@ function plugin_privacy_export_birthdays($uid,$email='',$username='',$ip='')
     global $_USER;
 
     $retval = "<birthdays>\n";
-    $bday = Birthdays\Birthday::getUser($uid);
+    $bday = \Birthdays\Birthday::getUser($uid);
     $retval .= '<birthday>' . BIRTHDAYS_format($bday) . '</birthday>' . "\n";
     $retval .= "</birthdays>\n";
     if ( function_exists('tidy_repair_string')) {
