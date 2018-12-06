@@ -96,6 +96,7 @@ $birthdaysConfigData = array(
         'set' => true,
         'group' => 'birthdays',
     ),
+);
 
 /**
  * Initialize Birthdays plugin configuration.
