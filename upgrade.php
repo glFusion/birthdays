@@ -18,9 +18,10 @@ if (!defined('GVERSION')) {
 /**
  * Upgrade the plugin.
  *
+ * @param   boolean $dvlp   True to ignore errors (development upgrade)
  * @return  boolean     True on success, False on failure
  */
-function BIRTHDAYS_upgrade()
+function BIRTHDAYS_do_upgrade($dvlp = false)
 {
     global $_TABLES, $_CONF, $_PLUGINS, $_BD_CONF, $_PLUGIN_INFO;;
 
@@ -34,16 +35,26 @@ function BIRTHDAYS_upgrade()
     if (!COM_checkVersion($current_ver, '0.0.2')) {
         // upgrade to 0.2.2
         $current_ver = '0.2.2';
-        if (!BIRTHDAYS_do_upgrade_sql($current_ver)) return false;
+        if (!BIRTHDAYS_do_upgrade_sql($current_ver, $dvlp)) return false;
         if (!BIRTHDAYS_do_set_version($current_ver)) return false;
     }
 
     if (!COM_checkVersion($current_ver, $installed_ver)) {
         if (!BIRTHDAYS_do_set_version($installed_ver)) return false;
     }
+
+    // Update any configuration item changes
+    USES_lib_install();
+    global $birthdaysConfigData;
+    require_once __DIR__ . '/install_defaults.php';
+    _update_config('birthdays', $birthdaysConfigData);
+
+    // Clear all caches
     \Birthdays\Birthday::clearCache();
-    BIRTHDAYS_remove_old_files();
     CTL_clearCache();
+
+    // Remove deprecated files
+    BIRTHDAYS_remove_old_files();
 }
 
 

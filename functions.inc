@@ -174,14 +174,8 @@ function plugin_geticon_birthdays()
  */
 function plugin_upgrade_birthdays()
 {
-    if (@file_exists(__DIR__ . '/upgrade.php')) {
-        require_once __DIR__ . '/upgrade.php';
-        return BIRTHDAYS_upgrade();
-    } else {
-        // upgrades are done by the install script - return a generic error
-        COM_errorLog("Birthdays plugin upgrade function not implemented");
-        return 3001;
-    }
+    require_once __DIR__ . '/upgrade.php';
+    return BIRTHDAYS_do_upgrade();
 }
 
 

@@ -16,45 +16,104 @@ if (!defined ('GVERSION')) {
     die ('This file can not be used on its own.');
 }
 
-
-/** Utility plugin default configurations
-*   @global array */
-global $_BD_DEFAULTS;
-$_BD_DEFAULTS = array(
-    'format' => 'M d',
-    'login_greeting'    => 1,
-    'enable_subs'       => 0,
-    'enable_cards'      => 0,
-    'grp_access'        => 13,  // default = Logged-In users
-);
+/** @var global config data */
+global $birthdaysConfigData;
+$birthdaysConfigData = array(
+    array(
+        'name' => 'sg_main',
+        'default_value' => NULL,
+        'type' => 'subgroup',
+        'subgroup' => 0,
+        'fieldset' => 0,
+        'selection_array' => NULL,
+        'sort' => 0,
+        'set' => true,
+        'group' => 'birthdays',
+    ),
+    array(
+        'name' => 'fs_main',
+        'default_value' => NULL,
+        'type' => 'fieldset',
+        'subgroup' => 0,
+        'fieldset' => 0,
+        'selection_array' => NULL,
+        'sort' => 0,
+        'set' => true,
+        'group' => 'birthdays',
+    ),
+    array(
+        'name' => 'format',
+        'default_value' => 'M d',
+        'type' => 'text',
+        'subgroup' => 0,
+        'fieldset' => 0,
+        'selection_array' => 0,
+        'sort' => 10,
+        'set' => true,
+        'group' => 'birthdays',
+    ),
+    array(
+        'name' => 'login_greeting',
+        'default_value' => 1,
+        'type' => 'select',
+        'subgroup' => 0,
+        'fieldset' => 0,
+        'selection_array' => 0,
+        'sort' => 20,
+        'set' => true,
+        'group' => 'birthdays',
+    ),
+    array(
+        'name' => 'enable_subs',
+        'default_value' => 0,
+        'type' => 'select',
+        'subgroup' => 0,
+        'fieldset' => 0,
+        'selection_array' => 0,
+        'sort' => 30,
+        'set' => true,
+        'group' => 'birthdays',
+    ),
+    array(
+        'name' => 'enable_cards',
+        'default_value' => 0,
+        'type' => 'select',
+        'subgroup' => 0,
+        'fieldset' => 0,
+        'selection_array' => 0,
+        'sort' => 40,
+        'set' => true,
+        'group' => 'birthdays',
+    ),
+    array(
+        'name' => 'grp_access',
+        'default_value' => 13,
+        'type' => 'select',
+        'subgroup' => 0,
+        'fieldset' => 0,
+        'selection_array' => 0,
+        'sort' => 50,
+        'set' => true,
+        'group' => 'birthdays',
+    ),
 
 /**
  * Initialize Birthdays plugin configuration.
  *
  * @return  boolean     True: success; False: an error occurred
  */
-function plugin_initconfig_birthdays()
+function plugin_initconfig_birthdays($group_id = 0)
 {
-    global $_CONF, $_BD_CONF, $_BD_DEFAULTS;
+    global $birthdaysConfigData;
 
     $c = config::get_instance();
-    if (!$c->group_exists($_BD_CONF['pi_name'])) {
-
-        $c->add('sg_main', NULL, 'subgroup', 0, 0, NULL, 0, true,
-                $_BD_CONF['pi_name']);
-        $c->add('fs_main', NULL, 'fieldset', 0, 0, NULL, 0, true,
-                $_BD_CONF['pi_name']);
-
-        $c->add('format', $_BD_DEFAULTS['format'],
-                'text', 0, 0, NULL, 10, true, $_BD_CONF['pi_name']);
-        $c->add('login_greeting', $_BD_DEFAULTS['login_greeting'],
-                'select', 0, 0, 0, 20, true, $_BD_CONF['pi_name']);
-        $c->add('enable_subs', $_BD_DEFAULTS['enable_subs'],
-                'select', 0, 0, 0, 30, true, $_BD_CONF['pi_name']);
-        $c->add('enable_cards', $_BD_DEFAULTS['enable_cards'],
-                'select', 0, 0, 0, 40, true, $_BD_CONF['pi_name']);
-        $c->add('grp_access', $_BD_DEFAULTS['grp_access'],
-                'select', 0, 0, 0, 50, true, $_BD_CONF['pi_name']);
+    if (!$c->group_exists('birthdays')) {
+        USES_lib_install();
+        foreach ($birthdaysConfigData AS $cfgItem) {
+            _addConfigItem($cfgItem);
+        }
+    } else {
+        COM_errorLog('initconfig error: Paypal config group already exists');
     }
     return true;
 }

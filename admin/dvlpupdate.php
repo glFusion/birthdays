@@ -19,7 +19,7 @@
 require_once '../../../lib-common.php';
 if (!SEC_inGroup('Root')) {
     // Someone is trying to illegally access this page
-    COM_errorLog("Someone has tried to access the Evlist Development Code Upgrade Routine without proper permissions.  User id: {$_USER['uid']}, Username: {$_USER['username']}, IP: " . $_SERVER['REMOTE_ADDR'],1);
+    COM_errorLog("Someone has tried to access the Birthdays Development Code Upgrade Routine without proper permissions.  User id: {$_USER['uid']}, Username: {$_USER['username']}, IP: " . $_SERVER['REMOTE_ADDR'],1);
     $display  = COM_siteHeader();
     $display .= COM_startBlock($LANG27[12]);
     $display .= $LANG27[12];
@@ -29,26 +29,19 @@ if (!SEC_inGroup('Root')) {
     exit;
 }
 require_once $_BD_CONF['pi_path'] . '/upgrade.php';   // needed for set_version()
-CACHE_clear();
+if (function_exists('CACHE_clear')) {
+    CACHE_clear();
+}
 \Birthdays\Birthday::clearCache();
 
-/**
- * Update to version 0.0.2
- */
-function BIRTHDAYS_dvlp_002()
-{
-    global $_BD_CONF;
-
-    $_BD_CONF['pi_version'] = '0.0.2';
-    BIRTHDAYS_do_set_version('0.0.2');
-    plugin_upgrade_birthdays(true);
-}
-
-// Call the function for the currently-installed codebase
-BIRTHDAYS_dvlp_002();
+// Force the plugin version to the previous version and do the upgrade
+$_PLUGIN_INFO['birthdays']['pi_version'] = '0.0.1';
+BIRTHDAYS_do_upgrade(true);
 
 // need to clear the template cache so do it here
-CACHE_clear();
+if (function_exists('CACHE_clear')) {
+    CACHE_clear();
+}
 header('Location: '.$_CONF['site_admin_url'].'/plugins.php?msg=600');
 exit;
 
