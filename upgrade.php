@@ -33,14 +33,15 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
     $c = config::get_instance();
 
     if (!COM_checkVersion($current_ver, '0.0.2')) {
-        // upgrade to 0.2.2
-        $current_ver = '0.2.2';
+        // upgrade to 0.0.2
+        $current_ver = '0.0.2';
         if (!BIRTHDAYS_do_upgrade_sql($current_ver, $dvlp)) return false;
         if (!BIRTHDAYS_do_set_version($current_ver)) return false;
     }
 
-    if (!COM_checkVersion($current_ver, $installed_ver)) {
-        if (!BIRTHDAYS_do_set_version($installed_ver)) return false;
+    // Final version update to catch any code-only updates
+    if (!COM_checkVersion($current_ver, $code_ver)) {
+        if (!BIRTHDAYS_do_set_version($code_ver)) return false;
     }
 
     // Update any configuration item changes
@@ -55,6 +56,9 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
 
     // Remove deprecated files
     BIRTHDAYS_remove_old_files();
+
+    // Made it this far, return OK
+    return true;
 }
 
 
