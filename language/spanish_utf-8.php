@@ -1,18 +1,23 @@
 <?php
 /**
-*   Language file for the Birthdays plugin for glFusion
-*
-*   @author     Lee Garner <lee@leegarner.com>
-*   @translation spanish    William López Jimenez <william.koalasoft@gmail.com>
-*   @author     Mike Lynn <mike@mlynn.com>
-*   @copyright  Copyright (c) 2018 Lee Garner <lee@leegarner.com>
-*   @copyright  Copyright (c) 2002 Mike Lynn <mike@mlynn.com>
-*   @package    birthdays
-*   @version    0.1.0
-*   @license    http://opensource.org/licenses/gpl-2.0.php
-*               GNU Public License v2 or later
-*   @filesource
-*/
+ * Language file for the Birthdays plugin for glFusion.
+ *
+ * @author      Lee Garner <lee@leegarner.com>
+ * @translation spanish    William López Jimenez <william.koalasoft@gmail.com>
+ * @author      Mike Lynn <mike@mlynn.com>
+ * @copyright   Copyright (c) 2018 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2002 Mike Lynn <mike@mlynn.com>
+ * @package     birthdays
+ * @version     v0.1.0
+ * @license     http://opensource.org/licenses/gpl-2.0.php
+ *              GNU Public License v2 or later
+ * @filesource
+ */
+
+/**
+ * Language array.
+ * @global array
+ */
 $LANG_BD00 = array (
     'pi_title'      => 'Cumpleaños',
     'my_birthday'   => 'Mi Cumpleaños',

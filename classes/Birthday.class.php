@@ -1,37 +1,40 @@
 <?php
 /**
-*   Class to manage birthdays
-*
-*   @author     Lee Garner <lee@leegarner.com>
-*   @copyright  Copyright (c) 2018 Lee Garner <lee@leegarner.com>
-*   @package    birthdays
-*   @version    0.1.0
-*   @license    http://opensource.org/licenses/gpl-2.0.php
-*               GNU Public License v2 or later
-*   @filesource
-*/
+ * Class to manage birthdays.
+ *
+ * @author      Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018 Lee Garner <lee@leegarner.com>
+ * @package     birthdays
+ * @version     v0.1.0
+ * @license     http://opensource.org/licenses/gpl-2.0.php
+ *              GNU Public License v2 or later
+ * @filesource
+ */
 namespace Birthdays;
 
 /**
-*   Class for ad type
-*   @package classifieds
-*/
+ * Class for birthdays.
+ * @package birthdays
+ */
 class Birthday
 {
-    /** Properties array
-     *  @var array */
+    /** Internal properties accessed via `__set()` and `__get()`.
+     * @var array */
     var $properties;
 
+    /** Base cache tag added to all items.
+     * @const string */
     const TAG = 'birthdays';
+
+    /** Minimum glFusion version that supports caching.
+     * @const string */
     const CACHE_GVERSION = '2.0.0';
 
     /**
-    *   Constructor.
-    *   Reads in the specified class, if $id is set.  If $id is zero,
-    *   then a new entry is being created.
-    *
-    *   @param integer $id Optional type ID
-    */
+     * Instantiate an object for the specified user, or a new entry.
+     *
+     * @param   integer $uid    Optional type ID, zero indicates a new record
+     */
     public function __construct($uid=0)
     {
         $uid = (int)$uid;
@@ -48,12 +51,12 @@ class Birthday
 
 
     /**
-    *   Get an instance of a birthday object.
-    *   Saves objects in a static variable for subsequent use.
-    *
-    *   @param  integer $uid    User ID
-    *   @return object          Birthday object for the user
-    */
+     * Get an instance of a birthday object.
+     * Saves objects in a static variable for subsequent use.
+     *
+     * @param   integer $uid    User ID
+     * @return  object          Birthday object for the user
+     */
     public static function getInstance($uid)
     {
         static $bdays = array();
@@ -70,11 +73,11 @@ class Birthday
 
 
     /**
-    *   Set a value into the property array
-    *
-    *   @param  string  $key    Property name
-    *   @param  mixed           Property value
-    */
+     * Set a value into the property array
+     *
+     * @param   string  $key    Property name
+     * @param   mixed           Property value
+     */
     public function __set($key, $value)
     {
         switch ($key) {
@@ -89,11 +92,11 @@ class Birthday
 
 
     /**
-    *   Getter function.
-    *
-    *   @param  string  $key    Name of property
-    *   @param  mixed           Value of property, NULL if not set
-    */
+     * Getter function.
+     *
+     * @param   string  $key    Name of property
+     * @return  mixed           Value of property, NULL if not set
+     */
     public function __get($key)
     {
         if (isset($this->properties[$key]))
@@ -104,10 +107,10 @@ class Birthday
 
 
     /**
-    *   Sets all variables to the matching values from $rows
-    *
-    *   @param array $row Array of values, from DB or $_POST
-    */
+     * Sets all variables to the matching values from `$rows`.
+     *
+     * @param   array   $row    Array of values, from DB or $_POST
+     */
     public function SetVars($row)
     {
         if (!is_array($row)) return;
@@ -121,10 +124,10 @@ class Birthday
 
 
     /**
-    *   Read one as type from the database and populate the local values.
-    *
-    *   @param integer $id Optional ID.  Current ID is used if zero
-    */
+     * Read one as type from the database and populate the local values.
+     *
+     * @param   integer $uid    Optional user ID.  Current user if zero.
+     */
     public function Read($uid = 0)
     {
         global $_TABLES;
@@ -143,11 +146,11 @@ class Birthday
 
 
     /**
-    *   Adds the current values to the databae as a new record
-    *
-    *   @param  array   $vals   Optional array of values to set
-    *   @return boolean     True on success, False on error
-    */
+     * Adds the current values to the databae as a new record.
+     *
+     * @param   array   $vals   Optional array of values to set
+     * @return  boolean     True on success, False on error
+     */
     public function Save($vals = NULL)
     {
         global $_TABLES, $_BD_CONF;;
@@ -186,12 +189,12 @@ class Birthday
 
 
     /**
-    *   Get all birthdays for one month, or for all.
-    *
-    *   @param  mixed   $month  Month number, or "all"
-    *   @param  mixed   $day    Optional day number
-    *   @return array           Array of birthday records
-    */
+     * Get all birthdays for one month, one day, or all..
+     *
+     * @param   mixed   $month  Month number, or "all"
+     * @param   mixed   $day    Optional day number
+     * @return  array           Array of birthday records
+     */
     public static function getAll($month = 0, $day = 0)
     {
         global $_TABLES, $_CONF;
@@ -215,6 +218,7 @@ class Birthday
         } else {
             $where .= ' AND b.day = ' . $day;
         }
+        // The year isn't stored, so use a bogus leap year.
         $sql = "SELECT 2016 as year, CONCAT(
                     LPAD(b.month,2,0),LPAD(b.day,2,0)
                 ) as birthday, b.*, u.username, u.fullname
@@ -237,14 +241,14 @@ class Birthday
 
 
     /**
-    *   Get a range of birthdays.
-    *   This is intended to be used with other plugins and returns only user
-    *   IDs indexed by date.
-    *
-    *   @param  string  $start  Starting date, YYYY-MM-DD
-    *   @param  string  $end    Ending date, YYYY-MM-DD
-    *   @return array           Array of date =>array(userids)
-    */
+     * Get a range of birthdays.
+     * This is intended to be used with other plugins and returns only user
+     * IDs indexed by date.
+     *
+     * @param   string  $start  Starting date, YYYY-MM-DD
+     * @param   string  $end    Ending date, YYYY-MM-DD
+     * @return  array           Array of date =>array(userids)
+     */
     public static function getRange($start, $end)
     {
         global $_TABLES, $_CONF;
@@ -305,11 +309,11 @@ class Birthday
 
 
     /**
-    *   Get a specific user's birthday for the profile page.
-    *
-    *   @param  integer $uid    User ID
-    *   @return array       Array of fields, NULL if not found.
-    */
+     * Get a specific user's birthday for the profile page.
+     *
+     * @param   integer $uid    User ID
+     * @return  array       Array of fields, NULL if not found.
+     */
     public static function getUser($uid)
     {
         global $_TABLES;
@@ -329,12 +333,12 @@ class Birthday
 
 
     /**
-    *   Display the edit form within the profile editing screen
-    *
-    *   @param  integer $uid    User ID
-    *   @param  string  $tpl    Template name, default="edit"
-    *   @return string      HTML for edit form
-    */
+     * Display the edit form within the profile editing screen.
+     *
+     * @param  integer $uid    User ID
+     * @param  string  $tpl    Template name, default="edit"
+     * @return string      HTML for edit form
+     */
     public static function editForm($uid, $tpl = 'edit')
     {
         global $LANG_MONTH, $LANG_BD00;
@@ -362,11 +366,11 @@ class Birthday
 
 
     /**
-    *   Delete a birthday record.
-    *   Used if the user submits "0" for month or day
-    *
-    *   @param  integer $uid    User ID
-    */
+     * Delete a birthday record.
+     * Used if the user submits "0" for month or day
+     *
+     * @param   integer $uid    User ID
+     */
     public static function Delete($uid)
     {
         global $_TABLES;
@@ -379,14 +383,14 @@ class Birthday
 
 
     /**
-    *   Create the option elements for a month selection.
-    *   This allows for a common function used for the month selection on the
-    *   home page and for the user-supplied birthday.
-    *
-    *   @param  integer $thismonth      Currently-selected month
-    *   @param  string  $all_prompt     String to show for "all" or "none"
-    *   @return string                  Option elements
-    */
+     * Create the option elements for a month selection.
+     * This allows for a common function used for the month selection on the
+     * home page and for the user-supplied birthday.
+     *
+     * @param   integer $thismonth      Currently-selected month
+     * @param   string  $all_prompt     String to show for "all" or "none"
+     * @return  string                  Option elements
+     */
     public static function selectMonth($thismonth = 0, $all_prompt = '')
     {
         global $LANG_BD00, $LANG_MONTH;
@@ -406,12 +410,12 @@ class Birthday
 
 
     /**
-    *   Update the cache
-    *
-    *   @param  string  $key    Item key
-    *   @param  mixed   $data   Data, typically an array
-    *   @param  mixed   $tag    Single or array of tags to apply
-    */
+     * Update the cache.
+     *
+     * @param   string  $key    Item key
+     * @param   mixed   $data   Data, typically an array
+     * @param   mixed   $tag    Single or array of tags to apply
+     */
     public static function setCache($key, $data, $tag='')
     {
         if (version_compare(GVERSION, self::CACHE_GVERSION, '<')) return NULL;
@@ -426,11 +430,11 @@ class Birthday
 
 
     /**
-    *   Clear the cache by tag. By default all plugin entries are removed.
-    *   Entries matching all tags, including default tag, are removed.
-    *
-    *   @param  mixed   $tag    Single or array of tags
-    */
+     * Clear the cache by tag. By default all plugin entries are removed.
+     * Entries matching all tags, including default tag, are removed.
+     *
+     * @param   mixed   $tag    Single or array of tags
+     */
     public static function clearCache($tag = '')
     {
         if (version_compare(GVERSION, self::CACHE_GVERSION, '<')) return;
@@ -445,10 +449,10 @@ class Birthday
 
 
     /**
-    *   Delete a single item from the cache
-    *
-    *   @param  string  $key    Item key to delete
-    */
+     * Delete a single item from the cache
+     *
+     * @param   string  $key    Item key to delete
+     */
     public static function deleteCache($key)
     {
         $key = self::_makeKey($key);
@@ -457,10 +461,11 @@ class Birthday
 
 
     /**
-    *   Create a unique cache key.
-    *
-    *   @return string          Encoded key string to use as a cache ID
-    */
+     * Create a unique cache key.
+     *
+     * @param   string  $key    Unique cache key
+     * @return  string          Encoded key string to use as a cache ID
+     */
     private static function _makeKey($key)
     {
         return self::TAG . '_' . $key;
@@ -468,11 +473,11 @@ class Birthday
 
 
     /**
-    *   Get an entry from cache, if available.
-    *
-    *   @param  string  $key    Cache key
-    *   @return mixed           Cache contents, NULL if not found
-    */
+     * Get an entry from cache, if available.
+     *
+     * @param   string  $key    Cache key
+     * @return  mixed           Cache contents, NULL if not found
+     */
     public static function getCache($key)
     {
         if (version_compare(GVERSION, self::CACHE_GVERSION, '<')) return;

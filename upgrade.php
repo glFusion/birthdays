@@ -1,20 +1,25 @@
 <?php
 /**
-*   Upgrade routines for the Birthdays plugin
-*
-*   @author     Lee Garner <lee@leegarner.com>
-*   @copyright  Copyright (c) 2018 Lee Garner <lee@leegarner.com>
-*   @package    birthdays
-*   @version    0.2.0
-*   @license    http://opensource.org/licenses/gpl-2.0.php
-*               GNU Public License v2 or later
-*   @filesource
-*/
+ * Upgrade routines for the Birthdays plugin.
+ *
+ * @author      Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018 Lee Garner <lee@leegarner.com>
+ * @package     birthdays
+ * @version     v0.2.0
+ * @license     http://opensource.org/licenses/gpl-2.0.php
+ *              GNU Public License v2 or later
+ * @filesource
+ */
 
 if (!defined('GVERSION')) {
     die('This file can not be used on its own.');
 }
 
+/**
+ * Upgrade the plugin.
+ *
+ * @return  boolean     True on success, False on failure
+ */
 function BIRTHDAYS_upgrade()
 {
     global $_TABLES, $_CONF, $_PLUGINS, $_BD_CONF, $_PLUGIN_INFO;;
@@ -43,14 +48,14 @@ function BIRTHDAYS_upgrade()
 
 
 /**
-*   Actually perform any sql updates.
-*   Gets the sql statements from the $UPGRADE array defined (maybe)
-*   in the SQL installation file.
-*
-*   @param  string  $version    Version being upgraded TO
-*   @param  boolean $ignore_error   True to ignore SQL errors.
-*   @param  array   $sql        Array of SQL statement(s) to execute
-*/
+ * Actually perform any sql updates.
+ * Gets the sql statements from the $UPGRADE array defined (maybe)
+ * in the SQL installation file.
+ *
+ * @param   string  $version    Version being upgraded TO
+ * @param   boolean $ignore_error   True to ignore SQL errors
+ * @return  boolean     True on success, False on failure
+ */
 function BIRTHDAYS_do_upgrade_sql($version, $ignore_error=false)
 {
     global $_TABLES, $_BD_CONF, $BD_UPGRADE;
@@ -77,13 +82,13 @@ function BIRTHDAYS_do_upgrade_sql($version, $ignore_error=false)
 
 
 /**
-*   Update the plugin version number in the database.
-*   Called at each version upgrade to keep up to date with
-*   successful upgrades.
-*
-*   @param  string  $ver    New version to set
-*   @return boolean         True on success, False on failure
-*/
+ * Update the plugin version number in the database.
+ * Called at each version upgrade to keep up to date with
+ * successful upgrades.
+ *
+ * @param   string  $ver    New version to set
+ * @return  boolean         True on success, False on failure
+ */
 function BIRTHDAYS_do_set_version($ver)
 {
     global $_TABLES, $_BD_CONF;
@@ -106,8 +111,8 @@ function BIRTHDAYS_do_set_version($ver)
 
 
 /**
-*   Remove deprecated files
-*/
+ * Remove deprecated files.
+ */
 function BIRTHDAYS_remove_old_files()
 {
     global $_CONF;

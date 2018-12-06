@@ -1,17 +1,17 @@
 <?php
 /**
-*   glFusion API functions for the Birthdays plugin.
-*
-*   @author     Lee Garner <lee@leegarner.com>
-*   @author     Mike Lynn <mike@mlynn.com>
-*   @copyright  Copyright (c) 2018 Lee Garner <lee@leegarner.com>
-*   @copyright  Copyright (c) 2002 Mike Lynn <mike@mlynn.com>
-*   @package    birthdays
-*   @version    0.1.0
-*   @license    http://opensource.org/licenses/gpl-2.0.php
-*               GNU Public License v2 or later
-*   @filesource
-*/
+ * glFusion API functions for the Birthdays plugin.
+ *
+ * @author      Lee Garner <lee@leegarner.com>
+ * @author      Mike Lynn <mike@mlynn.com>
+ * @copyright   Copyright (c) 2018 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2002 Mike Lynn <mike@mlynn.com>
+ * @package     birthdays
+ * @version     v0.1.0
+ * @license     http://opensource.org/licenses/gpl-2.0.php
+ *              GNU Public License v2 or later
+ * @filesource
+ */
 
 /** Import configuration-handling class */
 $config = \config::get_instance();
@@ -20,10 +20,10 @@ $_BD_CONF = $config->get_config('birthdays');
 require_once __DIR__ . '/birthdays.php';
 
 /**
-*   Include the plugin-specific language file, and the corresponding
-*   admin-created custom language file, if any.  Looks for the site
-*   language first, then defaults to english.php if nothing else found.
-*/
+ * Include the plugin-specific language file.
+ * Also includes the corresponding admin-created custom language file, if any.
+ * Looks for the site language first, then defaults to english.php if nothing else found.
+ */
 $langpath = __DIR__ . '/language';
 if (is_file("$langpath/{$_CONF['language']}.php")) {
     $langfile = "{$_CONF['language']}.php";
@@ -76,12 +76,12 @@ spl_autoload_register(function($class)
 
 
 /**
-*   Returns the items for this plugin that should appear on the main menu
-*   NOTE: this MUST return the url/value pairs in the following format
-*       label => url
-*
-*   @return array   Associative array of menu items to be added to menu
-*/
+ * Returns the items for this plugin that should appear on the main menu.
+ * NOTE: this MUST return the url/value pairs in the following format
+ *       label => url
+ *
+ * @return  array   Associative array of menu items to be added to menu
+ */
 function plugin_getmenuitems_birthdays()
 {
     global $_BD_CONF, $LANG_BD00;
@@ -95,10 +95,10 @@ function plugin_getmenuitems_birthdays()
 
 
 /**
-*   Returns the administrative option for this plugin
-*
-*   @return mixed   array(title, url, num. astore), or false when not allowed
-*/
+ * Returns the administrative option for this plugin.
+ *
+ * @return  mixed   array(title, url, num. astore), or false when not allowed
+ */
 function plugin_getadminoption_birthdays()
 {
     global $LANG_BD00, $_BD_CONF;
@@ -114,11 +114,10 @@ function plugin_getadminoption_birthdays()
 
 
 /**
-*   This will put an option for astore in the command and control block on
-*   moderation.php
-*
-*   @return mixed   array(title, url, icon), or boolean false when not allowed
-*/
+ * This will put an option for astore in the command and control block on moderation.php.
+ *
+ * @return  mixed   array(title, url, icon), or boolean false when not allowed
+ */
 function plugin_cclabel_birthdays()
 {
     global $LANG_BD00, $_BD_CONF;
@@ -134,10 +133,10 @@ function plugin_cclabel_birthdays()
 
 
 /**
-*   Check to see if this Plugin uses comments. It does not.
-*
-*   @return boolean     True or False
-*/
+ * Check to see if this Plugin uses comments. It does not.
+ *
+ * @return  boolean     True or False
+ */
 function plugin_commentsupport_birthdays()
 {
     return false;
@@ -145,10 +144,10 @@ function plugin_commentsupport_birthdays()
 
 
 /**
-*   Get the current code version of the plugin.
-*
-*   @return string  version number
-*/
+ * Get the current code version of the plugin.
+ *
+ * @return  string  version number
+ */
 function plugin_chkVersion_birthdays()
 {
     global $_BD_CONF;
@@ -157,10 +156,10 @@ function plugin_chkVersion_birthdays()
 
 
 /**
-*   Returns the URL of the plugin's icon.
-*
-*   @return string      URL of the icon
-*/
+ * Returns the URL of the plugin's icon.
+ *
+ * @return  string      URL of the icon
+ */
 function plugin_geticon_birthdays()
 {
     global $_CONF, $_BD_CONF;
@@ -169,10 +168,10 @@ function plugin_geticon_birthdays()
 
 
 /**
-*   Upgrade the plugin
-*
-*   @return mixed   True for success, False or error message number otherwise
-*/
+ * Upgrade the plugin.
+ *
+ * @return  mixed   True for success, False or error message number otherwise
+ */
 function plugin_upgrade_birthdays()
 {
     if (@file_exists(__DIR__ . '/upgrade.php')) {
@@ -187,11 +186,11 @@ function plugin_upgrade_birthdays()
 
 
 /**
-*   Get additional CSS into the site header.
-*   Allows for custom CSS to be placed by the site admin.
-*
-*   @return array   List of paths to CSS files
-*/
+ * Get additional CSS into the site header.
+ * Allows for custom CSS to be placed by the site admin.
+ *
+ * @return  array   List of paths to CSS files
+ */
 function plugin_getheadercss_birthdays()
 {
     global $_CONF, $_BD_CONF;
@@ -218,10 +217,10 @@ function plugin_getheadercss_birthdays()
 
 
 /**
-*   Get additional Javascript into the site header
-*
-*   @return array   List of paths to Javascript files
-*/
+ * Get additional Javascript into the site header.
+ *
+ * @return  array   List of paths to Javascript files
+ */
 function plugin_getheaderjs_birthdays()
 {
     global $_CONF;
@@ -235,13 +234,13 @@ function plugin_getheaderjs_birthdays()
 
 
 /**
-*   Create an edit form in the Account Settings section.
-*
-*   @param  integer $uid        User ID
-*   @param  string  $panel      Panel being populated
-*   @param  string  $fieldset   Name of fieldset being populated
-*   @return string              HTML for edit form. Never NULL.
-*/
+ * Create an edit form in the Account Settings section.
+ *
+ * @param   integer $uid        User ID
+ * @param   string  $panel      Panel being populated
+ * @param   string  $fieldset   Name of fieldset being populated
+ * @return  string              HTML for edit form. Never NULL.
+ */
 function plugin_profileedit_birthdays($uid, $panel, $fieldset)
 {
     $retval = '';
@@ -253,9 +252,10 @@ function plugin_profileedit_birthdays($uid, $panel, $fieldset)
 
 
 /**
-*   Save the profile information when edited via Account Settings.
-*   Used with glFusion 1.1.5 and above
-*/
+ * Save the profile information when edited via Account Settings.
+ *
+ * @param   integer $uid    User ID being saved
+ */
 function plugin_profilesave_birthdays($uid = 0)
 {
     global $_USER;
@@ -277,11 +277,11 @@ function plugin_profilesave_birthdays($uid = 0)
 
 
 /**
-*   Show the user's birthday in the public profile.
-*
-*   @param  integer $uid    User ID
-*   @param  object  $T      Template object
-*/
+ * Show the user's birthday in the public profile.
+ *
+ * @param   integer $uid    User ID
+ * @param   object  $T      Template object
+ */
 function plugin_profilevariablesdisplay_birthdays($uid, &$T)
 {
     global $_BD_CONF;
@@ -308,10 +308,10 @@ function plugin_profilevariablesdisplay_birthdays($uid, &$T)
 
 
 /**
-*   Delete user-specific data when a user account is deleted.
-*
-*   @param  integer $uid    User ID being deleted
-*/
+ * Delete user-specific data when a user account is deleted.
+ *
+ * @param   integer $uid    User ID being deleted
+ */
 function plugin_user_delete_birthdays($uid)
 {
     \Birthdays\Birthday::Delete($uid);
@@ -319,14 +319,14 @@ function plugin_user_delete_birthdays($uid)
 
 
 /**
-*   Create the sideblock showin upcoming birthdays
-*   The plugin installs a block with no arguments but the site admin can
-*   create or edit the block with an argument for the number of months to show.
-*
-*   @param  array   $blkinfo    Block Info
-*   @param  integer $months     Number of months to show
-*   @return string      HTML for the block
-*/
+ * Create the sideblock showing upcoming birthdays by month.
+ * The plugin installs a block with no arguments but the site admin can
+ * create or edit the block with an argument for the number of months to show.
+ *
+ * @param   array   $blkinfo    Block Info
+ * @param   integer $months     Number of months to show
+ * @return  string      HTML for the block
+ */
 function phpblock_birthdays_month($blkinfo=array(), $months=2)
 {
     global $_BD_CONF, $LANG_BD00, $_CONF, $LANG_MONTH;
@@ -371,14 +371,14 @@ function phpblock_birthdays_month($blkinfo=array(), $months=2)
 
 
 /**
-*   Create the sideblock showin upcoming birthdays by week
-*   The plugin installs the function with no arguments but the site admin
-*   can add functions with an argument for the desired number of weeks.
-*
-*   @param  array   $blkinfo    All block information
-*   @param  integer $weeks      Number of weeks
-*   @return string      HTML for the block
-*/
+ * Create the sideblock showing upcoming birthdays by week.
+ * The plugin installs the function with no arguments but the site admin
+ * can add functions with an argument for the desired number of weeks.
+ *
+ * @param   array   $blkinfo    All block information
+ * @param   integer $weeks      Number of weeks
+ * @return  string      HTML for the block
+ */
 function phpblock_birthdays_week($blkinfo=array(), $weeks=2)
 {
     global $_BD_CONF, $LANG_BD00, $_CONF;
@@ -429,12 +429,12 @@ function phpblock_birthdays_week($blkinfo=array(), $weeks=2)
 
 
 /**
-*   Get the URL to the configuration help file.
-*
-*   @param  string  $option     Config option selected
-*   @param  string  $doclang    Document language
-*   @return string              URL to document
-*/
+ * Get the URL to the configuration help file.
+ *
+ * @param   string  $option     Config option selected
+ * @param   string  $doclang    Document language
+ * @return  string              URL to document
+ */
 function plugin_getconfigelementhelp_birthdays($option, $doclang='english')
 {
     global $_CONF, $_BD_CONF;
@@ -457,10 +457,10 @@ function plugin_getconfigelementhelp_birthdays($option, $doclang='english')
 
 
 /**
-*   Disable this plugin's blocks when the plugin is disabled.
-*
-*   @param  boolean $enabled    Plugin's "enabled" state
-*/
+ * Disable this plugin's blocks when the plugin is disabled.
+ *
+ * @param   boolean $enabled    Plugin's "enabled" state
+ */
 function plugin_enablestatechange_birthdays($enabled)
 {
     global $_TABLES, $_PLUGINS, $_BD_CONF;
@@ -485,11 +485,11 @@ function plugin_enablestatechange_birthdays($enabled)
 
 
 /**
-*   Dispaly a Happy Birthday message when a user logs in.
-*
-*   @param  integer $uid    User ID
-*   @return void
-*/
+ * Dispaly a Happy Birthday message when a user logs in.
+ *
+ * @param   integer $uid    User ID
+ * @return  void
+ */
 function plugin_user_login_birthdays($uid)
 {
     global $_CONF, $LANG_BD00, $_BD_CONF;
@@ -515,10 +515,10 @@ function plugin_user_login_birthdays($uid)
 
 
 /**
-*   Check if the current is a moderator
-*
-*   @return boolean     True if a moderator, False if not
-*/
+ * Check if the current is a moderator.
+ *
+ * @return  boolean     True if a moderator, False if not
+ */
 function plugin_ismoderator_birthdays()
 {
     if (SEC_inGroup('Root')) {
@@ -530,14 +530,14 @@ function plugin_ismoderator_birthdays()
 
 
 /**
-*   Provides the getItemInfo function for birthdays
-*
-*   @param  string  $id         Product ID
-*   @param  string  $fields     Comma-separated list of fields to return
-*   @param  integer $uid        User ID
-*   @param  array   $options    Not used
-*   @return array           Array of product information
-*/
+ * Provides the getItemInfo function for birthdays.
+ *
+ * @param   string  $id         Product ID
+ * @param   string  $what       Comma-separated list of fields to return
+ * @param   integer $uid        User ID
+ * @param   array   $options    Not used
+ * @return  array           Array of product information
+ */
 function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
 {
     global $_TABLES, $_BD_CONF, $LANG_BD00, $_CONF;
@@ -632,9 +632,8 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
 
 
 /**
-*   Perform scheduled functions, such as notifications and cancellations.
-*
-*/
+ * Perform scheduled functions, such as notifications and cancellations.
+ */
 function plugin_runScheduledTask_birthdays()
 {
     global $_TABLES, $_VARS, $_BD_CONF;
@@ -680,13 +679,14 @@ function plugin_runScheduledTask_birthdays()
 
 
 /**
-*   Set the email format for birthday reminders.
-*
-*   @param  string  $category   Notification type, e.g. birthday_sub
-*   @param  string  $track_id   Item being tracked (not used)
-*   @param  integer $uid        Item ID (ID of birthday user in this case)
-*   @param  integer $poster_id  Poster ID (not used)
-*/
+ * Set the email format for birthday reminders.
+ *
+ * @param   string  $category   Notification type, e.g. birthday_sub
+ * @param   string  $track_id   Item being tracked (not used)
+ * @param   integer $uid        Item ID (ID of birthday user in this case)
+ * @param   integer $poster_id  Poster ID (not used)
+ * @return  array       Array(HTML message, Text message, Subject)
+ */
 function plugin_subscription_email_format_birthdays($category, $track_id, $uid, $poster_id)
 {
     global $_CONF, $_BD_CONF;
@@ -745,11 +745,11 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
 
 
 /**
-*   Get an array of values for the current date.
-*   Uses a static variable for repeated calls.
-*
-*   @return array   Array of year, month, day
-*/
+ * Get an array of values for the current date.
+ * Uses a static variable for repeated calls.
+ *
+ * @return  array   Array of year, month, day
+ */
 function BIRTHDAYS_currentDate()
 {
     global $_CONF;
@@ -769,14 +769,14 @@ function BIRTHDAYS_currentDate()
 
 
 /**
-*   Format a date according to the configured format.
-*   Allows a single array parameter, or individual values.
-*
-*   @param  mixed   $month  Month number or array of all values
-*   @param  integer $day    Day value, if $month is an integer
-*   @param  integer $year   Optional year value
-*   @return string          Formatted date string
-*/
+ * Format a date according to the configured format.
+ * Allows a single array parameter, or individual values.
+ *
+ * @param   mixed   $month  Month number or array of all values
+ * @param   integer $day    Day value, if $month is an integer
+ * @param   integer $year   Optional year value
+ * @return  string          Formatted date string
+ */
 function BIRTHDAYS_format($month, $day = '', $year = '')
 {
     global $_CONF, $_BD_CONF;
@@ -819,10 +819,10 @@ function BIRTHDAYS_format($month, $day = '', $year = '')
 
 
 /**
-*   Helper function to determine if the current user can view all birthdays
-*
-*   @return boolean     True if access is allowed, False if not.
-*/
+ * Helper function to determine if the current user can view all birthdays.
+ *
+ * @return  boolean     True if access is allowed, False if not.
+ */
 function BIRTHDAYS_canView()
 {
     global $_BD_CONF;
@@ -836,13 +836,12 @@ function BIRTHDAYS_canView()
 
 
 /**
-*   Service function to get birthdays for a time period.
-*   Args can be an array of start and end dates, or a month
-*   and day.
-*
-*   @param  array   $args       Array of arguments
-*   @return array       Array of birthdays by date
-*/
+ * Service function to get birthdays for a time period.
+ * Args can be an array of start and end dates, or a month and day.
+ *
+ * @param   array   $args       Array of arguments
+ * @return  array       Array of birthdays by date
+ */
 function plugin_getBirthdays_birthdays($args)
 {
     $output = array();
@@ -872,14 +871,10 @@ function plugin_getBirthdays_birthdays($args)
 
 
 /**
-*   Create an array of groups for the configmanager
-*
-*   @param  boolean $nogroup    True if "No Group" is an option.
-*   @param  string  $grplist    Comma-separated list of groups, SQL format
-*   @param  string  $NOT        "NOT" to exclude $grplist, blank to include it.
-*   $param  mixeed  $prepend    Array of gid=>grp_names to prepend to the list.
-*   @return array               Array of groups as name=>ID
-*/
+ * Create an array of groups for the configmanager.
+ *
+ * @return  array               Array of groups as name=>ID
+ */
 function plugin_configmanager_select_grp_access_birthdays()
 {
     global $_TABLES;
@@ -900,15 +895,15 @@ function plugin_configmanager_select_grp_access_birthdays()
 
 
 /**
-*   Export user data when requested.
-*
-*   @param  integer $uid        User ID
-*   @param  string  $email      User Email Address (not used)
-*   @param  string  $username   User Name (not used)
-*   @param  string  $ip         IP address (not used)
-*   @return string              XML-formatted data
-*/
-function plugin_privacy_export_birthdays($uid,$email='',$username='',$ip='')
+ * Export user data when requested by the privacy plugin.
+ *
+ * @param   integer $uid        User ID
+ * @param   string  $email      User Email Address (not used)
+ * @param   string  $username   User Name (not used)
+ * @param   string  $ip         IP address (not used)
+ * @return  string              XML-formatted data
+ */
+function plugin_privacy_export_birthdays($uid, $email='', $username='', $ip='')
 {
     global $_USER;
 
@@ -924,13 +919,13 @@ function plugin_privacy_export_birthdays($uid,$email='',$username='',$ip='')
 
 
 /**
-*   Get a language file for a specific specific user ID.
-*   This is the same as the code at the top of the file, but the language
-*   strings are saved in a local array so the global $LANG_BD00 is unaffected.
-*
-*   @param  integer $uid    User ID
-*   @return array           Language array
-*/
+ * Get a language file for a specific specific user ID.
+ * This is the same as the code at the top of the file, but the language
+ * strings are saved in a local array so the global $LANG_BD00 is unaffected.
+ *
+ * @param   integer $uid    User ID
+ * @return  array           Language array
+ */
 function BIRTHDAYS_loadLanguage($uid)
 {
     global $_CONF, $_TABLES;

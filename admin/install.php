@@ -1,19 +1,17 @@
 <?php
 /**
-*  Installation routine for the Birthdays plugin for GLFusion
-*
-*   @author     Lee Garner <lee@leegarner.com>
-*   @copyright  Copyright (c) 2018 Lee Garner <lee@leegarner.com>
-*   @package    birthdays
-*   @version    0.1.0
-*   @license    http://opensource.org/licenses/gpl-2.0.php 
-*               GNU Public License v2 or later
-*   @filesource
-*/
-
-/**
- *  Include required glFusion common functions
+ * Installation routine for the Birthdays plugin for glFusion.
+ *
+ * @author      Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018 Lee Garner <lee@leegarner.com>
+ * @package     birthdays
+ * @version     v0.1.0
+ * @license     http://opensource.org/licenses/gpl-2.0.php 
+ *              GNU Public License v2 or later
+ * @filesource
  */
+
+/** Include required glFusion common functions. */
 require_once '../../../lib-common.php';
 
 // Only let Root users access this page
@@ -24,16 +22,12 @@ if (!SEC_inGroup('Root')) {
     exit;
 }
 
-/**
-*  Include required plugin common functions
-*/
+/** Include required plugin common functions */
 $base_path  = "{$_CONF['path']}plugins/birthdays";
 require_once "$base_path/autoinstall.php";
 USES_lib_install();
 
-/* 
-* Main Function
-*/
+// MAIN
 if (SEC_checkToken()) {
     if ($_GET['action'] == 'install') {
         if (plugin_install_birthdays()) {

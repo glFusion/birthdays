@@ -1,17 +1,17 @@
 <?php
 /**
-*   Public entry point for the Birthdays plugin.
-*
-*   @author     Lee Garner <lee@leegarner.com>
-*   @author     Mike Lynn <mike@mlynn.com>
-*   @copyright  Copyright (c) 2018 Lee Garner <lee@leegarner.com>
-*   @copyright  Copyright (c) 2002 Mike Lynn <mike@mlynn.com>
-*   @package    birthdays
-*   @version    0.1.0
-*   @license    http://opensource.org/licenses/gpl-2.0.php
-*               GNU Public License v2 or later
-*   @filesource
-*/
+ * Public entry point for the Birthdays plugin.
+ *
+ * @author      Lee Garner <lee@leegarner.com>
+ * @author      Mike Lynn <mike@mlynn.com>
+ * @copyright   Copyright (c) 2018 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2002 Mike Lynn <mike@mlynn.com>
+ * @package     birthdays
+ * @version     v0.1.0
+ * @license     http://opensource.org/licenses/gpl-2.0.php
+ *              GNU Public License v2 or later
+ * @filesource
+ */
 require_once('../lib-common.php');
 
 if (!BIRTHDAYS_canView()) {
@@ -21,9 +21,7 @@ if (!BIRTHDAYS_canView()) {
 
 USES_lib_admin();
 
-/*
-* Main Function
-*/
+// MAIN
 
 $expected = array('list', 'addbday', 'mode');
 foreach($expected as $provided) {
@@ -79,11 +77,11 @@ exit;
 
 
 /**
-*   Present the list of birthdays.
-*
-*   @param  integer $filter_month   Month to show, or "all"
-*   @return string      HTML for the list
-*/
+ * Present the list of birthdays.
+ *
+ * @param   integer $filter_month   Month to show, or "all"
+ * @return  string      HTML for the list
+ */
 function listbirthdays($filter_month)
 {
     global $_TABLES, $LANG_BD00, $_BD_CONF;
@@ -145,15 +143,14 @@ function listbirthdays($filter_month)
 
 
 /**
-*   Determine what to display in the admin list for each birthday.
-*
-*   @param  string  $fieldname  Name of the field, from database
-*   @param  mixed   $fieldvalue Value of the current field
-*   @param  array   $A          Array of all name/field pairs
-*   @param  array   $icon_arr   Array of system icons
-*   @param  array   $extra      Extra passthrough items (includes date obj)
-*   @return string              HTML for the field cell
-*/
+ * Determine what to display in the admin list for each birthday.
+ *
+ * @param   string  $fieldname  Name of the field, from database
+ * @param   mixed   $fieldvalue Value of the current field
+ * @param   array   $A          Array of all name/field pairs
+ * @param   array   $icon_arr   Array of system icons
+ * @return  string              HTML for the field cell
+ */
 function getField_bday_list($fieldname, $fieldvalue, $A, $icon_arr)
 {
     global $_CONF, $_BD_CONF, $LANG_BD00, $_USER;

@@ -1,16 +1,16 @@
 <?php
 /**
-*   Admin entry point for the Birthdays plugin.
-*
-*   @author     Lee Garner <lee@leegarner.com>
-*   @author     Mike Lynn <mike@mlynn.com>
-*   @copyright  Copyright (c) 2018 Lee Garner <lee@leegarner.com>
-*   @package    birthdays
-*   @version    0.1.0
-*   @license    http://opensource.org/licenses/gpl-2.0.php
-*               GNU Public License v2 or later
-*   @filesource
-*/
+ * Admin entry point for the Birthdays plugin.
+ *
+ * @author     Lee Garner <lee@leegarner.com>
+ * @author     Mike Lynn <mike@mlynn.com>
+ * @copyright  Copyright (c) 2018 Lee Garner <lee@leegarner.com>
+ * @package    birthdays
+ * @version    0.1.0
+ * @license    http://opensource.org/licenses/gpl-2.0.php
+ *              GNU Public License v2 or later
+ * @filesource
+ */
 require_once('../../../lib-common.php');
 
 if (!plugin_ismoderator_birthdays()) {
@@ -68,10 +68,10 @@ echo COM_siteFooter();
 
 
 /**
-*   Create the admin menu at the top of the list and form pages.
-*
-*   @return string      HTML for admin menu section
-*/
+ * Create the admin menu at the top of the list and form pages.
+ *
+ * @return  string      HTML for admin menu section
+ */
 function BIRTHDAYS_adminMenu()
 {
     global $_CONF, $_BD_CONF, $LANG_BD00, $LANG01;
@@ -100,10 +100,10 @@ function BIRTHDAYS_adminMenu()
 
 
 /**
-*   Show the admin list
-*
-*   @return string  HTML for item list
-*/
+ * Show the admin list.
+ *
+ * @return string  HTML for item list
+ */
 function BIRTHDAYS_adminList()
 {
     global $LANG_ADMIN, $LANG_BD00, $_TABLES, $_CONF, $_BD_CONF;
@@ -150,14 +150,14 @@ function BIRTHDAYS_adminList()
 
 
 /**
-*   Get the correct display for a single field in the astore admin list
-*
-*   @param  string  $fieldname  Field variable name
-*   @param  string  $fieldvalue Value of the current field
-*   @param  array   $A          Array of all field names and values
-*   @param  array   $icon_arr   Array of system icons
-*   @return string              HTML for field display within the list cell
-*/
+ * Get the correct display for a single field in the admin list.
+ *
+ * @param   string  $fieldname  Field variable name
+ * @param   string  $fieldvalue Value of the current field
+ * @param   array   $A          Array of all field names and values
+ * @param   array   $icon_arr   Array of system icons
+ * @return  string              HTML for field display within the list cell
+ */
 function BIRTHDAYS_getAdminField($fieldname, $fieldvalue, $A, $icon_arr)
 {
     global $_CONF, $_BD_CONF, $LANG_BD00;
@@ -187,6 +187,5 @@ function BIRTHDAYS_getAdminField($fieldname, $fieldvalue, $A, $icon_arr)
     }
     return $retval;
 }
-
 
 ?>
