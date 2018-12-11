@@ -415,6 +415,7 @@ class Birthday
      * @param   string  $key    Item key
      * @param   mixed   $data   Data, typically an array
      * @param   mixed   $tag    Single or array of tags to apply
+     * @return  boolean     True on success, False on error
      */
     public static function setCache($key, $data, $tag='')
     {
@@ -425,7 +426,7 @@ class Birthday
         else
             $tag = array($tag, self::TAG);
         $key = self::_makeKey($key);
-        \glFusion\Cache::getInstance()->set($key, $data, $tag);
+        return \glFusion\Cache\Cache::getInstance()->set($key, $data, $tag);
     }
 
 
@@ -434,6 +435,7 @@ class Birthday
      * Entries matching all tags, including default tag, are removed.
      *
      * @param   mixed   $tag    Single or array of tags
+     * @return  boolean     True on success, False on error
      */
     public static function clearCache($tag = '')
     {
@@ -444,7 +446,7 @@ class Birthday
             if (!is_array($tag)) $tag = array($tag);
             $tags = array_merge($tags, $tag);
         }
-        \glFusion\Cache::getInstance()->deleteItemsByTagsAll($tags);
+        return \glFusion\Cache\Cache::getInstance()->deleteItemsByTagsAll($tags);
     }
 
 
@@ -452,11 +454,12 @@ class Birthday
      * Delete a single item from the cache
      *
      * @param   string  $key    Item key to delete
+     * @return  boolean     True on success, False on error
      */
     public static function deleteCache($key)
     {
         $key = self::_makeKey($key);
-        \glFusion\Cache::getInstance()->delete($key);
+        return \glFusion\Cache\Cache::getInstance()->delete($key);
     }
 
 
@@ -482,8 +485,8 @@ class Birthday
     {
         if (version_compare(GVERSION, self::CACHE_GVERSION, '<')) return;
         $key = self::_makeKey($key);
-        if (\glFusion\Cache::getInstance()->has($key)) {
-            return \glFusion\Cache::getInstance()->get($key);
+        if (\glFusion\Cache\Cache::getInstance()->has($key)) {
+            return \glFusion\Cache\Cache::getInstance()->get($key);
         } else {
             return NULL;
         }
