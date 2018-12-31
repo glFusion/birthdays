@@ -410,6 +410,97 @@ class Birthday
 
 
     /**
+     * Format a date according to the configured format.
+     * Allows a single array parameter, or individual values.
+     *
+     * @param   mixed   $month  Month number or array of all values
+     * @param   integer $day    Day value, if $month is an integer
+     * @param   integer $year   Optional year value
+     * @return  string          Formatted date string
+     */
+    public static function formatDate($month, $day = '', $year = '')
+    {
+        global $_CONF, $_BD_CONF;
+        static $dt = NULL;
+
+        if (is_array($month)) {
+            // For an array, load the vaues into individual fields
+            $day = isset($month['day']) ? $month['day'] : '';
+            $year = isset($month['year']) ? $month['year'] : '';
+            $month = isset($month['month']) ? $month['month'] : '';
+        } elseif (strpos($month, '-')) {
+            // YYYY-MM-DD format, separate into component parts
+            $A = explode('-', $month);
+            if (count($A) == 3) {
+                $year = $A[0];
+                $month = $A[1];
+                $day = $A[2];
+            } else {
+                $month = $A[0];
+                $day = $A[1];
+            }
+        }
+
+        // At least month and day are required
+        if (empty($month) || empty($day)) {
+            return 'n/a';
+        }
+        // If the year is undefined, use the current year
+        if (empty($year)) $year = self::currentDate()['year'];
+
+        // Create a date object, if not already done.
+        if ($dt === NULL) {
+            $dt = new \Date('now', $_CONF['timezone']);
+        }
+
+        // Format the date
+        $dt->setDate($year, $month, $day);
+        return $dt->Format($_BD_CONF['format'], true);
+    }
+
+
+    /**
+     * Helper function to determine if the current user can view all birthdays.
+     *
+     * @return  boolean     True if access is allowed, False if not.
+     */
+    public static function canView()
+    {
+        global $_BD_CONF;
+        static $canView = NULL;
+
+        if ($canView === NULL) {
+            $canView = SEC_inGroup($_BD_CONF['grp_access']);
+        }
+        return $canView;
+    }
+
+
+    /**
+     * Get an array of values for the current date.
+     * Uses a static variable for repeated calls.
+     *
+     * @return  array   Array of year, month, day
+     */
+    public static function currentDate()
+    {
+        global $_CONF;
+        static $retval = NULL;
+
+        if ($retval === NULL) {
+            $dt = new \Date('now', $_CONF['timezone']);
+            $retval = array(
+                'dt'    => $dt,
+                'year'  => $dt->Format('Y', true),
+                'month' => $dt->Format('m', true),
+                'day'   => $dt->Format('d', true),
+            );
+        }
+        return $retval;
+    }
+
+
+    /**
      * Update the cache.
      *
      * @param   string  $key    Item key

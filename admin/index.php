@@ -178,7 +178,7 @@ function BIRTHDAYS_getAdminField($fieldname, $fieldvalue, $A, $icon_arr)
         break;
 
     case 'birthday':
-        $retval = BIRTHDAYS_format($A['month'], $A['day']);
+        $retval = \Birthdays\Birthday::formatDate($A['month'], $A['day']);
         break;
 
     default:

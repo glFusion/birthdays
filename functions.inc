@@ -87,7 +87,7 @@ function plugin_getmenuitems_birthdays()
     global $_BD_CONF, $LANG_BD00;
 
     $menuitems = array();
-    if (BIRTHDAYS_canView()) {
+    if (\Birthdays\Birthday::canView()) {
         $menuitems[$LANG_BD00['pi_title']] = $_BD_CONF['url'];
     }
     return $menuitems;
@@ -283,7 +283,7 @@ function plugin_profilevariablesdisplay_birthdays($uid, &$T)
     $retval = '';
 
     // Make sure that a valid UID was passed in.
-    if (empty($uid) || !BIRTHDAYS_canView()) {
+    if (empty($uid) || !\Birthdays\Birthday::canView()) {
         return '';
     }
 
@@ -293,7 +293,7 @@ function plugin_profilevariablesdisplay_birthdays($uid, &$T)
     ));
     $bday = \Birthdays\Birthday::getUser($uid);
     if (empty($bday)) return;
-    $LT->set_var('birthday', BIRTHDAYS_format($bday));
+    $LT->set_var('birthday', \Birthdays\Birthday::formatDate($bday));
     $LT->parse('output', 'block');
     $existingFields = $T->get_var('plugin_fields');
     $T->set_var('plugin_fields',
@@ -325,7 +325,7 @@ function phpblock_birthdays_month($blkinfo=array(), $months=2)
 {
     global $_BD_CONF, $LANG_BD00, $_CONF, $LANG_MONTH;
 
-    $M = BIRTHDAYS_currentDate()['month'];  // starting month
+    $M = \Birthdays\Birthday::currentDate()['month'];  // starting month
     $have_data = false;
     $retval = '';
 
@@ -343,7 +343,7 @@ function phpblock_birthdays_month($blkinfo=array(), $months=2)
         $T->set_block('block', 'bdays', 'bd');
         foreach($thismonth as $bday) {
             $T->set_var('username', COM_getDisplayName($bday['uid']));
-            $T->set_var('birthday', BIRTHDAYS_format($bday));
+            $T->set_var('birthday', \Birthdays\Birthday::formatDate($bday));
             $T->parse('bd', 'bdays', true);
         }
         $T->parse('mon', 'month', true);
@@ -398,14 +398,14 @@ function phpblock_birthdays_week($blkinfo=array(), $weeks=2)
             $have_data = true;
         }
         $T->set_var(array(
-            'period' => BIRTHDAYS_format($start) . ' - ' .
-                        BIRTHDAYS_format($end),
+            'period' => \Birthdays\Birthday::formatDate($start) . ' - ' .
+                        \Birthdays\Birthday::formatDate($end),
         ) );
         $T->set_block('block', 'bdays', 'bd');
         foreach($thisweek as $bday=>$bdays) {
             foreach ($bdays as $uid) {
                 $T->set_var('username', COM_getDisplayName($uid));
-                $T->set_var('birthday', BIRTHDAYS_format($bday));
+                $T->set_var('birthday', \Birthdays\Birthday::formatDate($bday));
                 $T->parse('bd', 'bdays', true);
             }
         }
@@ -491,8 +491,8 @@ function plugin_user_login_birthdays($uid)
     // Show nothing if disabled
     if (!$_BD_CONF['login_greeting']) return;
 
-    $month = BIRTHDAYS_currentDate()['month'];
-    $day = BIRTHDAYS_currentDate()['day'];
+    $month = \Birthdays\Birthday::currentDate()['month'];
+    $day = \Birthdays\Birthday::currentDate()['day'];
     // Get all user birthdays for today. This allows the request
     // to go through caching, and the result set should be small anyway.
     $x = \Birthdays\Birthday::getAll($month, $day);
@@ -566,7 +566,7 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
                 $props[$p] = 1;     // Recurs every one year
                 break;
             case 'content':
-                $props[$p] = BIRTHDAYS_format($bday->month, $bday->day);
+                $props[$p] = \Birthdays\Birthday::formatDate($bday->month, $bday->day);
                 break;
             case 'date':
                 // Use 2016 as year since it's a leap year, allow for 29 Feb.
@@ -636,7 +636,7 @@ function plugin_runScheduledTask_birthdays()
         return;     // don't go through the loop if nothing will be sent
     }
 
-    $dt = BIRTHDAYS_currentDate();
+    $dt = \Birthdays\Birthday::currentDate();
     $today = sprintf("%4d%02d%02d", $dt['year'], $dt['month'], $dt['day']);
     $lastrun = isset($_VARS['birthdays_lastrun']) ? $_VARS['birthdays_lastrun'] : '';
     if ($lastrun == $today) return;     // run once daily only
@@ -739,116 +739,27 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
 
 
 /**
- * Get an array of values for the current date.
- * Uses a static variable for repeated calls.
- *
- * @return  array   Array of year, month, day
- */
-function BIRTHDAYS_currentDate()
-{
-    global $_CONF;
-    static $retval = NULL;
-
-    if ($retval === NULL) {
-        $dt = new \Date('now', $_CONF['timezone']);
-        $retval = array(
-            'dt'    => $dt,
-            'year'  => $dt->Format('Y', true),
-            'month' => $dt->Format('m', true),
-            'day'   => $dt->Format('d', true),
-        );
-    }
-    return $retval;
-}
-
-
-/**
- * Format a date according to the configured format.
- * Allows a single array parameter, or individual values.
- *
- * @param   mixed   $month  Month number or array of all values
- * @param   integer $day    Day value, if $month is an integer
- * @param   integer $year   Optional year value
- * @return  string          Formatted date string
- */
-function BIRTHDAYS_format($month, $day = '', $year = '')
-{
-    global $_CONF, $_BD_CONF;
-    static $dt = NULL;
-
-    if (is_array($month)) {
-        // For an array, load the vaues into individual fields
-        $day = isset($month['day']) ? $month['day'] : '';
-        $year = isset($month['year']) ? $month['year'] : '';
-        $month = isset($month['month']) ? $month['month'] : '';
-    } elseif (strpos($month, '-')) {
-        // YYYY-MM-DD format, separate into component parts
-        $A = explode('-', $month);
-        if (count($A) == 3) {
-            $year = $A[0];
-            $month = $A[1];
-            $day = $A[2];
-        } else {
-            $month = $A[0];
-            $day = $A[1];
-        }
-    }
-
-    // At least month and day are required
-    if (empty($month) || empty($day)) {
-        return 'n/a';
-    }
-    // If the year is undefined, use the current year
-    if (empty($year)) $year = BIRTHDAYS_currentDate()['year'];
-
-    // Create a date object, if not already done.
-    if ($dt === NULL) {
-        $dt = new \Date('now', $_CONF['timezone']);
-    }
-
-    // Format the date
-    $dt->setDate($year, $month, $day);
-    return $dt->Format($_BD_CONF['format'], true);
-}
-
-
-/**
- * Helper function to determine if the current user can view all birthdays.
- *
- * @return  boolean     True if access is allowed, False if not.
- */
-function BIRTHDAYS_canView()
-{
-    global $_BD_CONF;
-    static $canView = NULL;
-
-    if ($canView === NULL) {
-        $canView = SEC_inGroup($_BD_CONF['grp_access']);
-    }
-    return $canView;
-}
-
-
-/**
  * Service function to get birthdays for a time period.
  * Args can be an array of start and end dates, or a month and day.
  *
  * @param   array   $args       Array of arguments
- * @return  array       Array of birthdays by date
+ * @param   array   $output     Array of output data
+ * @param   string  $svc_msg    Unused
+ * @return  integer     Return value
  */
-function plugin_getBirthdays_birthdays($args)
+function service_getBirthdays_birthdays($args, &$output, &$svc_msg)
 {
     $output = array();
-    if (!BIRTHDAYS_canView()) {
+    if (!\Birthdays\Birthday::canView()) {
         // Not an error, but return nothing
-        return $output;
+        return PLG_RET_OK;
     }
 
     // Args must be an array
     if (!is_array($args)) $args = array($args);
 
     if (isset($args['start'])) {
-        // Get birthdays within a date range
+        // Get birthdays within a date range, one day by default
         $start = $args['start'];
         $end = isset($args['end']) ? $args['end'] : $start;
         $output = \Birthdays\Birthday::getRange($start, $end);
@@ -860,7 +771,7 @@ function plugin_getBirthdays_birthdays($args)
         // Get all birthdays in the table
         $output = \Birthdays\Birthday::getAll();
     }
-    return $output;
+    return PLG_RET_OK;
 }
 
 
@@ -903,7 +814,7 @@ function plugin_privacy_export_birthdays($uid, $email='', $username='', $ip='')
 
     $retval = "<birthdays>\n";
     $bday = \Birthdays\Birthday::getUser($uid);
-    $retval .= '<birthday>' . BIRTHDAYS_format($bday) . '</birthday>' . "\n";
+    $retval .= '<birthday>' . \Birthdays\Birthday::formatDate($bday) . '</birthday>' . "\n";
     $retval .= "</birthdays>\n";
     if ( function_exists('tidy_repair_string')) {
         $retval = tidy_repair_string($retval, array('input-xml' => 1));

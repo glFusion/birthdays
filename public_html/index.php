@@ -14,7 +14,7 @@
  */
 require_once('../lib-common.php');
 
-if (!BIRTHDAYS_canView()) {
+if (!\Birthdays\Birthday::canView()) {
     COM_404();
     exit;
 }
@@ -39,7 +39,7 @@ foreach($expected as $provided) {
     }
 }
 if (empty($action)) $action = 'list';
-$curmonth = BIRTHDAYS_currentDate()['month'];
+$curmonth = \Birthdays\Birthday::currentDate()['month'];
 $filter_month = isset($_REQUEST['filter_month']) ? $_REQUEST['filter_month'] : $curmonth;
 if ($filter_month == -1) {
     $filter_month = $curmonth;
@@ -163,7 +163,7 @@ function getField_bday_list($fieldname, $fieldvalue, $A, $icon_arr)
         break;
 
     case 'birthday':
-        $retval .= BIRTHDAYS_format($A);
+        $retval .= \Birthdays\Birthday::formatDate($A);
         break;
 
     case 'subscribe':
