@@ -2,6 +2,7 @@
 
 ## Version 0.1.2
 Release TBD
+- Remove html-format apostrophy in dscp language string
 - Show only allowed days when birthday form is first displayed
 - Add privacy export function
 - Use plugin language for Name column header to allow customization
@@ -10,7 +11,7 @@ Release TBD
 
 ## Version 0.1.1
 Release 2018-04-14
-- Change DB_fetchAll() to get results in a loop
+- Change `DB_fetchAll()` to get results in a loop
 
 ## Version 0.1.0
 Release 2018-04-14
