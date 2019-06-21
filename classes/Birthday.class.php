@@ -3,9 +3,9 @@
  * Class to manage birthdays.
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2018 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018-2019 Lee Garner <lee@leegarner.com>
  * @package     birthdays
- * @version     v0.1.0
+ * @version     v0.1.2
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
@@ -37,15 +37,19 @@ class Birthday
      */
     public function __construct($uid=0)
     {
-        $uid = (int)$uid;
-        if ($uid < 1) {
-            $this->uid = 0;
-            $this->month = 0;
-            $this->day = 0;
-            $this->year = 0;
+        if (is_array($uid)) {
+            $this->setVars($uid);
         } else {
-            $this->uid = $uid;
-            $this->Read();
+            $uid = (int)$uid;
+            if ($uid < 1) {
+                $this->uid = 0;
+                $this->month = 0;
+                $this->day = 0;
+                $this->year = 0;
+            } else {
+                $this->uid = $uid;
+                $this->Read();
+            }
         }
     }
 
@@ -99,10 +103,11 @@ class Birthday
      */
     public function __get($key)
     {
-        if (isset($this->properties[$key]))
+        if (isset($this->properties[$key])) {
             return $this->properties[$key];
-        else
+        } else {
             return NULL;
+        }
     }
 
 
@@ -208,14 +213,10 @@ class Birthday
         }
 
         $where = '';
-        if ($month == 0) {
-            $where .= ' AND b.month > 0';
-        } else {
+        if ($month > 0) {
             $where .= ' AND b.month = ' . $month;
         }
-        if ($day == 0) {
-            $where .= ' AND b.day > 0';
-        } else {
+        if ($day > 0) {
             $where .= ' AND b.day = ' . $day;
         }
         // The year isn't stored, so use a bogus leap year.
@@ -233,7 +234,7 @@ class Birthday
         //$retval = DB_fetchAll($res, false);
         $retval = array();
         while ($A = DB_fetchArray($res, false)) {
-            $retval[] = $A;
+            $retval[] = new self($A);
         }
         self::setCache($cache_key, $retval, 'range');
         return $retval;
@@ -326,6 +327,7 @@ class Birthday
             $res = DB_query($sql);
             if (!DB_error()) {
                 $retval = DB_fetchArray($res, false);
+                self::setCache($uid, $retval);
             }
         }
         return $retval;
@@ -512,10 +514,11 @@ class Birthday
     {
         if (version_compare(GVERSION, self::CACHE_GVERSION, '<')) return NULL;
 
-        if ($tag == '')
+        if ($tag == '') {
             $tag = array(self::TAG);
-        else
+        } else {
             $tag = array($tag, self::TAG);
+        }
         $key = self::_makeKey($key);
         return \glFusion\Cache\Cache::getInstance()->set($key, $data, $tag);
     }
@@ -574,7 +577,9 @@ class Birthday
      */
     public static function getCache($key)
     {
-        if (version_compare(GVERSION, self::CACHE_GVERSION, '<')) return;
+        if (version_compare(GVERSION, self::CACHE_GVERSION, '<')) {
+            return;
+        }
         $key = self::_makeKey($key);
         if (\glFusion\Cache\Cache::getInstance()->has($key)) {
             return \glFusion\Cache\Cache::getInstance()->get($key);

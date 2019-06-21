@@ -4,10 +4,10 @@
  *
  * @author      Lee Garner <lee@leegarner.com>
  * @author      Mike Lynn <mike@mlynn.com>
- * @copyright   Copyright (c) 2018 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018-2019 Lee Garner <lee@leegarner.com>
  * @copyright   Copyright (c) 2002 Mike Lynn <mike@mlynn.com>
  * @package     birthdays
- * @version     v0.1.0
+ * @version     v0.1.2
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
@@ -342,7 +342,7 @@ function phpblock_birthdays_month($blkinfo=array(), $months=2)
         $T->set_var('period', $LANG_MONTH[(int)$M]);
         $T->set_block('block', 'bdays', 'bd');
         foreach($thismonth as $bday) {
-            $T->set_var('username', COM_getDisplayName($bday['uid']));
+            $T->set_var('username', COM_getDisplayName($bday->uid));
             $T->set_var('birthday', \Birthdays\Birthday::formatDate($bday));
             $T->parse('bd', 'bdays', true);
         }
@@ -498,7 +498,7 @@ function plugin_user_login_birthdays($uid)
     $x = \Birthdays\Birthday::getAll($month, $day);
     if ($x) {
         foreach ($x as $data) {
-            if ($data['uid'] == $uid) {
+            if ($data->uid == $uid) {
                 COM_setMsg(sprintf($LANG_BD00['msg_happy_birthday'], COM_getDisplayName($uid)));
                 break;
             }
@@ -538,9 +538,11 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
 
     $properties = explode(',', $what);
     $retval = array();
-    if ($id == '*') return $retval; // getAll not supported
-    // Use an array in case getAll is supported later
-    $bdays = array(\Birthdays\Birthday::getInstance($id));
+    if ($id == '*') {
+        $bdays = \Birthdays\Birthday::getAll();
+    } else {
+        $bdays = array(\Birthdays\Birthday::getInstance($id));
+    }
 
     foreach ($bdays as $bday) {
         foreach ($properties as $p) {
@@ -645,7 +647,7 @@ function plugin_runScheduledTask_birthdays()
             ON DUPLICATE KEY UPDATE value = '$today'");
     $bdays = \Birthdays\Birthday::getAll($dt['month'], $dt['day']);
     foreach ($bdays as $bday) {
-        $uid = (int)$bday['uid'];
+        $uid = (int)$bday->uid;
         if ($_BD_CONF['enable_subs']) {
             PLG_sendSubscriptionNotification('birthdays', 'birthday_sub', '', $uid, 0);
         }
@@ -810,14 +812,15 @@ function plugin_configmanager_select_grp_access_birthdays()
  */
 function plugin_privacy_export_birthdays($uid, $email='', $username='', $ip='')
 {
-    global $_USER;
-
-    $retval = "<birthdays>\n";
+    $retval = '';
     $bday = \Birthdays\Birthday::getUser($uid);
-    $retval .= '<birthday>' . \Birthdays\Birthday::formatDate($bday) . '</birthday>' . "\n";
-    $retval .= "</birthdays>\n";
-    if ( function_exists('tidy_repair_string')) {
-        $retval = tidy_repair_string($retval, array('input-xml' => 1));
+    if ($bday !== NULL) {
+        $retval .= "<birthdays>\n";
+        $retval .= '<birthday>' . \Birthdays\Birthday::formatDate($bday) . '</birthday>' . "\n";
+        $retval .= "</birthdays>\n";
+        if (function_exists('tidy_repair_string')) {
+            $retval = tidy_repair_string($retval, array('input-xml' => 1));
+        }
     }
     return $retval;
 }

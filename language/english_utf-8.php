@@ -49,6 +49,7 @@ $LANG_BD00 = array (
     'user_id'       => 'User ID',
     'birthdays_month' => 'Birthdays This Month',
     'birthdays_week'  => 'Birthdays This Week',
+    'hlp_sync_all' => 'Sync All: Re-saves all birthday entries so other plugins will update their records if they use data from this plugin.',
 );
 
 // Localization of the Admin Configuration UI

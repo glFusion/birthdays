@@ -4,9 +4,9 @@
  *
  * @author     Lee Garner <lee@leegarner.com>
  * @author     Mike Lynn <mike@mlynn.com>
- * @copyright  Copyright (c) 2018 Lee Garner <lee@leegarner.com>
+ * @copyright  Copyright (c) 2018-2019 Lee Garner <lee@leegarner.com>
  * @package    birthdays
- * @version    0.1.0
+ * @version    0.1.2
  * @license    http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
@@ -39,10 +39,9 @@ foreach($expected as $provided) {
 switch ($action) {
 case 'syncall':
     // Re-save all items to sync with other plugins
-    $BD = \Birthdays\Birthday::getAll();
-    $B = new \Birthdays\Birthday();
-    foreach ($BD as $vals) {
-        $B->Save($vals);
+    $Birthdays= \Birthdays\Birthday::getAll();
+    foreach ($Birthdays as $B) {
+        PLG_itemSaved($B->uid, $_BD_CONF['pi_name']);
     }
     break;
 
@@ -93,8 +92,11 @@ function BIRTHDAYS_adminMenu()
         'logo_url' => plugin_geticon_birthdays(),
     ) );
     $retval = $T->parse('', 'title');
-    $retval .= ADMIN_createMenu($menu_arr, '',
-            plugin_geticon_birthdays());
+    $retval .= ADMIN_createMenu(
+        $menu_arr,
+        $LANG_BD00['hlp_sync_all'],
+        plugin_geticon_birthdays()
+    );
     return $retval;
 }
 

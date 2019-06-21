@@ -8,6 +8,7 @@ Release TBD
 - Use plugin language for Name column header to allow customization
 - Add plugin and user name to subscription record
 - Disable search indexing
+- Add option to sync all birthdays to other plugins
 
 ## Version 0.1.1
 Release 2018-04-14
