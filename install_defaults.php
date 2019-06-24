@@ -101,6 +101,7 @@ $birthdaysConfigData = array(
 /**
  * Initialize Birthdays plugin configuration.
  *
+ * @param   integer $group_id   Not used
  * @return  boolean     True: success; False: an error occurred
  */
 function plugin_initconfig_birthdays($group_id = 0)
