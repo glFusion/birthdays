@@ -1,6 +1,6 @@
 # Changelog for the Birthdays plugin
 
-## Version 0.1.2
+## Version 1.0.0
 Release TBD
 - Remove html-format apostrophy in dscp language string
 - Show only allowed days when birthday form is first displayed
