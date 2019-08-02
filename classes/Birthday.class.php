@@ -5,7 +5,7 @@
  * @author      Lee Garner <lee@leegarner.com>
  * @copyright   Copyright (c) 2018-2019 Lee Garner <lee@leegarner.com>
  * @package     birthdays
- * @version     v0.1.2
+ * @version     v1.0.0
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
@@ -430,7 +430,11 @@ class Birthday
             $day = isset($month['day']) ? $month['day'] : '';
             $year = isset($month['year']) ? $month['year'] : '';
             $month = isset($month['month']) ? $month['month'] : '';
-        } elseif (strpos($month, '-')) {
+        } elseif (is_object($month)) {  // a Birthday object received
+            $day = $month->day;
+            $year = $month->year;
+            $month = $month->month;
+        } elseif (is_string($month) && strpos($month, '-')) {
             // YYYY-MM-DD format, separate into component parts
             $A = explode('-', $month);
             if (count($A) == 3) {
