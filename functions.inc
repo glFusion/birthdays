@@ -342,7 +342,7 @@ function phpblock_birthdays_month($blkinfo=array(), $months=2)
         $T->set_var('period', $LANG_MONTH[(int)$M]);
         $T->set_block('block', 'bdays', 'bd');
         foreach($thismonth as $bday) {
-            $T->set_var('username', COM_getDisplayName($bday->uid));
+            $T->set_var('username', COM_getDisplayName($bday->getUid()));
             $T->set_var('birthday', \Birthdays\Birthday::formatDate($bday));
             $T->parse('bd', 'bdays', true);
         }
@@ -498,7 +498,7 @@ function plugin_user_login_birthdays($uid)
     $x = \Birthdays\Birthday::getAll($month, $day);
     if ($x) {
         foreach ($x as $data) {
-            if ($data->uid == $uid) {
+            if ($data->getUid() == $uid) {
                 COM_setMsg(sprintf($LANG_BD00['msg_happy_birthday'], COM_getDisplayName($uid)));
                 break;
             }
@@ -553,13 +553,13 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
             case 'id':
             case 'author':
             case 'owner_id':
-                $props[$p] = $bday->uid;
+                $props[$p] = $bday->getUid();
                 break;
             case 'month':
-                $props[$p] = $bday->month;
+                $props[$p] = $bday->getMonth();
                 break;
             case 'day':
-                $props[$p] = $bday->day;
+                $props[$p] = $bday->getDay();
                 break;
             case 'recur_type':
                 $props[$p] = 3;     // Evlist code for Yearly
@@ -568,26 +568,26 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
                 $props[$p] = 1;     // Recurs every one year
                 break;
             case 'content':
-                $props[$p] = \Birthdays\Birthday::formatDate($bday->month, $bday->day);
+                $props[$p] = \Birthdays\Birthday::formatDate($bday->getMonth(), $bday->getDay());
                 break;
             case 'date':
                 // Use 2016 as year since it's a leap year, allow for 29 Feb.
-                $props[$p] = sprintf('2016-%02d-%02d', $bday->month, $bday->day);
+                $props[$p] = sprintf('2016-%02d-%02d', $bday->getMonth(), $bday->getDay());
                 break;
             case 'title':
             case 'description':
             case 'excerpt':
             case 'summary':
-                $props[$p] = sprintf($LANG_BD00['dscp'], COM_getDisplayName($bday->uid));
+                $props[$p] = sprintf($LANG_BD00['dscp'], COM_getDisplayName($bday->getUid()));
                 break;
             case 'author_name':
-                $props[$p] = COM_getDisplayName($bday->uid);
+                $props[$p] = COM_getDisplayName($bday->getUid());
                 break;
             case 'is_event':
                 $props[$p] = true;
                 break;
             case 'url':
-                $props[$p] = $_CONF['site_url'] . '/users.php?mode=profile&uid=' . $bday->uid;
+                $props[$p] = $_CONF['site_url'] . '/users.php?mode=profile&uid=' . $bday->getUid();
                 break;
             case 'search_index':
                 return NULL;        // Birthdays does not support searching
@@ -647,7 +647,7 @@ function plugin_runScheduledTask_birthdays()
             ON DUPLICATE KEY UPDATE value = '$today'");
     $bdays = \Birthdays\Birthday::getAll($dt['month'], $dt['day']);
     foreach ($bdays as $bday) {
-        $uid = (int)$bday->uid;
+        $uid = $bday->getUid();
         if ($_BD_CONF['enable_subs']) {
             PLG_sendSubscriptionNotification('birthdays', 'birthday_sub', '', $uid, 0);
         }
