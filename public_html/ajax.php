@@ -18,7 +18,11 @@ $retval = '';
 
 switch ($_POST['action']) {
 case 'toggleSub':
-    if (!$_BD_CONF['enable_subs'] || !isset($_POST['oldval'])) {
+    if (
+        !$_BD_CONF['enable_subs'] ||
+        COM_isAnonUser() ||
+        !isset($_POST['oldval'])
+    ) {
         break;
     }
 
