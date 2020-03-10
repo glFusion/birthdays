@@ -59,7 +59,7 @@ case 'delitem':
 default:
     break;
 }
-$content .= BIRTHDAYS_adminList();
+$content .= \Birthdays\Birthday::adminList();
 
 echo COM_siteHeader();
 echo $content;
@@ -97,96 +97,6 @@ function BIRTHDAYS_adminMenu()
         $LANG_BD00['hlp_sync_all'],
         plugin_geticon_birthdays()
     );
-    return $retval;
-}
-
-
-/**
- * Show the admin list.
- *
- * @return string  HTML for item list
- */
-function BIRTHDAYS_adminList()
-{
-    global $LANG_ADMIN, $LANG_BD00, $_TABLES, $_CONF, $_BD_CONF;
-
-    $retval = '';
-    $form_arr = array();
-
-    $header_arr = array(
-        array(  'text' => $LANG_BD00['user_id'],
-                'field' => 'uid',
-                'sort' => true,
-        ),
-        array(  'text' => $LANG_BD00['name'],
-                'field' => 'username',
-                'sort' => false,
-        ),
-        array(  'text'  => $LANG_BD00['birthday'],
-                'field' => 'birthday',
-                'sort'  => false,
-        ),
-        array(  'text' => $LANG_ADMIN['delete'],
-                'field' => 'delete',
-                'sort' => false,
-                'align' => 'center',
-        ),
-    );
-
-    $text_arr = array(
-        'has_extras' => false,
-        'form_url' => $_BD_CONF['admin_url'] . '/index.php',
-    );
-
-    $options = array('chkdelete' => 'true', 'chkfield' => 'uid');
-    $defsort_arr = array('field' => 'uid', 'direction' => 'asc');
-    $query_arr = array(
-        'table' => 'birthdays',
-        'sql' => "SELECT * FROM {$_TABLES['birthdays']}",
-    );
-
-    $retval = ADMIN_list('birthdays', 'BIRTHDAYS_getAdminField', $header_arr,
-                $text_arr, $query_arr, $defsort_arr, '', '', $options, $form_arr);
-    return $retval;
-}
-
-
-/**
- * Get the correct display for a single field in the admin list.
- *
- * @param   string  $fieldname  Field variable name
- * @param   string  $fieldvalue Value of the current field
- * @param   array   $A          Array of all field names and values
- * @param   array   $icon_arr   Array of system icons
- * @return  string              HTML for field display within the list cell
- */
-function BIRTHDAYS_getAdminField($fieldname, $fieldvalue, $A, $icon_arr)
-{
-    global $_CONF, $_BD_CONF, $LANG_BD00;
-
-    $retval = '';
-
-    switch($fieldname) {
-    case 'username':
-        $retval = COM_getDisplayName($A['uid']);
-        break;
-
-    case 'delete':
-        $retval = COM_createLink('<i class="uk-icon uk-icon-trash uk-text-danger"></i>',
-                $_BD_CONF['admin_url'] . "/index.php?delitem={$A['uid']}",
-                array(
-                     'onclick' => "return confirm('{$LANG_BD00['conf_del']}');",
-                ) );
-        break;
-
-    case 'birthday':
-        $retval = \Birthdays\Birthday::formatDate($A['month'], $A['day']);
-        break;
-
-    default:
-        $retval = $fieldvalue;
-        break;
-    }
     return $retval;
 }
 

@@ -4,7 +4,7 @@
  *
  * @author      Lee Garner <lee@leegarner.com>
  * @author      Mike Lynn <mike@mlynn.com>
- * @copyright   Copyright (c) 2018 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018-2020 Lee Garner <lee@leegarner.com>
  * @copyright   Copyright (c) 2002 Mike Lynn <mike@mlynn.com>
  * @package     birthdays
  * @version     v0.1.0
@@ -70,120 +70,9 @@ $T->set_var(array(
 ) );
 $T->parse('output','header');
 $display .= $T->finish($T->get_var('output'));
-$display .= listbirthdays($filter_month);
+$display .= \Birthdays\Birthday::publicList($filter_month);
 $display .= COM_siteFooter();
 echo $display;
 exit;
-
-
-/**
- * Present the list of birthdays.
- *
- * @param   integer $filter_month   Month to show, or "all"
- * @return  string      HTML for the list
- */
-function listbirthdays($filter_month)
-{
-    global $_TABLES, $LANG_BD00, $_BD_CONF;
-
-    $retval = '';
-
-    $header_arr = array(
-        array('text' => $LANG_BD00['name'],
-            'field' => 'fullname',
-            'sort' => false,
-            'align' => '',
-        ),
-        array('text' => $LANG_BD00['birthday'],
-            'field' => 'birthday',
-            'sort' => true,
-            'align' => 'center',
-        ),
-    );
-    if ($_BD_CONF['enable_subs']) {
-        $header_arr[] =  array('text' => $LANG_BD00['subscribe'],
-            'field' => 'subscribe',
-            'sort' => false,
-            'align' => 'center',
-        );
-    }
-
-    $defsort_arr = array('field' => 'birthday', 'direction' => 'ASC');
-    $text_arr = array(
-        'has_menu'     => false,
-        'has_extras'   => false,
-        'title'        => $LANG_BD00['pi_title'],
-        'form_url'     => $_BD_CONF['url'] . '/index.php?filter_month=' . $filter_month,
-        'help_url'     => ''
-    );
-    $filter = $filter_month == 0 ? '' : " AND month = $filter_month";
-    $sql = "SELECT 2016 as year, CONCAT(
-                    LPAD(b.month,2,0),LPAD(b.day,2,0)
-                ) as birthday, b.*, u.username, u.fullname
-                FROM {$_TABLES['birthdays']} b
-                LEFT JOIN {$_TABLES['users']} u
-                    ON u.uid = b.uid
-                WHERE 1=1 $filter";
-
-    $query_arr = array('table' => 'birthdays',
-            'sql' => $sql,
-            'query_fields' => array(),
-    );
-    $text_arr = array(
-        'form_url' => $_BD_CONF['url'] . '/index.php?filter_month=' . $filter_month,
-        'has_search' => false,
-        'has_limit'     => true,
-        'has_paging'    => true,
-    );
-
-    $retval .= ADMIN_list('birthdays', 'getField_bday_list',
-            $header_arr, $text_arr, $query_arr, $defsort_arr);
-    return $retval;
-}
-
-
-/**
- * Determine what to display in the admin list for each birthday.
- *
- * @param   string  $fieldname  Name of the field, from database
- * @param   mixed   $fieldvalue Value of the current field
- * @param   array   $A          Array of all name/field pairs
- * @param   array   $icon_arr   Array of system icons
- * @return  string              HTML for the field cell
- */
-function getField_bday_list($fieldname, $fieldvalue, $A, $icon_arr)
-{
-    global $_CONF, $_BD_CONF, $LANG_BD00, $_USER;
-
-    $retval = '';
-
-    switch($fieldname) {
-    case 'fullname':
-        $retval .= COM_getDisplayName($A['uid'], $A['username'], $A['fullname']);
-        break;
-
-    case 'birthday':
-        $retval .= \Birthdays\Birthday::formatDate($A);
-        break;
-
-    case 'subscribe':
-        if (PLG_isSubscribed('birthdays', 'birthday_sub', $A['uid'], $_USER['uid'])) {
-            $text = $LANG_BD00['unsubscribe'];
-            //$icon_cls = 'uk-text-success';
-            $current_val = 1;
-            $chk = 'checked="checked"';
-        } else {
-            $text = $LANG_BD00['subscribe'];
-            //$icon_cls = '';
-            $current_val = 0;
-            $chk = '';
-        }
-        $retval = '<input type="checkbox" value="1" ' . $chk .
-                ' data-uk-tooltip title="' . $LANG_BD00['click_to'] . $text .
-                    '" onclick="javascript:BDAY_toggleSub(this, ' . $A['uid'] . ', ' . $current_val . ');" />';
-        break;
-    }
-    return $retval;
-}
 
 ?>

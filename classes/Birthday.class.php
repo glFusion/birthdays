@@ -3,7 +3,7 @@
  * Class to manage birthdays.
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2018-2019 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018-2020 Lee Garner <lee@leegarner.com>
  * @package     birthdays
  * @version     v1.0.0
  * @license     http://opensource.org/licenses/gpl-2.0.php
@@ -18,10 +18,6 @@ namespace Birthdays;
  */
 class Birthday
 {
-    /** Internal properties accessed via `__set()` and `__get()`.
-     * @var array */
-    var $properties;
-
     /** Base cache tag added to all items.
      * @const string */
     const TAG = 'birthdays';
@@ -29,6 +25,19 @@ class Birthday
     /** Minimum glFusion version that supports caching.
      * @const string */
     const CACHE_GVERSION = '2.0.0';
+
+    /** User ID.
+     * @var integer */
+    private $uid = 0;
+
+    /** Birth Month.
+     * @var integer */
+    private $month = 0;
+
+    /** Birth Day.
+     * @var integer */
+    private $day = 0;
+
 
     /**
      * Instantiate an object for the specified user, or a new entry.
@@ -41,13 +50,8 @@ class Birthday
             $this->setVars($uid);
         } else {
             $uid = (int)$uid;
-            if ($uid < 1) {
-                $this->uid = 0;
-                $this->month = 0;
-                $this->day = 0;
-                $this->year = 0;
-            } else {
-                $this->uid = $uid;
+            if ($uid > 0) {
+                $this->uid = (int)$uid;
                 $this->Read();
             }
         }
@@ -64,6 +68,7 @@ class Birthday
     public static function getInstance($uid)
     {
         static $bdays = array();
+        $uid = (int)$uid;
         $key = 'uid_' . $uid;
         if (!array_key_exists($uid, $bdays)) {
             $bdays[$uid] = self::getCache($key);
@@ -73,41 +78,6 @@ class Birthday
             }
         }
         return $bdays[$uid];
-    }
-
-
-    /**
-     * Set a value into the property array
-     *
-     * @param   string  $key    Property name
-     * @param   mixed           Property value
-     */
-    public function __set($key, $value)
-    {
-        switch ($key) {
-        case 'uid':
-        case 'year':
-        case 'month':
-        case 'day':
-            $this->properties[$key] = (int)$value;
-            break;
-        }
-    }
-
-
-    /**
-     * Getter function.
-     *
-     * @param   string  $key    Name of property
-     * @return  mixed           Value of property, NULL if not set
-     */
-    public function __get($key)
-    {
-        if (isset($this->properties[$key])) {
-            return $this->properties[$key];
-        } else {
-            return NULL;
-        }
     }
 
 
@@ -122,7 +92,7 @@ class Birthday
 
         foreach (array('uid', 'month', 'day') as $key) {
             if (isset($row[$key])) {
-                $this->$key = $row[$key];
+                $this->$key = (int)$row[$key];
             }
         }
     }
@@ -143,8 +113,10 @@ class Birthday
             return false;
         }
 
-        $result = DB_query("SELECT * from {$_TABLES['birthdays']}
-                            WHERE uid = $uid");
+        $result = DB_query(
+            "SELECT * from {$_TABLES['birthdays']}
+            WHERE uid = $uid"
+        );
         $row = DB_fetchArray($result, false);
         $this->SetVars($row);
     }
@@ -263,12 +235,10 @@ class Birthday
         $dt_s = new \Date($start, $_CONF['timezone']);
         $dt_e = new \Date($end, $_CONF['timezone']);
         // Find the months to retrieve
-        $s_year = $dt_s->Format('Y');
-        $s_month = $dt_s->Format('n');
-        //$s_day = $dt_s->Format('d');
-        $e_year = $dt_e->Format('Y');
-        $e_month = $dt_e->Format('n');
-        //$e_day = $dt_e->Format('d');
+        $s_year = $dt_s->format('Y');
+        $s_month = $dt_s->format('n');
+        $e_year = $dt_e->format('Y');
+        $e_month = $dt_e->format('n');
         $months = array();
 
         if ($e_month < $s_month) {
@@ -591,6 +561,227 @@ class Birthday
             return NULL;
         }
     }
+
+
+    /**
+     * Get the user ID.
+     *
+     * @return  integer     User ID
+     */
+    public function getUid()
+    {
+        return (int)$this->uid;
+    }
+
+
+    /**
+     * Get the birth month value.
+     *
+     * @return  integer     Birth month (1 - 12)
+     */
+    public function getMonth()
+    {
+        return (int)$this->month;
+    }
+
+
+    /**
+     * Get the birth day value.
+     *
+     * @return  integer     Birth day (1 - 31)
+     */
+    public function getDay()
+    {
+        return (int)$this->day;
+    }
+
+
+    /**
+     * Present the list of birthdays.
+     *
+     * @param   integer $filter_month   Month to show, 0 for "all"
+     * @return  string      HTML for the list
+     */
+    public static function publicList($filter_month=0)
+    {
+        global $_TABLES, $LANG_BD00, $_BD_CONF;
+
+        $retval = '';
+
+        $header_arr = array(
+            array(
+                'text' => $LANG_BD00['name'],
+                'field' => 'fullname',
+                'sort' => false,
+                'align' => '',
+            ),
+            array(
+                'text' => $LANG_BD00['birthday'],
+                'field' => 'birthday',
+                'sort' => true,
+                'align' => 'center',
+            ),
+        );
+        if ($_BD_CONF['enable_subs']) {
+            $header_arr[] =  array(
+                'text' => $LANG_BD00['subscribe'],
+                'field' => 'subscribe',
+                'sort' => false,
+                'align' => 'center',
+            );
+        }
+
+        $defsort_arr = array('field' => 'birthday', 'direction' => 'ASC');
+        $text_arr = array(
+            'has_menu'     => false,
+            'has_extras'   => false,
+            'title'        => $LANG_BD00['pi_title'],
+            'form_url'     => $_BD_CONF['url'] . '/index.php?filter_month=' . $filter_month,
+            'help_url'     => ''
+        );
+        $filter = $filter_month == 0 ? '' : " AND month = $filter_month";
+        $sql = "SELECT 2016 as year, CONCAT(
+                    LPAD(b.month,2,0),LPAD(b.day,2,0)
+                ) as birthday, b.*, u.username, u.fullname
+                FROM {$_TABLES['birthdays']} b
+                LEFT JOIN {$_TABLES['users']} u
+                    ON u.uid = b.uid
+                WHERE 1=1 $filter";
+
+        $query_arr = array(
+            'table' => 'birthdays',
+            'sql' => $sql,
+            'query_fields' => array(),
+        );
+        $text_arr = array(
+            'form_url' => $_BD_CONF['url'] . '/index.php?filter_month=' . $filter_month,
+            'has_search' => false,
+            'has_limit'     => true,
+            'has_paging'    => true,
+        );
+
+        $retval .= ADMIN_list(
+            'birthdays_publiclist',
+            array(__CLASS__, 'getListField'),
+            $header_arr, $text_arr, $query_arr, $defsort_arr
+        );
+        return $retval;
+    }
+
+
+    /**
+     * Show the admin list.
+     *
+     * @return string  HTML for item list
+     */
+    public static function adminList()
+    {
+        global $LANG_ADMIN, $LANG_BD00, $_TABLES, $_CONF, $_BD_CONF;
+
+        $retval = '';
+        $form_arr = array();
+
+        $header_arr = array(
+            array(
+                'text' => $LANG_BD00['user_id'],
+                'field' => 'uid',
+                'sort' => true,
+            ),
+            array(
+                'text' => $LANG_BD00['name'],
+                'field' => 'fullname',
+                'sort' => false,
+            ),
+            array(
+                'text'  => $LANG_BD00['birthday'],
+                'field' => 'birthday',
+                'sort'  => false,
+            ),
+            array(
+                'text' => $LANG_ADMIN['delete'],
+                'field' => 'delete',
+                'sort' => false,
+                'align' => 'center',
+            ),
+        );
+
+        $text_arr = array(
+            'has_extras' => false,
+            'form_url' => $_BD_CONF['admin_url'] . '/index.php',
+        );
+
+        $options = array('chkdelete' => 'true', 'chkfield' => 'uid');
+        $defsort_arr = array('field' => 'uid', 'direction' => 'asc');
+        $query_arr = array(
+            'table' => 'birthdays',
+            'sql' => "SELECT * FROM {$_TABLES['birthdays']}",
+        );
+
+        $retval = ADMIN_list(
+            'birthdays_adminlist',
+            array(__CLASS__, 'getListField'),
+            $header_arr,
+            $text_arr, $query_arr, $defsort_arr, '', '', $options, $form_arr
+        );
+        return $retval;
+    }
+
+
+    /**
+     * Determine what to display in the birthday lists.
+     * Serves both publicList() and adminList().
+     *
+     * @param   string  $fieldname  Name of the field, from database
+     * @param   mixed   $fieldvalue Value of the current field
+     * @param   array   $A          Array of all name/field pairs
+     * @param   array   $icon_arr   Array of system icons
+     * @return  string              HTML for the field cell
+     */
+    public static function getListField($fieldname, $fieldvalue, $A, $icon_arr)
+    {
+        global $_CONF, $_BD_CONF, $LANG_BD00, $_USER;
+
+        $retval = '';
+
+        switch($fieldname) {
+        case 'fullname':
+            $retval .= COM_getDisplayName($A['uid'], $A['username'], $A['fullname']);
+            break;
+
+        case 'birthday':
+            $retval .= \Birthdays\Birthday::formatDate($A);
+            break;
+
+        case 'subscribe':
+            if (PLG_isSubscribed('birthdays', 'birthday_sub', $A['uid'], $_USER['uid'])) {
+                $text = $LANG_BD00['unsubscribe'];
+                $current_val = 1;
+                $chk = 'checked="checked"';
+            } else {
+                $text = $LANG_BD00['subscribe'];
+                $current_val = 0;
+                $chk = '';
+            }
+            $retval = '<input type="checkbox" value="1" ' . $chk .
+                ' data-uk-tooltip title="' . $LANG_BD00['click_to'] . $text .
+                '" onclick="javascript:BDAY_toggleSub(this, ' . $A['uid'] . ', ' . $current_val . ');" />';
+            break;
+
+        case 'delete':
+            $retval = COM_createLink('<i class="uk-icon uk-icon-trash uk-text-danger"></i>',
+                $_BD_CONF['admin_url'] . "/index.php?delitem={$A['uid']}",
+                array(
+                     'onclick' => "return confirm('{$LANG_BD00['conf_del']}');",
+                ) );
+            break;
+        
+        default:
+            $retval = $fieldvalue;
+            break;
+        }
+        return $retval;
+    }
+
 
 }
 
