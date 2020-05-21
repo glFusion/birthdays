@@ -647,7 +647,6 @@ class Birthday
                 LEFT JOIN {$_TABLES['users']} u
                     ON u.uid = b.uid
                 WHERE 1=1 $filter";
-
         $query_arr = array(
             'table' => 'birthdays',
             'sql' => $sql,
@@ -705,16 +704,21 @@ class Birthday
             ),
         );
 
+        $sql = "SELECT 2016 as year, CONCAT(
+                    LPAD(b.month,2,0),LPAD(b.day,2,0)
+                ) as birthday, b.*, u.username, u.fullname
+                FROM {$_TABLES['birthdays']} b
+                LEFT JOIN  {$_TABLES['users']} u
+                    ON u.uid = b.uid";
         $text_arr = array(
             'has_extras' => false,
             'form_url' => $_BD_CONF['admin_url'] . '/index.php',
         );
-
         $options = array('chkdelete' => 'true', 'chkfield' => 'uid');
         $defsort_arr = array('field' => 'uid', 'direction' => 'asc');
         $query_arr = array(
             'table' => 'birthdays',
-            'sql' => "SELECT * FROM {$_TABLES['birthdays']}",
+            'sql' => $sql,
         );
 
         $retval = ADMIN_list(
