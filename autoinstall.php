@@ -71,7 +71,7 @@ $INSTALL_plugin[$_BD_CONF['pi_name']] = array(
     ),
     array(
         'type' => 'mapping',
-        'group' => 1,       // Root user gets the feature
+        'findgroup' => 'Root',       // Root user gets the feature
         'feature' => 'admin_feature_id',
         'log' => 'Adding admin feature to the admin group',
     ),
