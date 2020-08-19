@@ -63,6 +63,18 @@ $INSTALL_plugin[$_BD_CONF['pi_name']] = array(
         'is_enabled' => 0,
         'group_id' => 'admin_group_id',
     ),
+    array(
+        'type' => 'feature',
+        'feature' => 'birthdays.admin',
+        'desc' => 'Full access to the Birthdays plugin',
+        'variable' => 'admin_feature_id',
+    ),
+    array(
+        'type' => 'mapping',
+        'group' => 1,       // Root user gets the feature
+        'feature' => 'admin_feature_id',
+        'log' => 'Adding admin feature to the admin group',
+    ),
 );
 
 
@@ -95,7 +107,7 @@ function plugin_autouninstall_birthdays()
     $out = array (
         'tables'    => array('birthdays'),
         'groups'    => array(),
-        'features'  => array(),
+        'features'  => array('birthdays.admin'),
         'php_blocks' => array('phpblock_birthdays_week', 'phpblock_birthdays_month'),
         'vars'      => array('birthdays_lastrun'),
     );

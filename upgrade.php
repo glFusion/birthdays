@@ -39,6 +39,25 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
         if (!BIRTHDAYS_do_set_version($current_ver)) return false;
     }
 
+    if (!COM_checkVersion($current_ver, '1.0.0')) {
+        // upgrade to 1.0.0
+        $current_ver = '1.0.0';
+
+        // Add the admin feature if not already done.
+        $ft_id = (int)DB_getItem($_TABLES['features'], 'ft_id', "ft_name = 'birthdays.admin'");
+        if ($ft_id == 0) {
+            $sql = "INSERT INTO {$_TABLES['features']} (ft_id, ft_name, ft_descr)
+                VALUES (0, 'birthdays.admin', 'Full access to the Birthdays plugin')";
+            $res = DB_query($sql);
+            if ($res) {
+                $ft_id = DB_insertId();
+                $sql = "INSERT INTO {$_TABLES['access']} (acc_ft_id, acc_grp_id)
+                    VALUES ($ft_id, 1)";
+                $res = DB_query($sql, 1);
+            }
+        }
+    }
+
     // Final version update to catch any code-only updates
     if (!COM_checkVersion($current_ver, $code_ver)) {
         if (!BIRTHDAYS_do_set_version($code_ver)) return false;
@@ -76,7 +95,7 @@ function BIRTHDAYS_do_upgrade_sql($version, $ignore_error=false)
     global $_TABLES, $_BD_CONF, $BD_UPGRADE;
 
     // If no sql statements passed in, return success
-    if (!is_array($BD_UPGRADE[$version]))
+    if (!isset($BD_UPGRADE[$version]) || !is_array($BD_UPGRADE[$version]))
         return true;
 
     // Execute SQL now to perform the upgrade

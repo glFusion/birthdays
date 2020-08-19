@@ -515,11 +515,7 @@ function plugin_user_login_birthdays($uid)
  */
 function plugin_ismoderator_birthdays()
 {
-    if (SEC_inGroup('Root')) {
-        return true;
-    } else {
-        return false;
-    }
+    return SEC_hasRights('birthdays.admin') || SEC_inGroup('Root');
 }
 
 
