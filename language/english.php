@@ -35,7 +35,7 @@ $LANG_BD00 = array (
     'sub_reason'    => 'You are receiving this email because you have chosen to be notified when %s has a birthday.',
     'sub_unsub'     => 'To unsubscribe from these notifications, please click this link',
     'card_title'    => 'Happy Birthday from ' . $_CONF['site_name'] . '!',
-    'card_message'  => 'Happy Birthday from %s',
+    'card_message'  => 'Best wishes on your birthday from %s',
     'unsubscribe'   => 'Unsubscribe',
     'email_autogen' => 'This email was generated automatically. Please do not reply to this email.',
     'click_to'      => 'Click to ',
@@ -49,6 +49,7 @@ $LANG_BD00 = array (
     'user_id'       => 'User ID',
     'birthdays_month' => 'Birthdays This Month',
     'birthdays_week'  => 'Birthdays This Week',
+    'hlp_sync_all' => 'Sync All: Re-saves all birthday entries so other plugins will update their records if they use data from this plugin.',
 );
 
 // Localization of the Admin Configuration UI

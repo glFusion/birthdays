@@ -637,10 +637,13 @@ function plugin_runScheduledTask_birthdays()
     $dt = \Birthdays\Birthday::currentDate();
     $today = sprintf("%4d%02d%02d", $dt['year'], $dt['month'], $dt['day']);
     $lastrun = isset($_VARS['birthdays_lastrun']) ? $_VARS['birthdays_lastrun'] : '';
-    if ($lastrun == $today) return;     // run once daily only
-    DB_query("INSERT INTO {$_TABLES['vars']}
-                VALUES('birthdays_lastrun', '$today')
-            ON DUPLICATE KEY UPDATE value = '$today'");
+    if ($lastrun == $today) {
+        return;     // run once daily only
+    }
+    DB_query(
+        "INSERT INTO {$_TABLES['vars']} VALUES('birthdays_lastrun', '$today')
+        ON DUPLICATE KEY UPDATE value = '$today'"
+    );
     $bdays = \Birthdays\Birthday::getAll($dt['month'], $dt['day']);
     foreach ($bdays as $bday) {
         $uid = $bday->getUid();
@@ -687,25 +690,47 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
     $name = COM_getDisplayName($uid);
     $name = @htmlspecialchars($name,ENT_QUOTES, COM_getEncodingt(),true);
     $lang = BIRTHDAYS_loadLanguage($uid);
+    $fullname = $name;
+    $nameparts = PLG_callFunctionForOnePlugin(
+        'plugin_parseName_lglib',
+        array(
+            1 => $name,
+        )
+    );
+    if ($nameparts !== false) {
+        $fname = $nameparts['fname'];
+        $lname = $nameparts['lname'];
+        $name = $fname;
+    } else {
+        $fname = '';
+        $lname = '';
+    }
 
-    $T = new Template( __DIR__ . '/templates' );
+    $T = new Template( __DIR__ . '/templates/notify' );
     $T->set_file (array(
-        'htmlemail'     => 'notifymessage_html.thtml',
-        'textemail'     => 'notifymessage_text.thtml',
+        'outer'     => 'html_outer.thtml',
+        'htmlemail' => 'html_inner.thtml',
+        'textemail' => 'text.thtml',
     ));
+    $T->set_var(array(          // common text elements
+        'uid'           => $uid,
+        'firstname'     => $fname,
+        'lastname'      => $lname,
+        'fullname'      => $fullname,
+        'lang_unsub'    => $lang['unsubscribe'],
+        'lang_to_unsub' => $lang['sub_unsub'],
+        'lang_noreply'  => $lang['email_autogen'],
+    ) );
+
     if ($category == 'birthday_sub') {
         // Subscription notification
-        $subject = sprintf($lang['sub_title'], $name);
+        $subject = sprintf($lang['sub_title'], $def_name);
         $T->set_var(array(
             'site_name'     => $_CONF['site_name'],
             'sub_title'     => sprintf($lang['sub_title'], $name),
             'sub_message'   => sprintf($lang['sub_message'], $name),
             'sub_reason'    => sprintf($lang['sub_reason'], $name),
-            'lang_to_unsub' => $lang['sub_unsub'],
-            'lang_unsub'    => $lang['unsubscribe'],
-            'lang_noreply'  => $lang['email_autogen'],
             'lang_birthday_notif' => $lang['sub_title'],
-            'uid'           => $uid,
         ));
     } else {
         // Happy Birthday message to users.
@@ -713,26 +738,26 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
         $T->set_var(array(
             'site_name'     => $_CONF['site_name'],
             'sub_title'     => $subject,
+            'lang_greeting' => sprintf($lang['msg_happy_birthday'], $name),
             'sub_message'   => sprintf($lang['card_message'], $_CONF['site_name']),
-            'lang_to_unsub' => $lang['sub_unsub'],
-            'lang_unsub'    => $lang['unsubscribe'],
             //'sub_reasion'   => sprintf($lang['card_reason'], $name),
-            'lang_noreply'  => $lang['email_autogen'],
             'lang_birthday_notif' => $lang['card_title'],
-            'uid'           => $uid,
         ));
     }
-    $T->parse('htmloutput', 'htmlemail');
-    $message = $T->finish($T->get_var('htmloutput'));
+    $T->parse('htmlmessage', 'htmlemail');
+    $T->parse('message', 'outer');
+    $message = $T->finish($T->get_var('message'));
     $T->parse('textoutput', 'textemail');
     $msgText = $T->finish($T->get_var('textoutput'));
     $html2txt = new Html2Text\Html2Text($msgText, false);
     $messageText = $html2txt->get_text();
-    return array(
+    $retval = array(
         'msghtml' => $message,
         'msgtext' => $messageText,
         'subject' => $subject,
     );
+    //var_dump($retval);die;
+    return $retval;
 }
 
 

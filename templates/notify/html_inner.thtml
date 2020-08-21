@@ -1,0 +1,5 @@
+<h2>
+    {lang_greeting}
+</h2>
+<p>{sub_message}</p>
+
