@@ -51,7 +51,7 @@ $INSTALL_plugin[$_BD_CONF['pi_name']] = array(
         'phpblockfn' => 'phpblock_birthdays_month',
         'block_type' => 'phpblock',
         'is_enabled' => 0,
-        'group_id' => 'admin_group_id',
+        'group_id' => 1,
     ),
 
     array(
@@ -61,7 +61,7 @@ $INSTALL_plugin[$_BD_CONF['pi_name']] = array(
         'phpblockfn' => 'phpblock_birthdays_week',
         'block_type' => 'phpblock',
         'is_enabled' => 0,
-        'group_id' => 'admin_group_id',
+        'group_id' => 1,
     ),
     array(
         'type' => 'feature',
@@ -70,10 +70,34 @@ $INSTALL_plugin[$_BD_CONF['pi_name']] = array(
         'variable' => 'admin_feature_id',
     ),
     array(
+        'type' => 'feature',
+        'feature' => 'birthdays.view',
+        'desc' => 'View access to the Birthdays plugin',
+        'variable' => 'view_feature_id',
+    ),
+    array(
+        'type' => 'feature',
+        'feature' => 'birthdays.card',
+        'desc' => 'Can receive birthday cards',
+        'variable' => 'card_feature_id',
+    ),
+    array(
         'type' => 'mapping',
         'findgroup' => 'Root',       // Root user gets the feature
         'feature' => 'admin_feature_id',
         'log' => 'Adding admin feature to the admin group',
+    ),
+    array(
+        'type' => 'mapping',
+        'findgroup' => 'Logged-In Users',   // all users can receive cards
+        'feature' => 'card_feature_id',
+        'log' => 'Adding card feature to the users group',
+    ),
+    array(
+        'type' => 'mapping',
+        'findgroup' => 'Logged-In Users',   // all users can receive cards
+        'feature' => 'view_feature_id',
+        'log' => 'Adding view feature to the users group',
     ),
 );
 
@@ -107,8 +131,15 @@ function plugin_autouninstall_birthdays()
     $out = array (
         'tables'    => array('birthdays'),
         'groups'    => array(),
-        'features'  => array('birthdays.admin'),
-        'php_blocks' => array('phpblock_birthdays_week', 'phpblock_birthdays_month'),
+        'features'  => array(
+            'birthdays.admin',
+            'birthdays.view',
+            'birthdays.card',
+        ),
+        'php_blocks' => array(
+            'phpblock_birthdays_week',
+            'phpblock_birthdays_month',
+        ),
         'vars'      => array('birthdays_lastrun'),
     );
     PLG_itemDeleted('*', 'birthdays');

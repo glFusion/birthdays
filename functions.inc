@@ -515,7 +515,7 @@ function plugin_user_login_birthdays($uid)
  */
 function plugin_ismoderator_birthdays()
 {
-    return SEC_hasRights('birthdays.admin') || SEC_inGroup('Root');
+    return SEC_hasRights('birthdays.admin');
 }
 
 
@@ -628,7 +628,7 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
  */
 function plugin_runScheduledTask_birthdays()
 {
-    global $_TABLES, $_VARS, $_BD_CONF;
+    global $_TABLES, $_VARS, $_BD_CONF, $_USER;
 
     if (!$_BD_CONF['enable_subs'] && !$_BD_CONF['enable_cards']) {
         return;     // don't go through the loop if nothing will be sent
@@ -647,11 +647,22 @@ function plugin_runScheduledTask_birthdays()
     $bdays = \Birthdays\Birthday::getAll($dt['month'], $dt['day']);
     foreach ($bdays as $bday) {
         $uid = $bday->getUid();
+
         if ($_BD_CONF['enable_subs']) {
             PLG_sendSubscriptionNotification('birthdays', 'birthday_sub', '', $uid, 0);
         }
 
         if ($_BD_CONF['enable_cards']) {
+            // Check if the user can receive birthday cards.
+            // Hack since SEC_hasRights() only operates on the current user ID.
+            $saveUser = $_USER['uid'];
+            $_USER['uid'] = $uid;
+            $cansend = SEC_hasRights('birthdays.card');
+            $_USER['uid'] = $saveUser;
+            if (!$cansend) {
+                continue;
+            }
+
             // Borrow the email format function to create the message
             $msg = plugin_subscription_email_format_birthdays('birthday_card', '', $uid, '');
             $name = COM_getDisplayName($uid);

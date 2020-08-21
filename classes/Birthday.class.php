@@ -446,7 +446,7 @@ class Birthday
         static $canView = NULL;
 
         if ($canView === NULL) {
-            $canView = SEC_inGroup($_BD_CONF['grp_access']);
+            $canView = SEC_hasRights('birthdays.view,birthdays.admin') || SEC_inGroup($_BD_CONF['grp_access']);
         }
         return $canView;
     }
