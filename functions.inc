@@ -900,4 +900,6 @@ function BIRTHDAYS_loadLanguage($uid)
     return $langs[$lang];
 }
 
+require_once __DIR__ . '/services.inc.php';
+
 ?>

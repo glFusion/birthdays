@@ -9,6 +9,7 @@ Release TBD
 - Add plugin and user name to subscription record
 - Disable search indexing
 - Add option to sync all birthdays to other plugins
+- Add birthdays to Custom Profile lists
 
 ## Version 0.1.1
 Release 2018-04-14
