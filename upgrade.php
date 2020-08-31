@@ -56,6 +56,7 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
                 $res = DB_query($sql, 1);
             }
         }
+        if (!BIRTHDAYS_do_set_version($current_ver)) return false;
     }
 
     // Final version update to catch any code-only updates
