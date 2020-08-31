@@ -10,6 +10,9 @@
  *              GNU Public License v2 or later
  * @filesource
  */
+
+global $BD_UPGRADE;
+
 $_SQL = array(
 'birthdays' => "CREATE TABLE {$_TABLES['birthdays']} (
   uid int(10) NOT NULL,
@@ -18,6 +21,9 @@ $_SQL = array(
   PRIMARY KEY (`uid`),
   KEY `mon_day` (`month`,`day`)
 ) TYPE=MyISAM;",
+);
+
+$BD_UPGRADE = array(
 );
 
 ?>
