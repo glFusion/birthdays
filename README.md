@@ -2,6 +2,9 @@
 This plugin doesn't do much other than let members view/enter/maintain their own birthdates.
 It was originally written for Geeklog as an exercise in learning to write plugins.
 
+Site members can edit their birthday from the main page (/birthdays/index.php) or
+from the `About You` tab under Account Settings.
+
 ## Installation
 Use the glFusion automated installation.
 
