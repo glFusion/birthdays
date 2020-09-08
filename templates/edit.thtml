@@ -1,5 +1,4 @@
 {# begin {templatelocation} #}
-<br />
 <div class="uk-panel uk-panel-box uk-margin-bottom">
   <div class="uk-form-row">
     <label class="uk-form-label">{$LANG_BD00['birthday']}</label>

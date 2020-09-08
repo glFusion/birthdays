@@ -1,7 +1,5 @@
 {# begin {templatelocation} #}
-<nav class="uk-navbar uk-margin-top">
-  <div class="uk-navbar-content">
-  {$LANG_BD00['birthday']}: {birthday}
-  </div>
-</nav>
+<div class="block-box">
+    <h2>{$LANG_BD00['birthday']}: {birthday}</h2>
+</div>
 {# end {templatelocation} #}
