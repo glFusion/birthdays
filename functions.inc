@@ -297,13 +297,17 @@ function plugin_profilevariablesdisplay_birthdays($uid, &$T)
     $LT->set_file(array(
         'block' => 'profileblock.thtml',
     ));
-    $bday = \Birthdays\Birthday::getUser($uid);
+    $bday = Birthdays\Birthday::getUser($uid);
     if (empty($bday)) return;
-    $LT->set_var('birthday', \Birthdays\Birthday::formatDate($bday));
+    $LT->set_var('birthday', Birthdays\Birthday::formatDate($bday));
+    $LT->set_var('lang_birthday', _('Birthday'));
     $LT->parse('output', 'block');
+//        var_dump($LT->get_var('output'));die;
     $existingFields = $T->get_var('plugin_fields');
-    $T->set_var('plugin_fields',
-                $existingFields . $T->finish($LT->get_var('output')));
+    $T->set_var(
+        'plugin_fields',
+        $existingFields . $T->finish($LT->get_var('output'))
+    );
 }
 
 
@@ -536,7 +540,7 @@ function plugin_ismoderator_birthdays()
  */
 function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
 {
-    global $_TABLES, $_BD_CONF, $LANG_BD00, $_CONF;
+    global $_TABLES, $_BD_CONF, $_CONF;
 
     $properties = explode(',', $what);
     $retval = array();
@@ -580,7 +584,7 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
             case 'description':
             case 'excerpt':
             case 'summary':
-                $props[$p] = sprintf($LANG_BD00['dscp'], COM_getDisplayName($bday->getUid()));
+                $props[$p] = sprintf(_('%s\'s Birthday'), COM_getDisplayName($bday->getUid()));
                 break;
             case 'author_name':
                 $props[$p] = COM_getDisplayName($bday->getUid());

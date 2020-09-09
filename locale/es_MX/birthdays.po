@@ -1,0 +1,87 @@
+# Language ex translations for PACKAGE package.
+# Copyright (C) 2020 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# root <lee@leegarner.com>, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-09 11:24-0700\n"
+"PO-Revision-Date: 2020-09-09 11:27-0700\n"
+"Last-Translator: root <lee@leegarner.com>\n"
+"Language-Team: Language ex\n"
+"Language: ex_MX\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: classes/Birthday.class.php:329
+msgid "None"
+msgstr ""
+
+#: classes/Birthday.class.php:334
+msgid "My Birthday"
+msgstr "Mi cumpleaños"
+
+#: classes/Birthday.class.php:370
+msgid "All"
+msgstr ""
+
+#: classes/Birthday.class.php:613 classes/Birthday.class.php:690
+msgid "Name"
+msgstr ""
+
+#: classes/Birthday.class.php:619 classes/Birthday.class.php:695
+#: functions.inc:303
+msgid "Birthday"
+msgstr "Cumpleaños"
+
+#: classes/Birthday.class.php:627 classes/Birthday.class.php:765
+msgid "Subscribe"
+msgstr ""
+
+#: classes/Birthday.class.php:638 functions.inc:94 functions.inc:111
+#: functions.inc:131
+msgid "Birthdays"
+msgstr "Cumpleaños"
+
+#: classes/Birthday.class.php:685
+msgid "User ID"
+msgstr ""
+
+#: classes/Birthday.class.php:761 functions.inc:742
+msgid "Unsubscribe"
+msgstr ""
+
+#: classes/Birthday.class.php:770
+msgid "Click to"
+msgstr ""
+
+#: classes/Birthday.class.php:778
+msgid "Do you really want to delete this item?"
+msgstr ""
+
+#: functions.inc:512
+#, php-format
+msgid "Happy Birthday, %s!"
+msgstr ""
+
+#: functions.inc:587
+#, php-format
+msgid "%s's Birthday"
+msgstr ""
+
+#: functions.inc:743
+msgid "To unsubscribe from these notifications, please click this link"
+msgstr ""
+
+#: functions.inc:744
+msgid ""
+"This email was generated automatically. Please do not reply to this email."
+msgstr ""
+
+#: functions.inc:752
+#, php-format
+msgid "Birthday Notification from %s"
+msgstr ""

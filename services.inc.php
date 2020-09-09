@@ -30,7 +30,7 @@ if (!defined ('GVERSION')) {
  */
 function service_profilefields_birthdays($args, &$output, &$svc_msg)
 {
-    global $LANG_BD00, $_BD_CONF, $_TABLES;
+    global $_BD_CONF, $_TABLES;
 
     $pi = $_BD_CONF['pi_name'];
     $tbl = $_TABLES['birthdays'];
@@ -44,7 +44,7 @@ function service_profilefields_birthdays($args, &$output, &$svc_msg)
         'names' => array(
             $pi . '_birthday' => array(
                 'field' => "{$tbl}.day",
-                'title' => $LANG_BD00['birthday'],
+                'title' => _('Birthday'),
             ),
         ),
 

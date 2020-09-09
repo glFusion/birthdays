@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2018-2020 Lee Garner <lee@leegarner.com>
  * @copyright   Copyright (c) 2002 Mike Lynn <mike@mlynn.com>
  * @package     birthdays
- * @version     v0.1.0
+ * @version     v1.0.0
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
@@ -66,7 +66,9 @@ $T->set_var(array(
     'pi_name'   => $_BD_CONF['pi_name'],
     'logo'      => plugin_geticon_birthdays(),
     'my_form'   => COM_isAnonUser() ? '' : \Birthdays\Birthday::editForm($_USER['uid'], 'edit_index'),
-    'month_select' => \Birthdays\Birthday::selectMonth($filter_month),
+    'month_select' => Birthdays\Birthday::selectMonth($filter_month),
+    'lang_sel_month' => Birthdays\_('Select Month'),
+    'lang_pi_title' => Birthdays\_('Birthdays'),
 ) );
 $T->parse('output','header');
 $display .= $T->finish($T->get_var('output'));

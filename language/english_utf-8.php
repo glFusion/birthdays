@@ -19,9 +19,9 @@
  * @global array
  */
 $LANG_BD00 = array (
-    'pi_title'      => 'Birthdays',
-    'my_birthday'   => 'My Birthday',
-    'birthday'      => 'Birthday',
+    //'pi_title'      => 'Birthdays',
+    //'my_birthday'   => 'My Birthday',
+    //'birthday'      => 'Birthday',
     'sel_month'     => 'Select Month',
     'this_month'    => 'This Month',
     'next_month'    => 'Next Month',

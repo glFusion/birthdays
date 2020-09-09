@@ -326,12 +326,12 @@ class Birthday
             if ($i > 0) {
                 $opt .= "<option id=\"bday_day_$i\" $sel value=\"$i\">$i</option>";
             } else {
-                $opt .= "<option $sel value=\"$i\">{$LANG_BD00['none']}</option>";
+                $opt .= "<option $sel value=\"$i\">" . _('None') . "/option>";
             }
         }
         $T->set_var('day_select', $opt);
         $T->set_var('month', $bday->month);
-        //$T->set_var('year', $bday->year);
+        $T->set_var('lang_my_birthday', _('My Birthday'));
         $T->parse('output', 'edit');
         return $T->finish($T->get_var('output'));
     }
@@ -365,9 +365,9 @@ class Birthday
      */
     public static function selectMonth($thismonth = 0, $all_prompt = '')
     {
-        global $LANG_BD00, $LANG_MONTH;
+        global $LANG_MONTH;
 
-        if ($all_prompt == '') $all_prompt = $LANG_BD00['all'];
+        if ($all_prompt == '') $all_prompt = _('All');
         $opt = '';
         for ($i = 0; $i < 13; $i++) {
             $sel = $thismonth == $i ? 'selected="selected"' : '';
@@ -610,13 +610,13 @@ class Birthday
 
         $header_arr = array(
             array(
-                'text' => $LANG_BD00['name'],
+                'text' => _('Name'),
                 'field' => 'fullname',
                 'sort' => false,
                 'align' => '',
             ),
             array(
-                'text' => $LANG_BD00['birthday'],
+                'text' => _('Birthday'),
                 'field' => 'birthday',
                 'sort' => true,
                 'align' => 'center',
@@ -624,7 +624,7 @@ class Birthday
         );
         if ($_BD_CONF['enable_subs']) {
             $header_arr[] =  array(
-                'text' => $LANG_BD00['subscribe'],
+                'text' => _('Subscribe'),
                 'field' => 'subscribe',
                 'sort' => false,
                 'align' => 'center',
@@ -635,7 +635,7 @@ class Birthday
         $text_arr = array(
             'has_menu'     => false,
             'has_extras'   => false,
-            'title'        => $LANG_BD00['pi_title'],
+            'title'        => _('Birthdays'),
             'form_url'     => $_BD_CONF['url'] . '/index.php?filter_month=' . $filter_month,
             'help_url'     => ''
         );
@@ -675,24 +675,24 @@ class Birthday
      */
     public static function adminList()
     {
-        global $LANG_ADMIN, $LANG_BD00, $_TABLES, $_CONF, $_BD_CONF;
+        global $LANG_ADMIN, $_TABLES, $_CONF, $_BD_CONF;
 
         $retval = '';
         $form_arr = array();
 
         $header_arr = array(
             array(
-                'text' => $LANG_BD00['user_id'],
+                'text' => _('User ID'),
                 'field' => 'uid',
                 'sort' => true,
             ),
             array(
-                'text' => $LANG_BD00['name'],
+                'text' => _('Name'),
                 'field' => 'fullname',
                 'sort' => false,
             ),
             array(
-                'text'  => $LANG_BD00['birthday'],
+                'text'  => _('Birthday'),
                 'field' => 'birthday',
                 'sort'  => false,
             ),
@@ -743,7 +743,7 @@ class Birthday
      */
     public static function getListField($fieldname, $fieldvalue, $A, $icon_arr)
     {
-        global $_CONF, $_BD_CONF, $LANG_BD00, $_USER;
+        global $_CONF, $_BD_CONF, $_USER;
 
         $retval = '';
 
@@ -758,16 +758,16 @@ class Birthday
 
         case 'subscribe':
             if (PLG_isSubscribed('birthdays', 'birthday_sub', $A['uid'], $_USER['uid'])) {
-                $text = $LANG_BD00['unsubscribe'];
+                $text = _('Unsubscribe');
                 $current_val = 1;
                 $chk = 'checked="checked"';
             } else {
-                $text = $LANG_BD00['subscribe'];
+                $text = _('Subscribe');
                 $current_val = 0;
                 $chk = '';
             }
             $retval = '<input type="checkbox" value="1" ' . $chk .
-                ' data-uk-tooltip title="' . $LANG_BD00['click_to'] . $text .
+                ' data-uk-tooltip title="' . _('Click to') . ' ' . $text .
                 '" onclick="javascript:BDAY_toggleSub(this, ' . $A['uid'] . ', ' . $current_val . ');" />';
             break;
 
@@ -775,7 +775,7 @@ class Birthday
             $retval = COM_createLink('<i class="uk-icon uk-icon-trash uk-text-danger"></i>',
                 $_BD_CONF['admin_url'] . "/index.php?delitem={$A['uid']}",
                 array(
-                     'onclick' => "return confirm('{$LANG_BD00['conf_del']}');",
+                     'onclick' => "return confirm('" . _('Do you really want to delete this item?') . "');",
                 ) );
             break;
         
@@ -786,7 +786,5 @@ class Birthday
         return $retval;
     }
 
-
 }
 
-?>

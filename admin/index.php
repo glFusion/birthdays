@@ -4,9 +4,9 @@
  *
  * @author     Lee Garner <lee@leegarner.com>
  * @author     Mike Lynn <mike@mlynn.com>
- * @copyright  Copyright (c) 2018-2019 Lee Garner <lee@leegarner.com>
+ * @copyright  Copyright (c) 2018-2020 Lee Garner <lee@leegarner.com>
  * @package    birthdays
- * @version    0.1.2
+ * @version    v1.0/0
  * @license    http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
@@ -90,6 +90,7 @@ function BIRTHDAYS_adminMenu()
     $T->set_var(array(
         'version'   => $_BD_CONF['pi_version'],
         'logo_url' => plugin_geticon_birthdays(),
+        'lang_pi_title' => _('Birthdays'),
     ) );
     $retval = $T->parse('', 'title');
     $retval .= ADMIN_createMenu(

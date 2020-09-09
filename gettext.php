@@ -18,6 +18,7 @@ class MO
         'english' => 'en_US',
         'french_canada' => 'fr_CA',
         'spanish_colombia' => 'es_CO',
+        'spanish' => 'es_MX',
     );
 
 
@@ -30,11 +31,11 @@ class MO
      */
     public static function init($lang = NULL)
     {
-        global $_CONF, $LANG_LOCALE;
+        global $_CONF, $LANG_LOCALE, $_BD_CONF;
 
         // Set the language domain to separate strings from the global
         // namespace.
-        self::$domain = Config::getInstance()->get('pi_name');
+        self::$domain = $_BD_CONF['pi_name'];
 
         // Set the requested language, falling back to the default if not
         // specified.
