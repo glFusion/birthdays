@@ -75,6 +75,9 @@ spl_autoload_register(function($class)
 });
 
 
+include_once __DIR__ . '/gettext.php';
+use Birthdays\_;
+
 /**
  * Returns the items for this plugin that should appear on the main menu.
  * NOTE: this MUST return the url/value pairs in the following format
@@ -84,11 +87,11 @@ spl_autoload_register(function($class)
  */
 function plugin_getmenuitems_birthdays()
 {
-    global $_BD_CONF, $LANG_BD00;
+    global $_BD_CONF;
 
     $menuitems = array();
     if (\Birthdays\Birthday::canView()) {
-        $menuitems[$LANG_BD00['pi_title']] = $_BD_CONF['url'];
+        $menuitems[_('Birthdays')] = $_BD_CONF['url'];
     }
     return $menuitems;
 }
@@ -101,12 +104,13 @@ function plugin_getmenuitems_birthdays()
  */
 function plugin_getadminoption_birthdays()
 {
-    global $LANG_BD00, $_BD_CONF;
+    global $_BD_CONF;
 
     if (plugin_ismoderator_birthdays()) {
-        return array ($LANG_BD00['pi_title'],
-                      $_BD_CONF['admin_url'] . '/index.php'
-                      );
+        return array(
+            _('Birthdays'),
+            $_BD_CONF['admin_url'] . '/index.php'
+        );
     } else {
         return false;
     }
@@ -120,12 +124,14 @@ function plugin_getadminoption_birthdays()
  */
 function plugin_cclabel_birthdays()
 {
-    global $LANG_BD00, $_BD_CONF;
+    global $_BD_CONF;
 
     if (plugin_ismoderator_birthdays()) {
-        return array($LANG_BD00['pi_title'],
-                      $_BD_CONF['admin_url'] . '/index.php',
-                      plugin_geticon_birthdays());
+        return array(
+            _('Birthdays'),
+            $_BD_CONF['admin_url'] . '/index.php',
+            plugin_geticon_birthdays()
+        );
     } else {
         return false;
     }
@@ -323,7 +329,7 @@ function plugin_user_delete_birthdays($uid)
  */
 function phpblock_birthdays_month($blkinfo=array(), $months=2)
 {
-    global $_BD_CONF, $LANG_BD00, $_CONF, $LANG_MONTH;
+    global $_BD_CONF, $_CONF, $LANG_MONTH;
 
     $M = \Birthdays\Birthday::currentDate()['month'];  // starting month
     $have_data = false;
@@ -375,7 +381,7 @@ function phpblock_birthdays_month($blkinfo=array(), $months=2)
  */
 function phpblock_birthdays_week($blkinfo=array(), $weeks=2)
 {
-    global $_BD_CONF, $LANG_BD00, $_CONF;
+    global $_BD_CONF, $_CONF;
 
     $s_dt = new \Date('now', $_CONF['timezone']);
     $e_dt = new \Date();      // Just create a date object for later
@@ -486,7 +492,7 @@ function plugin_enablestatechange_birthdays($enabled)
  */
 function plugin_user_login_birthdays($uid)
 {
-    global $_CONF, $LANG_BD00, $_BD_CONF;
+    global $_CONF, $_BD_CONF;
 
     // Show nothing if disabled
     if (!$_BD_CONF['login_greeting']) return;
@@ -499,7 +505,7 @@ function plugin_user_login_birthdays($uid)
     if ($x) {
         foreach ($x as $data) {
             if ($data->getUid() == $uid) {
-                COM_setMsg(sprintf($LANG_BD00['msg_happy_birthday'], COM_getDisplayName($uid)));
+                COM_setMsg(sprintf(_('Happy Birthday, %s!'), COM_getDisplayName($uid)));
                 break;
             }
         }
@@ -700,7 +706,8 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
     $uid = (int)$uid;
     $name = COM_getDisplayName($uid);
     $name = @htmlspecialchars($name,ENT_QUOTES, COM_getEncodingt(),true);
-    $lang = BIRTHDAYS_loadLanguage($uid);
+    //$lang = BIRTHDAYS_loadLanguage($uid);
+    Birthdays\MO::initUser($uid);
     $fullname = $name;
     $nameparts = PLG_callFunctionForOnePlugin(
         'plugin_parseName_lglib',
@@ -728,9 +735,9 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
         'firstname'     => $fname,
         'lastname'      => $lname,
         'fullname'      => $fullname,
-        'lang_unsub'    => $lang['unsubscribe'],
-        'lang_to_unsub' => $lang['sub_unsub'],
-        'lang_noreply'  => $lang['email_autogen'],
+        'lang_unsub'    => _('Unsubscribe'),
+        'lang_to_unsub' => _('To unsubscribe from these notifications, please click this link'),
+        'lang_noreply'  => _('This email was generated automatically. Please do not reply to this email.'),
     ) );
 
     if ($category == 'birthday_sub') {
@@ -738,7 +745,7 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
         $subject = sprintf($lang['sub_title'], $def_name);
         $T->set_var(array(
             'site_name'     => $_CONF['site_name'],
-            'sub_title'     => sprintf($lang['sub_title'], $name),
+            'sub_title'     => sprintf(_('Birthday Notification from %s'), $_CONF['site_name']),
             'sub_message'   => sprintf($lang['sub_message'], $name),
             'sub_reason'    => sprintf($lang['sub_reason'], $name),
             'lang_birthday_notif' => $lang['sub_title'],
@@ -768,6 +775,7 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
         'subject' => $subject,
     );
     //var_dump($retval);die;
+    Birthdays\MO::init();
     return $retval;
 }
 
