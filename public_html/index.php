@@ -58,6 +58,16 @@ case 'addbday':
     break;
 }
 
+/*$domain = 'birthdays';
+        $results = setlocale(LC_MESSAGES, 'es_MX');
+if ($results) {
+            $dom = bind_textdomain_codeset($domain, 'UTF-8');
+            $dom = bindtextdomain($domain, __DIR__ . "/locale");
+        }
+
+ */
+
+
 $display = COM_siteHeader('menu');
 $T = new Template($_CONF['path'] . 'plugins/birthdays/templates');
 $T->set_file('header', 'index.thtml');
@@ -67,12 +77,13 @@ $T->set_var(array(
     'logo'      => plugin_geticon_birthdays(),
     'my_form'   => COM_isAnonUser() ? '' : \Birthdays\Birthday::editForm($_USER['uid'], 'edit_index'),
     'month_select' => Birthdays\Birthday::selectMonth($filter_month),
-    'lang_sel_month' => Birthdays\_('Select Month'),
-    'lang_pi_title' => Birthdays\_('Birthdays'),
+    'lang_sel_month' => dgettext('birthdays', 'Select Month'),
+    'lang_pi_title' => dgettext('birthdays', 'Birthdays'),
 ) );
+
 $T->parse('output','header');
 $display .= $T->finish($T->get_var('output'));
-$display .= \Birthdays\Birthday::publicList($filter_month);
+$display .= Birthdays\Birthday::publicList($filter_month);
 $display .= COM_siteFooter();
 echo $display;
 exit;

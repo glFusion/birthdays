@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-10 10:42-0700\n"
+"POT-Creation-Date: 2020-09-10 08:33-0700\n"
 "PO-Revision-Date: 2020-09-10 08:36-0700\n"
 "Last-Translator: root <lee@leegarner.com>\n"
 "Language-Team: Language ex\n"
@@ -34,16 +34,16 @@ msgid "Name"
 msgstr "Nombre"
 
 #: classes/Birthday.class.php:619 classes/Birthday.class.php:695
-#: functions.inc:301
+#: functions.inc:303
 msgid "Birthday"
 msgstr "Cumpleaños"
 
-#: classes/Birthday.class.php:627 classes/Birthday.class.php:771
+#: classes/Birthday.class.php:627 classes/Birthday.class.php:765
 msgid "Subscribe"
 msgstr "Suscribir"
 
 #: classes/Birthday.class.php:638 public_html/index.php:71 admin/index.php:93
-#: functions.inc:92 functions.inc:109 functions.inc:129
+#: functions.inc:94 functions.inc:111 functions.inc:131
 msgid "Birthdays"
 msgstr "Cumpleaños"
 
@@ -51,15 +51,15 @@ msgstr "Cumpleaños"
 msgid "User ID"
 msgstr "ID de usuario"
 
-#: classes/Birthday.class.php:767 functions.inc:741
+#: classes/Birthday.class.php:761 functions.inc:744
 msgid "Unsubscribe"
 msgstr "darse de baja"
 
-#: classes/Birthday.class.php:776
+#: classes/Birthday.class.php:770
 msgid "Click to"
 msgstr "Haga clic para"
 
-#: classes/Birthday.class.php:784
+#: classes/Birthday.class.php:778
 msgid "Do you really want to delete this item?"
 msgstr "¿Realmente desea eliminar este elemento?"
 
@@ -80,16 +80,6 @@ msgstr "Error al actualizar la suscripción"
 msgid "Select Month"
 msgstr "Seleccione mes"
 
-#: autoinstall.php:52
-#, fuzzy
-msgid "Birthdays This Month"
-msgstr "Cumpleaños"
-
-#: autoinstall.php:62
-#, fuzzy
-msgid "Birthdays This Week"
-msgstr "Cumpleaños"
-
 #: admin/index.php:81
 msgid "Sync All"
 msgstr "Sincronizar todo"
@@ -103,33 +93,34 @@ msgstr ""
 "otros complementos actualicen sus registros si utilizan datos de este "
 "complemento."
 
-#: functions.inc:343 functions.inc:396
+#: functions.inc:345 functions.inc:398
 msgid "View All"
 msgstr "Ver todo"
 
-#: functions.inc:512
+#: functions.inc:514
 #, php-format
 msgid "Happy Birthday, %s!"
 msgstr "¡Feliz cumpleaños, %s!"
 
-#: functions.inc:587
+#: functions.inc:589
 #, php-format
 msgid "%s's Birthday"
 msgstr "Cumpleaños de %s"
 
-#: functions.inc:742
+#: functions.inc:745
 msgid "To unsubscribe from these notifications, please click this link"
 msgstr ""
 "Para cancelar la suscripción a estas notificaciones, haga clic en este enlace"
 
-#: functions.inc:743
+#: functions.inc:746
 msgid ""
 "This email was generated automatically. Please do not reply to this email."
 msgstr ""
 "Este correo electrónico se generó automáticamente. Por favor no responder a "
 "este email."
 
-#: functions.inc:751
+#: functions.inc:754
 #, php-format
 msgid "Birthday Notification from %s"
 msgstr "Notificación de cumpleaños de %s"
+

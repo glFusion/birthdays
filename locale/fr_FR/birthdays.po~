@@ -15,16 +15,16 @@ msgid "Name"
 msgstr ""
 
 #: classes/Birthday.class.php:619 classes/Birthday.class.php:695
-#: functions.inc:301
+#: functions.inc:303
 msgid "Birthday"
 msgstr ""
 
-#: classes/Birthday.class.php:627 classes/Birthday.class.php:771
+#: classes/Birthday.class.php:627 classes/Birthday.class.php:765
 msgid "Subscribe"
 msgstr ""
 
 #: classes/Birthday.class.php:638 public_html/index.php:71 admin/index.php:93
-#: functions.inc:92 functions.inc:109 functions.inc:129
+#: functions.inc:94 functions.inc:111 functions.inc:131
 msgid "Birthdays"
 msgstr ""
 
@@ -32,15 +32,15 @@ msgstr ""
 msgid "User ID"
 msgstr ""
 
-#: classes/Birthday.class.php:767 functions.inc:741
+#: classes/Birthday.class.php:761 functions.inc:744
 msgid "Unsubscribe"
 msgstr ""
 
-#: classes/Birthday.class.php:776
+#: classes/Birthday.class.php:770
 msgid "Click to"
 msgstr ""
 
-#: classes/Birthday.class.php:784
+#: classes/Birthday.class.php:778
 msgid "Do you really want to delete this item?"
 msgstr ""
 
@@ -61,14 +61,6 @@ msgstr ""
 msgid "Select Month"
 msgstr ""
 
-#: autoinstall.php:52
-msgid "Birthdays This Month"
-msgstr ""
-
-#: autoinstall.php:62
-msgid "Birthdays This Week"
-msgstr ""
-
 #: admin/index.php:81
 msgid "Sync All"
 msgstr ""
@@ -79,30 +71,30 @@ msgid ""
 "records if they use data from this plugin."
 msgstr ""
 
-#: functions.inc:343 functions.inc:396
+#: functions.inc:345 functions.inc:398
 msgid "View All"
 msgstr ""
 
-#: functions.inc:512
+#: functions.inc:514
 #, php-format
 msgid "Happy Birthday, %s!"
 msgstr ""
 
-#: functions.inc:587
+#: functions.inc:589
 #, php-format
 msgid "%s's Birthday"
 msgstr ""
 
-#: functions.inc:742
+#: functions.inc:745
 msgid "To unsubscribe from these notifications, please click this link"
 msgstr ""
 
-#: functions.inc:743
+#: functions.inc:746
 msgid ""
 "This email was generated automatically. Please do not reply to this email."
 msgstr ""
 
-#: functions.inc:751
+#: functions.inc:754
 #, php-format
 msgid "Birthday Notification from %s"
 msgstr ""

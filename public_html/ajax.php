@@ -34,7 +34,7 @@ case 'toggleSub':
                 $_POST['uid'],
                 $_USER['uid'],
                 $_BD_CONF['pi_display_name'],
-                sprintf($LANG_BD00['dscp'], COM_getDisplayName($_POST['uid']))
+                sprintf(dgettext('birthdays', 'Description'), COM_getDisplayName($_POST['uid']))
         ) ? 1 : 0;
         break;
     case 1:         // was subscribed, now unsubscribing
@@ -46,7 +46,9 @@ case 'toggleSub':
     $retval = array(
         'uid'    => $_POST['uid'],
         'newval' => $newval,
-        'statusMessage' => $newval != $_POST['oldval'] ? $LANG_BD00['subscr_updated'] : $LANG_BD00['subscr_err'],
+        'statusMessage' => $newval != $_POST['oldval'] ? 
+            dgettext('birthdays', 'Subscription has been updated') :
+            dgettext('birthdays', 'Error updating subscription'),
     );
     break;
 }

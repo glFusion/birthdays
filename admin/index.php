@@ -73,12 +73,12 @@ echo COM_siteFooter();
  */
 function BIRTHDAYS_adminMenu()
 {
-    global $_CONF, $_BD_CONF, $LANG_BD00, $LANG01;
+    global $_CONF, $_BD_CONF, $LANG01;
 
     $menu_arr = array (
         array(
             'url' => $_BD_CONF['admin_url'] . '/index.php?syncall=x',
-            'text' => $LANG_BD00['sync_all'],
+            'text' => dgettext('birthdays', 'Sync All'),
         ),
         array(
             'url' => $_CONF['site_admin_url'],
@@ -90,12 +90,12 @@ function BIRTHDAYS_adminMenu()
     $T->set_var(array(
         'version'   => $_BD_CONF['pi_version'],
         'logo_url' => plugin_geticon_birthdays(),
-        'lang_pi_title' => _('Birthdays'),
+        'lang_pi_title' => dgettext('birthdays', 'Birthdays'),
     ) );
     $retval = $T->parse('', 'title');
     $retval .= ADMIN_createMenu(
         $menu_arr,
-        $LANG_BD00['hlp_sync_all'],
+        dgettext('birthdays', 'Sync All: Re-saves all birthday entries so other plugins will update their records if they use data from this plugin.'),
         plugin_geticon_birthdays()
     );
     return $retval;

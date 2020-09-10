@@ -7,5 +7,5 @@
 <!-- END bdays -->
 </ul>
 <!-- END month -->
-<a class="bday_blk_viewall"  href="{site-url}/birthdays">{$LANG_BD00['view_all']}</a>
+<a class="bday_blk_viewall"  href="{site-url}/birthdays">{lang_view_all}</a>
 {# end {templatelocation} #}

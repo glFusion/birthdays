@@ -313,12 +313,12 @@ class Birthday
      */
     public static function editForm($uid, $tpl = 'edit')
     {
-        global $LANG_MONTH, $LANG_BD00;
+        global $LANG_MONTH;
 
         $bday = self::getInstance($uid);
         $T = new \Template(__DIR__ . '/../templates');
         $T->set_file('edit', $tpl . '.thtml');
-        $opt = self::selectMonth($bday->month, $LANG_BD00['none']);
+        $opt = self::selectMonth($bday->month, _('None'));
         $T->set_var('month_select', $opt);
         $opt = '';
         for ($i = 0; $i < 32; $i++) {
@@ -326,7 +326,7 @@ class Birthday
             if ($i > 0) {
                 $opt .= "<option id=\"bday_day_$i\" $sel value=\"$i\">$i</option>";
             } else {
-                $opt .= "<option $sel value=\"$i\">" . _('None') . "/option>";
+                $opt .= "<option $sel value=\"$i\">" . _('None') . "</option>";
             }
         }
         $T->set_var('day_select', $opt);
@@ -604,7 +604,7 @@ class Birthday
      */
     public static function publicList($filter_month=0)
     {
-        global $_TABLES, $LANG_BD00, $_BD_CONF;
+        global $_TABLES, $_BD_CONF;
 
         $retval = '';
 
@@ -714,8 +714,14 @@ class Birthday
             'has_extras' => false,
             'form_url' => $_BD_CONF['admin_url'] . '/index.php',
         );
-        $options = array('chkdelete' => 'true', 'chkfield' => 'uid');
-        $defsort_arr = array('field' => 'uid', 'direction' => 'asc');
+        $options = array(
+            'chkdelete' => 'true',
+            'chkfield' => 'uid',
+        );
+        $defsort_arr = array(
+            'field' => 'uid',
+            'direction' => 'asc',
+        );
         $query_arr = array(
             'table' => 'birthdays',
             'sql' => $sql,

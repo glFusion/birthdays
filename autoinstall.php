@@ -47,7 +47,7 @@ $INSTALL_plugin[$_BD_CONF['pi_name']] = array(
     array(
         'type'  => 'block',
         'name'  => 'birthdays_month',
-        'title' => $LANG_BD00['birthdays_month'],
+        'title' => dgettext('birthdays', 'Birthdays This Month'),
         'phpblockfn' => 'phpblock_birthdays_month',
         'block_type' => 'phpblock',
         'is_enabled' => 0,
@@ -57,7 +57,7 @@ $INSTALL_plugin[$_BD_CONF['pi_name']] = array(
     array(
         'type'  => 'block',
         'name'  => 'birthdays_week',
-        'title' => $LANG_BD00['birthdays_week'],
+        'title' => dgettext('birthdays', 'Birthdays This Week'),
         'phpblockfn' => 'phpblock_birthdays_week',
         'block_type' => 'phpblock',
         'is_enabled' => 0,
