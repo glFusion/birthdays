@@ -1,5 +1,5 @@
 {# begin {templatelocation} #}
-<form method="post" action="{site_url}/birthdays/index.php">
+<form class="uk-form uk-form-horizontal" method="post" action="{site_url}/birthdays/index.php">
   {$LANG_BD00['my_birthday']}:
     <select name="birthday_month" onchange="javascript:BDAY_updateDay(this.options[this.selectedIndex].value);">
       {month_select}

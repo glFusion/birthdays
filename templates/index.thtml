@@ -6,7 +6,7 @@
   <a href="{site_url}/{pi_name}/index.php"><img src="{logo}" border="0"></a>
   &nbsp;&nbsp;<span class="bday_pi_title">{$LANG_BD00['pi_title']}</span>
   <div style="clear:both;"></div>
-  <form method="get" action="{site_url}/{pi_name}/index.php">
+  <form class="uk-form uk-form-horizontal" method="get" action="{site_url}/{pi_name}/index.php">
     <input type="hidden" name="list">
     {$LANG_BD00['sel_month']}:
     <select name="filter_month" onChange='javascript:this.form.submit();return true'>
