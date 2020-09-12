@@ -780,7 +780,7 @@ class Birthday
             break;
 
         case 'delete':
-            $retval = COM_createLink('<i class="uk-icon uk-icon-trash uk-text-danger"></i>',
+            $retval = COM_createLink('<i class="uk-icon uk-icon-remove uk-text-danger"></i>',
                 $_BD_CONF['admin_url'] . "/index.php?delitem={$A['uid']}",
                 array(
                      'onclick' => "return confirm('" . _('Do you really want to delete this item?') . "');",
