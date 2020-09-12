@@ -526,6 +526,8 @@ class Birthday
      */
     public static function deleteCache($key)
     {
+        if (version_compare(GVERSION, self::CACHE_GVERSION, '<')) return;
+
         $key = self::_makeKey($key);
         return \glFusion\Cache\Cache::getInstance()->delete($key);
     }

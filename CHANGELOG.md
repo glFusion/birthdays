@@ -1,5 +1,9 @@
 # Changelog for the Birthdays plugin
 
+## Version 1.0.1
+Release 2020-09-12
+- Fix call to glFusion 2.0 cache if GVERSION < 2.0
+
 ## Version 1.0.0
 Release 2020-08-31
 - Remove html-format apostrophy in dscp language string
