@@ -23,6 +23,7 @@ global $_DB_dbms;
 require_once __DIR__ . '/functions.inc';
 require_once __DIR__ . '/birthdays.php';
 require_once __DIR__ . "/sql/{$_DB_dbms}_install.php";
+use Birthdays\MO;
 
 //  Plugin installation options
 $INSTALL_plugin[$_BD_CONF['pi_name']] = array(
@@ -47,7 +48,7 @@ $INSTALL_plugin[$_BD_CONF['pi_name']] = array(
     array(
         'type'  => 'block',
         'name'  => 'birthdays_month',
-        'title' => dgettext('birthdays', 'Birthdays This Month'),
+        'title' => MO::_('Birthdays This Month'),
         'phpblockfn' => 'phpblock_birthdays_month',
         'block_type' => 'phpblock',
         'is_enabled' => 0,
@@ -57,7 +58,7 @@ $INSTALL_plugin[$_BD_CONF['pi_name']] = array(
     array(
         'type'  => 'block',
         'name'  => 'birthdays_week',
-        'title' => dgettext('birthdays', 'Birthdays This Week'),
+        'title' => MO::_('Birthdays This Week'),
         'phpblockfn' => 'phpblock_birthdays_week',
         'block_type' => 'phpblock',
         'is_enabled' => 0,

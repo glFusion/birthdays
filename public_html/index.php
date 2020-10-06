@@ -18,7 +18,7 @@ if (!\Birthdays\Birthday::canView()) {
     COM_404();
     exit;
 }
-
+use Birthdays\MO;
 USES_lib_admin();
 
 // MAIN
@@ -77,8 +77,8 @@ $T->set_var(array(
     'logo'      => plugin_geticon_birthdays(),
     'my_form'   => COM_isAnonUser() ? '' : \Birthdays\Birthday::editForm($_USER['uid'], 'edit_index'),
     'month_select' => Birthdays\Birthday::selectMonth($filter_month),
-    'lang_sel_month' => dgettext('birthdays', 'Select Month'),
-    'lang_pi_title' => dgettext('birthdays', 'Birthdays'),
+    'lang_sel_month' => MO::_('Select Month'),
+    'lang_pi_title' => MO::_('Birthdays'),
 ) );
 
 $T->parse('output','header');

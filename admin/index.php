@@ -12,6 +12,7 @@
  * @filesource
  */
 require_once('../../../lib-common.php');
+use Birthdays\MO;
 
 if (!plugin_ismoderator_birthdays()) {
     COM_404();
@@ -78,7 +79,7 @@ function BIRTHDAYS_adminMenu()
     $menu_arr = array (
         array(
             'url' => $_BD_CONF['admin_url'] . '/index.php?syncall=x',
-            'text' => dgettext('birthdays', 'Sync All'),
+            'text' => MO::_('Sync All'),
         ),
         array(
             'url' => $_CONF['site_admin_url'],
@@ -90,12 +91,12 @@ function BIRTHDAYS_adminMenu()
     $T->set_var(array(
         'version'   => $_BD_CONF['pi_version'],
         'logo_url' => plugin_geticon_birthdays(),
-        'lang_pi_title' => dgettext('birthdays', 'Birthdays'),
+        'lang_pi_title' => MO::_('Birthdays'),
     ) );
     $retval = $T->parse('', 'title');
     $retval .= ADMIN_createMenu(
         $menu_arr,
-        dgettext('birthdays', 'Sync All: Re-saves all birthday entries so other plugins will update their records if they use data from this plugin.'),
+        MO::_('Sync All: Re-saves all birthday entries so other plugins will update their records if they use data from this plugin.'),
         plugin_geticon_birthdays()
     );
     return $retval;

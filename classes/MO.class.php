@@ -30,15 +30,14 @@ class MO
     /** Supported language name=>locale mapping.
      * @var array */
     private static $lang2locale = array(
-        'dutch' => 'nl',
-        'finnish' => 'fi',
-        'german' => 'de_DE',
-        'polish' => 'pl_PL',
-        'czech' => 'cs_CZ',
-        'english' => 'en_US',
-        'french_canada' => 'fr_CA',
-        'spanish_colombia' => 'es_CO',
-        'spanish' => 'es_MX',
+        'dutch_utf-8' => 'nl_NL',
+        'finnish_utf-8' => 'fi_FI',
+        'german_utf-8' => 'de_DE',
+        'polish_utf-8' => 'pl_PL',
+        'czech_utf-8' => 'cs_CZ',
+        'english_utf-8' => 'en_US',
+        'french_canada_utf-8' => 'fr_CA',
+        'spanish_colombia_utf-8' => 'es_CO',
     );
 
 
@@ -57,35 +56,32 @@ class MO
         // namespace.
         self::$domain = $_BD_CONF['pi_name'];
 
-        // Set the requested language, falling back to the default if not
-        // specified.
         if (empty($lang)) {
             $lang = $_CONF['language'];
         }
-
-        // Validate and use the appropriate locale code.
-        // Defaults to 'en_US' if a supportated locale wasn't requested.
-        $parts = explode('_', $lang);
-        if (
-            count($parts) > 2 &&
-            isset(self::$lang2local[$parts[0] . '_' . $parts[1]])
-        ) {
-            // 2-part language, e.g. "french_canada"
-            // Ignore any other parts like 'utf-8'
-            $locale = self::$lang2locale[$parts[0] . '_' . $parts[1]];
-        } elseif (isset(self::$lang2locale[$parts[0]])) {
-            // single-part language, e.g. "english"
-            $locale = self::$lang2locale[$parts[0]];
-        } elseif (isset($LANG_LOCALE) && !empty($LANG_LOCALE)) {
-            // Not found, try the global variable
-            $locale = $LANG_LOCALE;
+        if (!empty($lang) && $lang != $_CONF['language']) {
+            // Validate and use the appropriate locale code.
+            // Defaults to 'en_US' if a supportated locale wasn't requested.
+            if (isset(self::$lang2locale[$lang])) {
+                $locale = self::$lang2locale[$lang];
+            } elseif (isset($LANG_LOCALE) && !empty($LANG_LOCALE)) {
+                // Not found, try the global variable
+                $locale = $LANG_LOCALE;
+            } else {
+                // global not set, fall back to US english
+                $locale = 'en_US';
+            }
+            self::$old_locale = setlocale(LC_MESSAGES, "0");
+            $lang = str_replace($lang, '_utf-8', '');
+            $results = setlocale(
+                LC_MESSAGES,
+                $locale.'.utf8', $locale, $lang
+            );
         } else {
-            // global not set, fall back to US english
-            $locale = 'en_US';
+            // Didn't need to run setlocale, so fake a true result so 
+            // the bind functions will be called.
+            $results = true;
         }
-
-        self::$old_locale = setlocale(LC_MESSAGES, "0");
-        $results = setlocale(LC_MESSAGES, $locale);
         if ($results) {
             bind_textdomain_codeset(self::$domain, 'UTF-8');
             bindtextdomain(self::$domain, __DIR__ . "/../locale");
@@ -114,7 +110,7 @@ class MO
      */
     public static function initUser($uid=0)
     {
-        global $_USER;
+        global $_USER, $_TABLES;
 
         if ($uid == 0) {
             $uid = $_USER['uid'];

@@ -1,0 +1,227 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-10-06 12:23-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: classes/Birthday.class.php:321 classes/Birthday.class.php:329
+msgid "None"
+msgstr "Ei mitään"
+
+#: classes/Birthday.class.php:334
+msgid "My Birthday"
+msgstr "Syntymäpäiväni"
+
+#: classes/Birthday.class.php:370 classes/Birthday.class.php:368
+msgid "All"
+msgstr "Kaikki"
+
+#: classes/Birthday.class.php:613 classes/Birthday.class.php:690
+#: classes/Birthday.class.php:615 classes/Birthday.class.php:692
+msgid "Name"
+msgstr "Päälläni"
+
+#: classes/Birthday.class.php:619 classes/Birthday.class.php:695
+#: functions.inc:287 classes/Birthday.class.php:621
+#: classes/Birthday.class.php:697 functions.inc:305
+msgid "Birthday"
+msgstr "Syntymäpäivä"
+
+#: classes/Birthday.class.php:627 classes/Birthday.class.php:771
+#: classes/Birthday.class.php:629 classes/Birthday.class.php:773
+msgid "Subscribe"
+msgstr "Tilaa"
+
+#: classes/Birthday.class.php:638 public_html/index.php:81 admin/index.php:94
+#: functions.inc:78 functions.inc:95 functions.inc:115
+#: language/lang_config.php:19 classes/Birthday.class.php:640 functions.inc:96
+#: functions.inc:113 functions.inc:133
+msgid "Birthdays"
+msgstr "Syntymäpäivät"
+
+#: classes/Birthday.class.php:685 classes/Birthday.class.php:687
+msgid "User ID"
+msgstr "käyttäjätunnus"
+
+#: classes/Birthday.class.php:767 functions.inc:727
+#: classes/Birthday.class.php:769 functions.inc:745
+msgid "Unsubscribe"
+msgstr "Lopeta tilaus"
+
+#: classes/Birthday.class.php:776 classes/Birthday.class.php:778
+msgid "Click to"
+msgstr "Napsauta"
+
+#: classes/Birthday.class.php:784 classes/Birthday.class.php:786
+msgid "Do you really want to delete this item?"
+msgstr "Haluatko todella poistaa tämän kohteen?"
+
+#: public_html/ajax.php:38
+#, php-format
+msgid "Description"
+msgstr "Tilaus"
+
+#: public_html/ajax.php:51
+msgid "Subscription has been updated"
+msgstr "Tilaus on päivitetty."
+
+#: public_html/ajax.php:52
+msgid "Error updating subscription"
+msgstr "Tilauksen päivittämisessä tapahtui virhe."
+
+#: public_html/index.php:80
+msgid "Select Month"
+msgstr "Valitse kuukausi"
+
+#: autoinstall.php:51
+msgid "Birthdays This Month"
+msgstr "Syntymäpäivät tässä kuussa"
+
+#: autoinstall.php:61
+msgid "Birthdays This Week"
+msgstr "Syntymäpäivät tällä viikolla"
+
+#: admin/index.php:82
+msgid "Sync All"
+msgstr "Synkronoi kaikki"
+
+#: admin/index.php:99
+msgid ""
+"Sync All: Re-saves all birthday entries so other plugins will update their "
+"records if they use data from this plugin."
+msgstr ""
+"Synkronoi kaikki: tallentaa kaikki syntymäpäivämerkinnät uudelleen, jotta "
+"muut laajennukset päivittävät tietueensa, jos he käyttävät tämän "
+"laajennuksen tietoja."
+
+#: functions.inc:329 functions.inc:382 functions.inc:347 functions.inc:400
+msgid "View All"
+msgstr "Näytä kaikki"
+
+#: functions.inc:498 functions.inc:516
+#, php-format
+msgid "Happy Birthday, %s!"
+msgstr "Hyvää syntymäpäivää, %s!"
+
+#: functions.inc:573 functions.inc:591
+#, php-format
+msgid "%s's Birthday"
+msgstr "%sin Syntymäpäivä"
+
+#: functions.inc:728 functions.inc:746
+msgid "To unsubscribe from these notifications, please click this link"
+msgstr ""
+"Voit peruuttaa näiden ilmoitusten tilaamisen napsauttamalla tätä linkkiä."
+
+#: functions.inc:729 functions.inc:747
+msgid ""
+"This email was generated automatically. Please do not reply to this email."
+msgstr ""
+"Tämä sähköposti luotiin automaattisesti. Ole hyvä ja älä vastaa tähän "
+"sähköpostiin."
+
+#: functions.inc:737 functions.inc:755
+#, php-format
+msgid "Birthday Notification from %s"
+msgstr "Syntymäpäiväilmoitus %s"
+
+#: language/lang_config.php:20
+msgid "Birthdays Plugin Configuration"
+msgstr "Syntymäpäivät-laajennuksen määritykset"
+
+#: language/lang_config.php:24 language/lang_config.php:28
+msgid "Main Settings"
+msgstr "Pääasetukset"
+
+#: language/lang_config.php:32
+msgid "Date Display Format"
+msgstr "Päivämäärän näyttömuoto"
+
+#: language/lang_config.php:33
+msgid "Greeting message upon login?"
+msgstr "Tervehdysviesti sisäänkirjautumisen yhteydessä?"
+
+#: language/lang_config.php:34
+msgid "Allow subscriptions to birthday announcements?"
+msgstr "Sallitaanko syntymäpäiväilmoitusten tilaaminen?"
+
+#: language/lang_config.php:35
+msgid "Enable birthday cards?"
+msgstr "Otetaanko syntymäpäiväkortit käyttöön?"
+
+#: language/lang_config.php:36
+msgid "Group allowed to view birthdays"
+msgstr "Ryhmä saa tarkastella syntymäpäiviä"
+
+#: language/lang_config.php:41
+msgid "True"
+msgstr "Totta"
+
+#: language/lang_config.php:42
+msgid "False"
+msgstr "Väärä"
+
+#: classes/Birthday.class.php:702 classes/Birthday.class.php:700
+msgid "Delete"
+msgstr ""
+
+#: classes/Models/Month.class.php:15
+msgid "January"
+msgstr ""
+
+#: classes/Models/Month.class.php:16
+msgid "February"
+msgstr ""
+
+#: classes/Models/Month.class.php:17
+msgid "March"
+msgstr ""
+
+#: classes/Models/Month.class.php:18
+msgid "April"
+msgstr ""
+
+#: classes/Models/Month.class.php:19
+msgid "May"
+msgstr ""
+
+#: classes/Models/Month.class.php:20
+msgid "June"
+msgstr ""
+
+#: classes/Models/Month.class.php:21
+msgid "July"
+msgstr ""
+
+#: classes/Models/Month.class.php:22
+msgid "August"
+msgstr ""
+
+#: classes/Models/Month.class.php:23
+msgid "September"
+msgstr ""
+
+#: classes/Models/Month.class.php:24
+msgid "October"
+msgstr ""
+
+#: classes/Models/Month.class.php:25
+msgid "November"
+msgstr ""
+
+#: classes/Models/Month.class.php:26
+msgid "December"
+msgstr ""

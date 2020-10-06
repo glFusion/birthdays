@@ -13,6 +13,7 @@
 
 /** Include required glFusion common functions */
 require_once '../lib-common.php';
+use Birthdays\MO;
 
 $retval = '';
 
@@ -34,7 +35,7 @@ case 'toggleSub':
                 $_POST['uid'],
                 $_USER['uid'],
                 $_BD_CONF['pi_display_name'],
-                sprintf(dgettext('birthdays', 'Description'), COM_getDisplayName($_POST['uid']))
+                sprintf(MO::_('Description'), COM_getDisplayName($_POST['uid']))
         ) ? 1 : 0;
         break;
     case 1:         // was subscribed, now unsubscribing
@@ -47,8 +48,8 @@ case 'toggleSub':
         'uid'    => $_POST['uid'],
         'newval' => $newval,
         'statusMessage' => $newval != $_POST['oldval'] ? 
-            dgettext('birthdays', 'Subscription has been updated') :
-            dgettext('birthdays', 'Error updating subscription'),
+            MO::_('Subscription has been updated') :
+            MO::_('Error updating subscription'),
     );
     break;
 }

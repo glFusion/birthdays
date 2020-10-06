@@ -47,16 +47,38 @@ if (!isset($_BD_CONF['format']) || empty($_BD_CONF['format'])) {
 
 spl_autoload_register(function($class)
 {
-    if (strpos($class, 'Birthdays\\') === 0) {
-        $class = str_replace('Birthdays\\', '', $class);
-        $path = __DIR__ . '/classes/' . $class . '.class.php';
-        if (file_exists($path)) {
-            include $path;
-        }
+    // project-specific namespace prefix
+    $prefix = 'Birthdays\\';
+
+    // does the class use the namespace prefix?
+    $len = strlen($prefix);
+    if (strncmp($prefix, $class, $len) !== 0) {
+        // no, move to the next registered autoloader
+        return;
+    }
+
+    // base directory for the namespace prefix
+    $base_dir = __DIR__ . '/classes/';
+
+    // get the relative class name
+    $relative_class = substr($class, $len);
+
+    // replace the namespace prefix with the base directory, replace namespace
+    // separators with directory separators in the relative class name, append
+    // with .php
+    $file = $base_dir . str_replace('\\', '/', $relative_class) . '.class.php';
+
+    // if the file exists, require it
+    if (file_exists($file)) {
+        require $file;
     }
 });
 
-Birthdays\MO::init();
+use Birthdays\MO;
+MO::init();
+require_once __DIR__ . '/language/lang_config.php';
+
+//Birthdays\MO::init();
 
 /**
  * Returns the items for this plugin that should appear on the main menu.
@@ -71,7 +93,7 @@ function plugin_getmenuitems_birthdays()
 
     $menuitems = array();
     if (\Birthdays\Birthday::canView()) {
-        $menuitems[dgettext('birthdays', 'Birthdays')] = $_BD_CONF['url'];
+        $menuitems[MO::_('Birthdays')] = $_BD_CONF['url'];
     }
     return $menuitems;
 }
@@ -88,7 +110,7 @@ function plugin_getadminoption_birthdays()
 
     if (plugin_ismoderator_birthdays()) {
         return array(
-            dgettext('birthdays', 'Birthdays'),
+            MO::_('Birthdays'),
             $_BD_CONF['admin_url'] . '/index.php'
         );
     } else {
@@ -108,7 +130,7 @@ function plugin_cclabel_birthdays()
 
     if (plugin_ismoderator_birthdays()) {
         return array(
-            dgettext('birthdays', 'Birthdays'),
+            MO::_('Birthdays'),
             $_BD_CONF['admin_url'] . '/index.php',
             plugin_geticon_birthdays()
         );
@@ -280,7 +302,7 @@ function plugin_profilevariablesdisplay_birthdays($uid, &$T)
     $bday = Birthdays\Birthday::getUser($uid);
     if (empty($bday)) return;
     $LT->set_var('birthday', Birthdays\Birthday::formatDate($bday));
-    $LT->set_var('lang_birthday', dgettext('birthdays', 'Birthday'));
+    $LT->set_var('lang_birthday', MO::_('Birthday'));
     $LT->parse('output', 'block');
 //        var_dump($LT->get_var('output'));die;
     $existingFields = $T->get_var('plugin_fields');
@@ -322,7 +344,7 @@ function phpblock_birthdays_month($blkinfo=array(), $months=2)
     $T = new Template(__DIR__ . '/templates');
     $T->set_file('block', 'phpblock.thtml');
     $T->set_block('block', 'month', 'mon');
-    $T->set_var('lang_view_all', dgettext('birthdays', 'View All'));
+    $T->set_var('lang_view_all', MO::_('View All'));
     for ($i = 0; $i < $months; $i++) {
         $thismonth = \Birthdays\Birthday::getAll($M);
         if (empty($thismonth)) {
@@ -375,7 +397,7 @@ function phpblock_birthdays_week($blkinfo=array(), $weeks=2)
     $T = new Template(__DIR__ . '/templates');
     $T->set_file('block', 'phpblock.thtml');
     $T->set_block('block', 'month', 'mon');
-    $T->set_var('lang_view_all', dgettext('birthdays', 'View All'));
+    $T->set_var('lang_view_all', MO::_('View All'));
     for ($i = 0; $i < $weeks; $i++) {
         // Set ending date to today + 6 days
         $e_dt->setTimestamp($s_dt->toUnix() + 518400);
@@ -491,7 +513,7 @@ function plugin_user_login_birthdays($uid)
     if ($x) {
         foreach ($x as $data) {
             if ($data->getUid() == $uid) {
-                COM_setMsg(sprintf(dgettext('birthdays', 'Happy Birthday, %s!'), COM_getDisplayName($uid)));
+                COM_setMsg(sprintf(MO::_('Happy Birthday, %s!'), COM_getDisplayName($uid)));
                 break;
             }
         }
@@ -566,7 +588,7 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
             case 'description':
             case 'excerpt':
             case 'summary':
-                $props[$p] = sprintf(dgettext('birthdays', '%s\'s Birthday'), COM_getDisplayName($bday->getUid()));
+                $props[$p] = sprintf(MO::_('%s\'s Birthday'), COM_getDisplayName($bday->getUid()));
                 break;
             case 'author_name':
                 $props[$p] = COM_getDisplayName($bday->getUid());
@@ -720,9 +742,9 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
         'firstname'     => $fname,
         'lastname'      => $lname,
         'fullname'      => $fullname,
-        'lang_unsub'    => dgettext('birthdays', 'Unsubscribe'),
-        'lang_to_unsub' => dgettext('birthdyas', 'To unsubscribe from these notifications, please click this link'),
-        'lang_noreply'  => dgettext('birthdays', 'This email was generated automatically. Please do not reply to this email.'),
+        'lang_unsub'    => MO::_('Unsubscribe'),
+        'lang_to_unsub' => MO::_('To unsubscribe from these notifications, please click this link'),
+        'lang_noreply'  => MO::_('This email was generated automatically. Please do not reply to this email.'),
     ) );
 
     if ($category == 'birthday_sub') {
@@ -730,7 +752,7 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
         $subject = sprintf($lang['sub_title'], $def_name);
         $T->set_var(array(
             'site_name'     => $_CONF['site_name'],
-            'sub_title'     => sprintf(dgettext('birthdays', 'Birthday Notification from %s'), $_CONF['site_name']),
+            'sub_title'     => sprintf(MO::_('Birthday Notification from %s'), $_CONF['site_name']),
             'sub_message'   => sprintf($lang['sub_message'], $name),
             'sub_reason'    => sprintf($lang['sub_reason'], $name),
             'lang_birthday_notif' => $lang['sub_title'],

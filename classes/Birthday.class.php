@@ -11,6 +11,8 @@
  * @filesource
  */
 namespace Birthdays;
+use Birthdays\Models\Month;
+
 
 /**
  * Class for birthdays.
@@ -313,12 +315,10 @@ class Birthday
      */
     public static function editForm($uid, $tpl = 'edit')
     {
-        global $LANG_MONTH;
-
         $bday = self::getInstance($uid);
         $T = new \Template(__DIR__ . '/../templates');
         $T->set_file('edit', $tpl . '.thtml');
-        $opt = self::selectMonth($bday->month, _('None'));
+        $opt = self::selectMonth($bday->month, MO::_('None'));
         $T->set_var('month_select', $opt);
         $opt = '';
         for ($i = 0; $i < 32; $i++) {
@@ -326,7 +326,7 @@ class Birthday
             if ($i > 0) {
                 $opt .= "<option id=\"bday_day_$i\" $sel value=\"$i\">$i</option>";
             } else {
-                $opt .= "<option $sel value=\"$i\">" . _('None') . "</option>";
+                $opt .= "<option $sel value=\"$i\">" . MO::_('None') . "</option>";
             }
         }
         $T->set_var('day_select', $opt);
@@ -365,14 +365,12 @@ class Birthday
      */
     public static function selectMonth($thismonth = 0, $all_prompt = '')
     {
-        global $LANG_MONTH;
-
         if ($all_prompt == '') $all_prompt = _('All');
         $opt = '';
         for ($i = 0; $i < 13; $i++) {
             $sel = $thismonth == $i ? 'selected="selected"' : '';
             if ($i > 0) {
-                $opt .= "<option $sel value=\"$i\">{$LANG_MONTH[$i]}</option>";
+                $opt .= "<option $sel value=\"$i\">" . Month::getName($i) . "</option>";
             } else {
                 $opt .= "<option $sel value=\"$i\">{$all_prompt}</option>";
             }
@@ -684,22 +682,22 @@ class Birthday
 
         $header_arr = array(
             array(
-                'text' => _('User ID'),
+                'text' => MO::_('User ID'),
                 'field' => 'uid',
                 'sort' => true,
             ),
             array(
-                'text' => _('Name'),
+                'text' => MO::_('Name'),
                 'field' => 'fullname',
                 'sort' => false,
             ),
             array(
-                'text'  => _('Birthday'),
+                'text'  => MO::_('Birthday'),
                 'field' => 'birthday',
                 'sort'  => false,
             ),
             array(
-                'text' => $LANG_ADMIN['delete'],
+                'text' => MO::_('Delete'),
                 'field' => 'delete',
                 'sort' => false,
                 'align' => 'center',
