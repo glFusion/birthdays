@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-06 12:23-0700\n"
+"POT-Creation-Date: 2020-10-06 14:20-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -60,10 +60,6 @@ msgstr "Benutzeridentifikation"
 #: classes/Birthday.class.php:769 functions.inc:745
 msgid "Unsubscribe"
 msgstr "Abmelden"
-
-#: classes/Birthday.class.php:776 classes/Birthday.class.php:778
-msgid "Click to"
-msgstr "Klicke um"
 
 #: classes/Birthday.class.php:784 classes/Birthday.class.php:786
 msgid "Do you really want to delete this item?"
@@ -226,3 +222,13 @@ msgstr "November"
 #: classes/Models/Month.class.php:26
 msgid "December"
 msgstr "Dezember"
+
+#: classes/Birthday.class.php:767
+#, fuzzy
+msgid "Click to Unsubscribe"
+msgstr "Zum Abbestellen klicken"
+
+#: classes/Birthday.class.php:771
+#, fuzzy
+msgid "Click to Subscribe"
+msgstr "Zum Abonnieren klicken"

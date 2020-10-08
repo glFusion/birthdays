@@ -764,16 +764,16 @@ class Birthday
 
         case 'subscribe':
             if (PLG_isSubscribed('birthdays', 'birthday_sub', $A['uid'], $_USER['uid'])) {
-                $text = _('Unsubscribe');
+                $tooltip = _('Click to Unsubscribe');
                 $current_val = 1;
                 $chk = 'checked="checked"';
             } else {
-                $text = _('Subscribe');
+                $tooltip = _('Click to Subscribe');
                 $current_val = 0;
                 $chk = '';
             }
             $retval = '<input type="checkbox" value="1" ' . $chk .
-                ' data-uk-tooltip title="' . _('Click to') . ' ' . $text .
+                ' data-uk-tooltip title="' . $tooltip .
                 '" onclick="javascript:BDAY_toggleSub(this, ' . $A['uid'] . ', ' . $current_val . ');" />';
             break;
 
@@ -784,7 +784,7 @@ class Birthday
                      'onclick' => "return confirm('" . _('Do you really want to delete this item?') . "');",
                 ) );
             break;
-        
+
         default:
             $retval = $fieldvalue;
             break;

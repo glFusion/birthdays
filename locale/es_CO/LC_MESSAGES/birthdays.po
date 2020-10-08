@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-06 12:28-0700\n"
+"POT-Creation-Date: 2020-10-06 14:20-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,219 +18,211 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: classes/Birthday.class.php:321 classes/Birthday.class.php:329
-#: classes/Birthday.class.php:321 classes/Birthday.class.php:329
 msgid "None"
-msgstr ""
+msgstr "Ninguno"
 
-#: classes/Birthday.class.php:334 classes/Birthday.class.php:334
+#: classes/Birthday.class.php:334
 msgid "My Birthday"
-msgstr ""
+msgstr "Mi cumpleaños"
 
 #: classes/Birthday.class.php:370 classes/Birthday.class.php:368
-#: classes/Birthday.class.php:368
 msgid "All"
-msgstr ""
+msgstr "Todos"
 
 #: classes/Birthday.class.php:613 classes/Birthday.class.php:690
 #: classes/Birthday.class.php:615 classes/Birthday.class.php:692
-#: classes/Birthday.class.php:613 classes/Birthday.class.php:690
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 #: classes/Birthday.class.php:619 classes/Birthday.class.php:695
 #: functions.inc:287 classes/Birthday.class.php:621
 #: classes/Birthday.class.php:697 functions.inc:305
-#: classes/Birthday.class.php:619 classes/Birthday.class.php:695
-#: functions.inc:305
 msgid "Birthday"
-msgstr ""
+msgstr "Cumpleaños"
 
 #: classes/Birthday.class.php:627 classes/Birthday.class.php:771
 #: classes/Birthday.class.php:629 classes/Birthday.class.php:773
-#: classes/Birthday.class.php:627 classes/Birthday.class.php:771
 msgid "Subscribe"
-msgstr ""
+msgstr "Suscribir"
 
 #: classes/Birthday.class.php:638 public_html/index.php:81 admin/index.php:94
 #: functions.inc:78 functions.inc:95 functions.inc:115
 #: language/lang_config.php:19 classes/Birthday.class.php:640 functions.inc:96
-#: functions.inc:113 functions.inc:133 classes/Birthday.class.php:638
-#: public_html/index.php:81 admin/index.php:94 functions.inc:96
-#: functions.inc:113 functions.inc:133 language/lang_config.php:19
+#: functions.inc:113 functions.inc:133
 msgid "Birthdays"
-msgstr ""
+msgstr "Cumpleaños"
 
 #: classes/Birthday.class.php:685 classes/Birthday.class.php:687
-#: classes/Birthday.class.php:685
 msgid "User ID"
-msgstr ""
+msgstr "ID de usuario"
 
 #: classes/Birthday.class.php:767 functions.inc:727
 #: classes/Birthday.class.php:769 functions.inc:745
-#: classes/Birthday.class.php:767 functions.inc:745
 msgid "Unsubscribe"
-msgstr ""
-
-#: classes/Birthday.class.php:776 classes/Birthday.class.php:778
-#: classes/Birthday.class.php:776
-msgid "Click to"
-msgstr ""
+msgstr "Darse de baja"
 
 #: classes/Birthday.class.php:784 classes/Birthday.class.php:786
-#: classes/Birthday.class.php:784
 msgid "Do you really want to delete this item?"
-msgstr ""
+msgstr "¿Realmente desea eliminar este elemento?"
 
-#: public_html/ajax.php:38 public_html/ajax.php:38
+#: public_html/ajax.php:38
 #, php-format
 msgid "Description"
-msgstr ""
+msgstr "Descripción"
 
-#: public_html/ajax.php:51 public_html/ajax.php:51
+#: public_html/ajax.php:51
 msgid "Subscription has been updated"
-msgstr ""
+msgstr "Se actualizó la suscripción"
 
-#: public_html/ajax.php:52 public_html/ajax.php:52
+#: public_html/ajax.php:52
 msgid "Error updating subscription"
-msgstr ""
+msgstr "Error al actualizar la suscripción"
 
-#: public_html/index.php:80 public_html/index.php:80
+#: public_html/index.php:80
 msgid "Select Month"
-msgstr ""
+msgstr "Seleccione mes"
 
-#: autoinstall.php:51 autoinstall.php:51
+#: autoinstall.php:51
 msgid "Birthdays This Month"
-msgstr ""
+msgstr "Cumpleaños este mes"
 
-#: autoinstall.php:61 autoinstall.php:61
+#: autoinstall.php:61
 msgid "Birthdays This Week"
-msgstr ""
+msgstr "Cumpleaños esta semana"
 
-#: admin/index.php:82 admin/index.php:82
+#: admin/index.php:82
 msgid "Sync All"
-msgstr ""
+msgstr "Sincronizar todo"
 
-#: admin/index.php:99 admin/index.php:99
+#: admin/index.php:99
 msgid ""
 "Sync All: Re-saves all birthday entries so other plugins will update their "
 "records if they use data from this plugin."
 msgstr ""
+"Sincronizar todo: vuelve a guardar todas las entradas de cumpleaños para que "
+"otros complementos actualicen sus registros si utilizan datos de este complemento."
 
 #: functions.inc:329 functions.inc:382 functions.inc:347 functions.inc:400
-#: functions.inc:347 functions.inc:400
 msgid "View All"
-msgstr ""
+msgstr "Ver todo"
 
-#: functions.inc:498 functions.inc:516 functions.inc:516
+#: functions.inc:498 functions.inc:516
 #, php-format
 msgid "Happy Birthday, %s!"
-msgstr ""
+msgstr "¡Feliz cumpleaños, %s!"
 
-#: functions.inc:573 functions.inc:591 functions.inc:591
+#: functions.inc:573 functions.inc:591
 #, php-format
 msgid "%s's Birthday"
-msgstr ""
+msgstr "Cumpleaños de %s"
 
-#: functions.inc:728 functions.inc:746 functions.inc:746
+#: functions.inc:728 functions.inc:746
 msgid "To unsubscribe from these notifications, please click this link"
-msgstr ""
+msgstr "Para cancelar la suscripción a estas notificaciones, haga clic en este enlace"
 
-#: functions.inc:729 functions.inc:747 functions.inc:747
+#: functions.inc:729 functions.inc:747
 msgid ""
 "This email was generated automatically. Please do not reply to this email."
 msgstr ""
+"Este correo electrónico se generó automáticamente. Por favor no responder a este email."
 
-#: functions.inc:737 functions.inc:755 functions.inc:755
+#: functions.inc:737 functions.inc:755
 #, php-format
 msgid "Birthday Notification from %s"
-msgstr ""
+msgstr "Notificación de cumpleaños de %s"
 
-#: language/lang_config.php:20 language/lang_config.php:20
+#: language/lang_config.php:20
 msgid "Birthdays Plugin Configuration"
-msgstr ""
+msgstr "Configuración del complemento de cumpleaños"
 
-#: language/lang_config.php:24 language/lang_config.php:28
 #: language/lang_config.php:24 language/lang_config.php:28
 msgid "Main Settings"
-msgstr ""
+msgstr "Configuración principal"
 
-#: language/lang_config.php:32 language/lang_config.php:32
+#: language/lang_config.php:32
 msgid "Date Display Format"
-msgstr ""
+msgstr "Formato de visualización de fecha"
 
-#: language/lang_config.php:33 language/lang_config.php:33
+#: language/lang_config.php:33
 msgid "Greeting message upon login?"
-msgstr ""
+msgstr "¿Mensaje de bienvenida al iniciar sesión?"
 
-#: language/lang_config.php:34 language/lang_config.php:34
+#: language/lang_config.php:34
 msgid "Allow subscriptions to birthday announcements?"
-msgstr ""
+msgstr "¿Permitir las suscripciones a los anuncios de cumpleaños?"
 
-#: language/lang_config.php:35 language/lang_config.php:35
+#: language/lang_config.php:35
 msgid "Enable birthday cards?"
-msgstr ""
+msgstr "¿Habilitar tarjetas de cumpleaños?"
 
-#: language/lang_config.php:36 language/lang_config.php:36
+#: language/lang_config.php:36
 msgid "Group allowed to view birthdays"
-msgstr ""
+msgstr "Grupo autorizado para ver cumpleaños"
 
-#: language/lang_config.php:41 language/lang_config.php:41
+#: language/lang_config.php:41
 msgid "True"
-msgstr ""
+msgstr "Cierto"
 
-#: language/lang_config.php:42 language/lang_config.php:42
+#: language/lang_config.php:42
 msgid "False"
-msgstr ""
+msgstr "Falso"
 
 #: classes/Birthday.class.php:702 classes/Birthday.class.php:700
-#: classes/Birthday.class.php:700
 msgid "Delete"
-msgstr ""
+msgstr "Eliminar"
 
-#: classes/Models/Month.class.php:15 classes/Models/Month.class.php:15
+#: classes/Models/Month.class.php:15
 msgid "January"
-msgstr ""
+msgstr "enero"
 
-#: classes/Models/Month.class.php:16 classes/Models/Month.class.php:16
+#: classes/Models/Month.class.php:16
 msgid "February"
-msgstr ""
+msgstr "febrero"
 
-#: classes/Models/Month.class.php:17 classes/Models/Month.class.php:17
+#: classes/Models/Month.class.php:17
 msgid "March"
-msgstr ""
+msgstr "marzo"
 
-#: classes/Models/Month.class.php:18 classes/Models/Month.class.php:18
+#: classes/Models/Month.class.php:18
 msgid "April"
-msgstr ""
+msgstr "abril"
 
-#: classes/Models/Month.class.php:19 classes/Models/Month.class.php:19
+#: classes/Models/Month.class.php:19
 msgid "May"
-msgstr ""
+msgstr "Mayo"
 
-#: classes/Models/Month.class.php:20 classes/Models/Month.class.php:20
+#: classes/Models/Month.class.php:20
 msgid "June"
-msgstr ""
+msgstr "junio"
 
-#: classes/Models/Month.class.php:21 classes/Models/Month.class.php:21
+#: classes/Models/Month.class.php:21
 msgid "July"
-msgstr ""
+msgstr "julio"
 
-#: classes/Models/Month.class.php:22 classes/Models/Month.class.php:22
+#: classes/Models/Month.class.php:22
 msgid "August"
-msgstr ""
+msgstr "agosto"
 
-#: classes/Models/Month.class.php:23 classes/Models/Month.class.php:23
+#: classes/Models/Month.class.php:23
 msgid "September"
-msgstr ""
+msgstr "septiembre"
 
-#: classes/Models/Month.class.php:24 classes/Models/Month.class.php:24
+#: classes/Models/Month.class.php:24
 msgid "October"
-msgstr ""
+msgstr "octubre"
 
-#: classes/Models/Month.class.php:25 classes/Models/Month.class.php:25
+#: classes/Models/Month.class.php:25
 msgid "November"
-msgstr ""
+msgstr "noviembre"
 
-#: classes/Models/Month.class.php:26 classes/Models/Month.class.php:26
+#: classes/Models/Month.class.php:26
 msgid "December"
-msgstr ""
+msgstr "diciembre"
+
+#: classes/Birthday.class.php:767
+msgid "Click to Unsubscribe"
+msgstr "Haga clic para cancelar la suscripción"
+
+#: classes/Birthday.class.php:771
+msgid "Click to Subscribe"
+msgstr "Haga clic para suscribirse"

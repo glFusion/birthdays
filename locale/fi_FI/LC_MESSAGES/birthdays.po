@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-06 12:23-0700\n"
+"POT-Creation-Date: 2020-10-06 14:20-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -60,10 +60,6 @@ msgstr "käyttäjätunnus"
 #: classes/Birthday.class.php:769 functions.inc:745
 msgid "Unsubscribe"
 msgstr "Lopeta tilaus"
-
-#: classes/Birthday.class.php:776 classes/Birthday.class.php:778
-msgid "Click to"
-msgstr "Napsauta"
 
 #: classes/Birthday.class.php:784 classes/Birthday.class.php:786
 msgid "Do you really want to delete this item?"
@@ -176,52 +172,62 @@ msgstr "Väärä"
 
 #: classes/Birthday.class.php:702 classes/Birthday.class.php:700
 msgid "Delete"
-msgstr ""
+msgstr "Poista"
 
 #: classes/Models/Month.class.php:15
 msgid "January"
-msgstr ""
+msgstr "tammikuu"
 
 #: classes/Models/Month.class.php:16
 msgid "February"
-msgstr ""
+msgstr "helmikuu"
 
 #: classes/Models/Month.class.php:17
 msgid "March"
-msgstr ""
+msgstr "Maaliskuu"
 
 #: classes/Models/Month.class.php:18
 msgid "April"
-msgstr ""
+msgstr "huhtikuu"
 
 #: classes/Models/Month.class.php:19
 msgid "May"
-msgstr ""
+msgstr "Toukokuu"
 
 #: classes/Models/Month.class.php:20
 msgid "June"
-msgstr ""
+msgstr "kesäkuu"
 
 #: classes/Models/Month.class.php:21
 msgid "July"
-msgstr ""
+msgstr "heinäkuu"
 
 #: classes/Models/Month.class.php:22
 msgid "August"
-msgstr ""
+msgstr "Elokuu"
 
 #: classes/Models/Month.class.php:23
 msgid "September"
-msgstr ""
+msgstr "Syyskuu"
 
 #: classes/Models/Month.class.php:24
 msgid "October"
-msgstr ""
+msgstr "Lokakuu"
 
 #: classes/Models/Month.class.php:25
 msgid "November"
-msgstr ""
+msgstr "marraskuu"
 
 #: classes/Models/Month.class.php:26
 msgid "December"
-msgstr ""
+msgstr "Joulukuu"
+
+#: classes/Birthday.class.php:767
+#, fuzzy
+msgid "Click to Unsubscribe"
+msgstr "Napsauta lopettaaksesi tilauksen"
+
+#: classes/Birthday.class.php:771
+#, fuzzy
+msgid "Click to Subscribe"
+msgstr "Napsauta tilataksesi"
