@@ -72,6 +72,7 @@ $LANG_confignames['birthdays'] = array(
     'enable_subs' => 'Allow subscripttions to birthday announcements?',
     'enable_cards' => 'Enable birthday cards?',
     'grp_access' => 'Group allowed to view birthdays',
+    'show_upcoming' => 'Show in upcoming events (evList)?'
 );
 
 $LANG_configselects['birthdays'] = array(

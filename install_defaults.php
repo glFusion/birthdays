@@ -96,6 +96,17 @@ $birthdaysConfigData = array(
         'set' => true,
         'group' => 'birthdays',
     ),
+    array(
+        'name' => 'show_upcoming',
+        'default_value' => 0,
+        'type' => 'select',
+        'subgroup' => 0,
+        'fieldset' => 0,
+        'selection_array' => 0,
+        'sort' => 60,
+        'set' => true,
+        'group' => 'birthdays',
+    ),
 );
 
 /**
