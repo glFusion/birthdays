@@ -34,6 +34,7 @@ $LANG_confignames['birthdays'] = array(
     'enable_subs' => MO::_('Allow subscriptions to birthday announcements?'),
     'enable_cards' => MO::_('Enable birthday cards?'),
     'grp_access' => MO::_('Group allowed to view birthdays'),
+    'show_upcoming' => MO::_('Show in upcoming events (evList)?'),
 );
 
 $LANG_configselects['birthdays'] = array(
