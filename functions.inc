@@ -599,6 +599,9 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
             case 'url':
                 $props[$p] = $_CONF['site_url'] . '/users.php?mode=profile&uid=' . $bday->getUid();
                 break;
+            case 'show_upcoming':
+                $props[$p] = isset($_BD_CONF['show_upcoming']) && $_BD_CONF['show_upcoming'] ? 1 : 0;
+                break;
             case 'search_index':
                 return NULL;        // Birthdays does not support searching
                 break;
