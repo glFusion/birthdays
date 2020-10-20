@@ -43,6 +43,7 @@ case 'syncall':
     foreach ($Birthdays as $B) {
         PLG_itemSaved($B->getUid(), $_BD_CONF['pi_name']);
     }
+    COM_refresh($_BD_CONF['admin_url'] . '/index.php');
     break;
 
 case 'delitem':
