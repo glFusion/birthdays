@@ -41,7 +41,7 @@ case 'syncall':
     // Re-save all items to sync with other plugins
     $Birthdays= \Birthdays\Birthday::getAll();
     foreach ($Birthdays as $B) {
-        PLG_itemSaved($B->uid, $_BD_CONF['pi_name']);
+        PLG_itemSaved($B->getUid(), $_BD_CONF['pi_name']);
     }
     break;
 
