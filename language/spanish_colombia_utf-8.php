@@ -68,6 +68,7 @@ $LANG_confignames['birthdays'] = array(
     'format'   => 'Mostrar formato de Fecha',
     'login_greeting' => 'Mensaje de bienvenida al iniciar sesión?',
     'enable_subs' => 'Permitir suscripciones a anuncios de cumpleaños?',
+    'grp_cards' => 'Group allowed to receive cards',
     'enable_cards' => 'Habilitar tarjetas de cumpleaños?',
     'grp_access' => 'Grupo permitido ver cumpleaños',
 );

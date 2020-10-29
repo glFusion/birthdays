@@ -26,6 +26,11 @@ class Birthday
      * @const string */
     const CACHE_GVERSION = '2.0.0';
 
+    /** Year to used to create date objects.
+     * The actual birth year is not included in the saved birthdays.
+     * @const integer */
+    CONST YEAR = 2016;
+
     /** User ID.
      * @var integer */
     private $uid = 0;
@@ -192,7 +197,7 @@ class Birthday
             $where .= ' AND b.day = ' . $day;
         }
         // The year isn't stored, so use a bogus leap year.
-        $sql = "SELECT 2016 as year, CONCAT(
+        $sql = "SELECT " . self::YEAR . " as year, CONCAT(
                     LPAD(b.month,2,0),LPAD(b.day,2,0)
                 ) as birthday, b.*, u.username, u.fullname
                 FROM {$_TABLES['birthdays']} b
@@ -401,9 +406,9 @@ class Birthday
             $year = isset($month['year']) ? $month['year'] : '';
             $month = isset($month['month']) ? $month['month'] : '';
         } elseif (is_object($month)) {  // a Birthday object received
-            $day = $month->day;
-            $year = $month->year;
-            $month = $month->month;
+            $day = $month->getDay();
+            $year = self::YEAR;
+            $month = $month->getMonth();
         } elseif (is_string($month) && strpos($month, '-')) {
             // YYYY-MM-DD format, separate into component parts
             $A = explode('-', $month);
@@ -642,7 +647,7 @@ class Birthday
             'help_url'     => ''
         );
         $filter = $filter_month == 0 ? '' : " AND month = $filter_month";
-        $sql = "SELECT 2016 as year, CONCAT(
+        $sql = "SELECT " . self::YEAR . " as year, CONCAT(
                     LPAD(b.month,2,0),LPAD(b.day,2,0)
                 ) as birthday, b.*, u.username, u.fullname
                 FROM {$_TABLES['birthdays']} b
@@ -706,7 +711,7 @@ class Birthday
             ),
         );
 
-        $sql = "SELECT 2016 as year, CONCAT(
+        $sql = "SELECT " . self::YEAR . " as year, CONCAT(
                     LPAD(b.month,2,0),LPAD(b.day,2,0)
                 ) as birthday, b.*, u.username, u.fullname
                 FROM {$_TABLES['birthdays']} b

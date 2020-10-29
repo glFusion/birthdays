@@ -641,7 +641,7 @@ function plugin_runScheduledTask_birthdays()
     $today = sprintf("%4d%02d%02d", $dt['year'], $dt['month'], $dt['day']);
     $lastrun = isset($_VARS['birthdays_lastrun']) ? $_VARS['birthdays_lastrun'] : '';
     if ($lastrun == $today) {
-        return;     // run once daily only
+//        return;     // run once daily only
     }
     DB_query(
         "INSERT INTO {$_TABLES['vars']} VALUES('birthdays_lastrun', '$today')
@@ -655,17 +655,12 @@ function plugin_runScheduledTask_birthdays()
             PLG_sendSubscriptionNotification('birthdays', 'birthday_sub', '', $uid, 0);
         }
 
-        if ($_BD_CONF['enable_cards']) {
+        if ($_BD_CONF['grp_cards'] > 0) {
             // Check if the user can receive birthday cards.
-            // Hack since SEC_hasRights() only operates on the current user ID.
-            $saveUser = $_USER['uid'];
-            $_USER['uid'] = $uid;
-            $cansend = SEC_hasRights('birthdays.card');
-            $_USER['uid'] = $saveUser;
-            if (!$cansend) {
+            
+            if (!SEC_inGroup($_BD_CONF['grp_cards'], $uid)) {
                 continue;
             }
-
             // Borrow the email format function to create the message
             $msg = plugin_subscription_email_format_birthdays('birthday_card', '', $uid, '');
             $name = COM_getDisplayName($uid);
@@ -720,11 +715,15 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
         $lname = '';
     }
 
-    $T = new Template( __DIR__ . '/templates/notify' );
+    $T = new Template(array(
+        $_CONF['path_layout'] . 'email/',
+        __DIR__ . '/templates/notify', // catch templates using language strings
+    ) );
     $T->set_file (array(
-        'outer'     => 'html_outer.thtml',
-        'htmlemail' => 'html_inner.thtml',
-        'textemail' => 'text.thtml',
+        'text_outer' => 'mailtemplate_text.thtml',
+        'html_outer' => 'mailtemplate_html.thtml',
+        'htmlcard'  => 'html_card.thtml',
+        'htmlsub'   => 'html_sub.thtml',
     ));
     $T->set_var(array(          // common text elements
         'uid'           => $uid,
@@ -734,43 +733,44 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
         'lang_unsub'    => $lang['unsubscribe'],
         'lang_to_unsub' => $lang['sub_unsub'],
         'lang_noreply'  => $lang['email_autogen'],
+        'site_name'     => $_CONF['site_name'],
     ) );
 
     if ($category == 'birthday_sub') {
         // Subscription notification
         $subject = sprintf($lang['sub_title'], $def_name);
-        $T->set_var(array(
-            'site_name'     => $_CONF['site_name'],
+        /*$T->set_var(array(
             'sub_title'     => sprintf($lang['sub_title'], $name),
             'sub_message'   => sprintf($lang['sub_message'], $name),
             'sub_reason'    => sprintf($lang['sub_reason'], $name),
             'lang_birthday_notif' => $lang['sub_title'],
-        ));
+        ));*/
+        $T->parse('htmlmessage', 'htmlsub');
     } else {
         // Happy Birthday message to users.
-        $subject = sprintf($lang['card_title'], $name);
-        $T->set_var(array(
-            'site_name'     => $_CONF['site_name'],
-            'sub_title'     => $subject,
-            'lang_greeting' => sprintf($lang['msg_happy_birthday'], $name),
-            'sub_message'   => sprintf($lang['card_message'], $_CONF['site_name']),
-            //'sub_reasion'   => sprintf($lang['card_reason'], $name),
-            'lang_birthday_notif' => $lang['card_title'],
-        ));
+        $T->parse('htmlmessage', 'htmlcard');
+        $subject = $lang['card_title'];
     }
-    $T->parse('htmlmessage', 'htmlemail');
-    $T->parse('message', 'outer');
-    $message = $T->finish($T->get_var('message'));
-    $T->parse('textoutput', 'textemail');
-    $msgText = $T->finish($T->get_var('textoutput'));
-    $html2txt = new Html2Text\Html2Text($msgText, false);
-    $messageText = $html2txt->get_text();
+    $html_content = $T->finish($T->get_var('htmlmessage'));
+    $T->set_block('html_outer', 'content', 'contentblock');
+    $T->set_var('content_text', $html_content);
+    $T->parse('contentblock', 'content', true);
+
+    $html2TextConverter = new \Html2Text\Html2Text($html_content);
+    $text_content = $html2TextConverter->getText();
+    $T->set_block('text_outer', 'contenttext', 'contenttextblock');
+    $T->set_var('content_text', $text_content);
+    $T->parse('contenttextblock', 'contenttext',true);
+
+    $T->parse('output', 'html_outer');
+    $html_msg = $T->finish($T->get_var('output'));
+    $T->parse('textoutput', 'text_outer');
+    $text_msg = $T->finish($T->get_var('textoutput'));
     $retval = array(
-        'msghtml' => $message,
-        'msgtext' => $messageText,
+        'msghtml' => $html_msg,
+        'msgtext' => $text_msg,
         'subject' => $subject,
     );
-    //var_dump($retval);die;
     return $retval;
 }
 
@@ -812,6 +812,29 @@ function service_getBirthdays_birthdays($args, &$output, &$svc_msg)
 }
 
 
+function BD_configlist_groups()
+{
+    global $_TABLES, $LANG_BD00;
+
+    static $A = NULL;
+    if ($A === NULL) {
+        $A = array(
+            '-- ' . $LANG_BD00['none'] . ' --' => 0,
+        );
+
+        $sql = "SELECT grp_id, grp_name FROM {$_TABLES['groups']}
+            ORDER BY grp_name ASC";
+        $res = DB_query($sql);
+        if ($res && DB_numRows($res) > 0) {
+            while ($row = DB_fetchArray($res, false)) {
+                $row['grp_name'] = htmlspecialchars($row['grp_name']);
+                $A[$row['grp_name']] = $row['grp_id'];
+            }
+        }
+    }
+    return $A;
+}
+
 /**
  * Create an array of groups for the configmanager.
  *
@@ -819,20 +842,18 @@ function service_getBirthdays_birthdays($args, &$output, &$svc_msg)
  */
 function plugin_configmanager_select_grp_access_birthdays()
 {
-    global $_TABLES;
+    return BD_configlist_groups();
+}
 
-    $A = array();
 
-    $sql = "SELECT grp_id, grp_name FROM {$_TABLES['groups']}
-            ORDER BY grp_name ASC";
-    $res = DB_query($sql);
-    if ($res && DB_numRows($res) > 0) {
-        while ($row = DB_fetchArray($res, false)) {
-            $row['grp_name'] = htmlspecialchars($row['grp_name']);
-            $A[$row['grp_name']] = $row['grp_id'];
-        }
-    }
-    return $A;
+/**
+ * Create an array of groups for the configmanager.
+ *
+ * @return  array               Array of groups as name=>ID
+ */
+function plugin_configmanager_select_grp_cards_birthdays()
+{
+    return BD_configlist_groups();
 }
 
 
