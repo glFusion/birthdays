@@ -75,8 +75,8 @@ $birthdaysConfigData = array(
         'group' => 'birthdays',
     ),
     array(
-        'name' => 'enable_cards',
-        'default_value' => 0,
+        'name' => 'grp_cards',
+        'default_value' => 13,
         'type' => 'select',
         'subgroup' => 0,
         'fieldset' => 0,
