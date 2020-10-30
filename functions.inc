@@ -282,14 +282,10 @@ function plugin_profilesave_birthdays($uid = 0)
  * Show the user's birthday in the public profile.
  *
  * @param   integer $uid    User ID
- * @param   object  $T      Template object
+ * @return  string      HTML to show on profile page.
  */
-function plugin_profilevariablesdisplay_birthdays($uid, &$T)
+function plugin_profileblocksdisplay_birthdays($uid)
 {
-    global $_BD_CONF;
-
-    $retval = '';
-
     // Make sure that a valid UID was passed in.
     if (empty($uid) || !\Birthdays\Birthday::canView()) {
         return '';
@@ -304,12 +300,7 @@ function plugin_profilevariablesdisplay_birthdays($uid, &$T)
     $LT->set_var('birthday', Birthdays\Birthday::formatDate($bday));
     $LT->set_var('lang_birthday', MO::_('Birthday'));
     $LT->parse('output', 'block');
-//        var_dump($LT->get_var('output'));die;
-    $existingFields = $T->get_var('plugin_fields');
-    $T->set_var(
-        'plugin_fields',
-        $existingFields . $T->finish($LT->get_var('output'))
-    );
+    return $LT->finish($LT->get_var('output'));
 }
 
 
