@@ -78,7 +78,6 @@ use Birthdays\MO;
 MO::init();
 require_once __DIR__ . '/language/lang_config.php';
 
-//Birthdays\MO::init();
 
 /**
  * Returns the items for this plugin that should appear on the main menu.
@@ -657,7 +656,7 @@ function plugin_runScheduledTask_birthdays()
         $uid = $bday->getUid();
 
         if ($_BD_CONF['enable_subs']) {
-            PLG_sendSubscriptionNotification('birthdays', 'birthday_sub', '', $uid, 0);
+            PLG_sendSubscriptionNotification('birthdays', 'birthday_sub', $uid, $uid, 0);
         }
 
         if ($_BD_CONF['grp_cards'] > 0) {
