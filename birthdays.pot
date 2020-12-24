@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-24 11:27-0800\n"
+"POT-Creation-Date: 2020-12-24 11:31-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,21 +19,24 @@ msgstr ""
 
 #: classes/Birthday.class.php:321 classes/Birthday.class.php:329
 #: classes/Birthday.class.php:326 classes/Birthday.class.php:334
-#: functions.inc:821
+#: functions.inc:821 classes/Birthday.class.php:326
+#: classes/Birthday.class.php:334 functions.inc:821
 msgid "None"
 msgstr ""
 
 #: classes/Birthday.class.php:334 classes/Birthday.class.php:340
+#: classes/Birthday.class.php:340
 msgid "My Birthday"
 msgstr ""
 
 #: classes/Birthday.class.php:370 classes/Birthday.class.php:368
-#: classes/Birthday.class.php:377
+#: classes/Birthday.class.php:377 classes/Birthday.class.php:377
 msgid "All"
 msgstr ""
 
 #: classes/Birthday.class.php:613 classes/Birthday.class.php:690
 #: classes/Birthday.class.php:615 classes/Birthday.class.php:692
+#: classes/Birthday.class.php:622 classes/Birthday.class.php:699
 #: classes/Birthday.class.php:622 classes/Birthday.class.php:699
 msgid "Name"
 msgstr ""
@@ -42,13 +45,14 @@ msgstr ""
 #: functions.inc:287 classes/Birthday.class.php:621
 #: classes/Birthday.class.php:697 functions.inc:305
 #: classes/Birthday.class.php:628 classes/Birthday.class.php:704
-#: functions.inc:300
+#: functions.inc:300 classes/Birthday.class.php:628
+#: classes/Birthday.class.php:704 functions.inc:300
 msgid "Birthday"
 msgstr ""
 
 #: classes/Birthday.class.php:627 classes/Birthday.class.php:771
 #: classes/Birthday.class.php:629 classes/Birthday.class.php:773
-#: classes/Birthday.class.php:636
+#: classes/Birthday.class.php:636 classes/Birthday.class.php:636
 msgid "Subscribe"
 msgstr ""
 
@@ -56,23 +60,26 @@ msgstr ""
 #: functions.inc:78 functions.inc:95 functions.inc:115
 #: language/lang_config.php:19 classes/Birthday.class.php:640 functions.inc:96
 #: functions.inc:113 functions.inc:133 classes/Birthday.class.php:647
-#: public_html/index.php:81 admin/index.php:95 functions.inc:95
-#: functions.inc:112 functions.inc:132 language/lang_config.php:19
+#: admin/index.php:95 functions.inc:112 functions.inc:132
+#: classes/Birthday.class.php:647 public_html/index.php:81 admin/index.php:95
+#: functions.inc:95 functions.inc:112 functions.inc:132
+#: language/lang_config.php:19
 msgid "Birthdays"
 msgstr ""
 
 #: classes/Birthday.class.php:685 classes/Birthday.class.php:687
-#: classes/Birthday.class.php:694
+#: classes/Birthday.class.php:694 classes/Birthday.class.php:694
 msgid "User ID"
 msgstr ""
 
 #: classes/Birthday.class.php:767 functions.inc:727
 #: classes/Birthday.class.php:769 functions.inc:745 functions.inc:737
+#: functions.inc:737
 msgid "Unsubscribe"
 msgstr ""
 
 #: classes/Birthday.class.php:784 classes/Birthday.class.php:786
-#: classes/Birthday.class.php:793
+#: classes/Birthday.class.php:793 classes/Birthday.class.php:793
 msgid "Do you really want to delete this item?"
 msgstr ""
 
@@ -101,36 +108,36 @@ msgstr ""
 msgid "Birthdays This Week"
 msgstr ""
 
-#: admin/index.php:82 admin/index.php:83
+#: admin/index.php:82 admin/index.php:83 admin/index.php:83
 msgid "Sync All"
 msgstr ""
 
-#: admin/index.php:99 admin/index.php:100
+#: admin/index.php:99 admin/index.php:100 admin/index.php:100
 msgid ""
 "Sync All: Re-saves all birthday entries so other plugins will update their "
 "records if they use data from this plugin."
 msgstr ""
 
 #: functions.inc:329 functions.inc:382 functions.inc:347 functions.inc:400
-#: functions.inc:337 functions.inc:390
+#: functions.inc:337 functions.inc:390 functions.inc:337 functions.inc:390
 msgid "View All"
 msgstr ""
 
-#: functions.inc:498 functions.inc:516 functions.inc:506
+#: functions.inc:498 functions.inc:516 functions.inc:506 functions.inc:506
 #, php-format
 msgid "Happy Birthday, %s!"
 msgstr ""
 
-#: functions.inc:573 functions.inc:591 functions.inc:581
+#: functions.inc:573 functions.inc:591 functions.inc:581 functions.inc:581
 #, php-format
 msgid "%s's Birthday"
 msgstr ""
 
-#: functions.inc:728 functions.inc:746 functions.inc:738
+#: functions.inc:728 functions.inc:746 functions.inc:738 functions.inc:738
 msgid "To unsubscribe from these notifications, please click this link"
 msgstr ""
 
-#: functions.inc:729 functions.inc:747 functions.inc:739
+#: functions.inc:729 functions.inc:747 functions.inc:739 functions.inc:739
 msgid ""
 "This email was generated automatically. Please do not reply to this email."
 msgstr ""
@@ -170,15 +177,17 @@ msgid "Group allowed to view birthdays"
 msgstr ""
 
 #: language/lang_config.php:41 language/lang_config.php:42
+#: language/lang_config.php:42
 msgid "True"
 msgstr ""
 
 #: language/lang_config.php:42 language/lang_config.php:43
+#: language/lang_config.php:43
 msgid "False"
 msgstr ""
 
 #: classes/Birthday.class.php:702 classes/Birthday.class.php:700
-#: classes/Birthday.class.php:709
+#: classes/Birthday.class.php:709 classes/Birthday.class.php:709
 msgid "Delete"
 msgstr ""
 
@@ -231,27 +240,29 @@ msgid "December"
 msgstr ""
 
 #: classes/Birthday.class.php:767 classes/Birthday.class.php:776
+#: classes/Birthday.class.php:776
 msgid "Click to Unsubscribe"
 msgstr ""
 
 #: classes/Birthday.class.php:771 classes/Birthday.class.php:780
+#: classes/Birthday.class.php:780
 msgid "Click to Subscribe"
 msgstr ""
 
-#: classes/Birthday.class.php:341
+#: classes/Birthday.class.php:341 classes/Birthday.class.php:341
 msgid "Today"
 msgstr ""
 
-#: functions.inc:745
+#: functions.inc:745 functions.inc:745
 #, php-format
 msgid "It's %s's birthday today!"
 msgstr ""
 
-#: functions.inc:749
+#: functions.inc:749 functions.inc:749
 #, php-format
 msgid "Happy Birthday from %s"
 msgstr ""
 
-#: language/lang_config.php:37
+#: language/lang_config.php:37 language/lang_config.php:37
 msgid "Show in upcoming events (evList)?"
 msgstr ""

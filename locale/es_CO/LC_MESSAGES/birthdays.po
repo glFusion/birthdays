@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-06 14:20-0700\n"
+"POT-Creation-Date: 2020-12-24 11:27-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,50 +18,60 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: classes/Birthday.class.php:321 classes/Birthday.class.php:329
+#: classes/Birthday.class.php:326 classes/Birthday.class.php:334
+#: functions.inc:821
 msgid "None"
 msgstr "Ninguno"
 
-#: classes/Birthday.class.php:334
+#: classes/Birthday.class.php:334 classes/Birthday.class.php:340
 msgid "My Birthday"
 msgstr "Mi cumpleaños"
 
 #: classes/Birthday.class.php:370 classes/Birthday.class.php:368
+#: classes/Birthday.class.php:377
 msgid "All"
 msgstr "Todos"
 
 #: classes/Birthday.class.php:613 classes/Birthday.class.php:690
 #: classes/Birthday.class.php:615 classes/Birthday.class.php:692
+#: classes/Birthday.class.php:622 classes/Birthday.class.php:699
 msgid "Name"
 msgstr "Nombre"
 
 #: classes/Birthday.class.php:619 classes/Birthday.class.php:695
 #: functions.inc:287 classes/Birthday.class.php:621
 #: classes/Birthday.class.php:697 functions.inc:305
+#: classes/Birthday.class.php:628 classes/Birthday.class.php:704
+#: functions.inc:300
 msgid "Birthday"
 msgstr "Cumpleaños"
 
 #: classes/Birthday.class.php:627 classes/Birthday.class.php:771
 #: classes/Birthday.class.php:629 classes/Birthday.class.php:773
+#: classes/Birthday.class.php:636
 msgid "Subscribe"
 msgstr "Suscribir"
 
 #: classes/Birthday.class.php:638 public_html/index.php:81 admin/index.php:94
 #: functions.inc:78 functions.inc:95 functions.inc:115
 #: language/lang_config.php:19 classes/Birthday.class.php:640 functions.inc:96
-#: functions.inc:113 functions.inc:133
+#: functions.inc:113 functions.inc:133 classes/Birthday.class.php:647
+#: admin/index.php:95 functions.inc:112 functions.inc:132
 msgid "Birthdays"
 msgstr "Cumpleaños"
 
 #: classes/Birthday.class.php:685 classes/Birthday.class.php:687
+#: classes/Birthday.class.php:694
 msgid "User ID"
 msgstr "ID de usuario"
 
 #: classes/Birthday.class.php:767 functions.inc:727
-#: classes/Birthday.class.php:769 functions.inc:745
+#: classes/Birthday.class.php:769 functions.inc:745 functions.inc:737
 msgid "Unsubscribe"
 msgstr "Darse de baja"
 
 #: classes/Birthday.class.php:784 classes/Birthday.class.php:786
+#: classes/Birthday.class.php:793
 msgid "Do you really want to delete this item?"
 msgstr "¿Realmente desea eliminar este elemento?"
 
@@ -90,41 +100,45 @@ msgstr "Cumpleaños este mes"
 msgid "Birthdays This Week"
 msgstr "Cumpleaños esta semana"
 
-#: admin/index.php:82
+#: admin/index.php:82 admin/index.php:83
 msgid "Sync All"
 msgstr "Sincronizar todo"
 
-#: admin/index.php:99
+#: admin/index.php:99 admin/index.php:100
 msgid ""
 "Sync All: Re-saves all birthday entries so other plugins will update their "
 "records if they use data from this plugin."
 msgstr ""
 "Sincronizar todo: vuelve a guardar todas las entradas de cumpleaños para que "
-"otros complementos actualicen sus registros si utilizan datos de este complemento."
+"otros complementos actualicen sus registros si utilizan datos de este "
+"complemento."
 
 #: functions.inc:329 functions.inc:382 functions.inc:347 functions.inc:400
+#: functions.inc:337 functions.inc:390
 msgid "View All"
 msgstr "Ver todo"
 
-#: functions.inc:498 functions.inc:516
+#: functions.inc:498 functions.inc:516 functions.inc:506
 #, php-format
 msgid "Happy Birthday, %s!"
 msgstr "¡Feliz cumpleaños, %s!"
 
-#: functions.inc:573 functions.inc:591
+#: functions.inc:573 functions.inc:591 functions.inc:581
 #, php-format
 msgid "%s's Birthday"
 msgstr "Cumpleaños de %s"
 
-#: functions.inc:728 functions.inc:746
+#: functions.inc:728 functions.inc:746 functions.inc:738
 msgid "To unsubscribe from these notifications, please click this link"
-msgstr "Para cancelar la suscripción a estas notificaciones, haga clic en este enlace"
+msgstr ""
+"Para cancelar la suscripción a estas notificaciones, haga clic en este enlace"
 
-#: functions.inc:729 functions.inc:747
+#: functions.inc:729 functions.inc:747 functions.inc:739
 msgid ""
 "This email was generated automatically. Please do not reply to this email."
 msgstr ""
-"Este correo electrónico se generó automáticamente. Por favor no responder a este email."
+"Este correo electrónico se generó automáticamente. Por favor no responder a "
+"este email."
 
 #: functions.inc:737 functions.inc:755
 #, php-format
@@ -159,15 +173,16 @@ msgstr "¿Habilitar tarjetas de cumpleaños?"
 msgid "Group allowed to view birthdays"
 msgstr "Grupo autorizado para ver cumpleaños"
 
-#: language/lang_config.php:41
+#: language/lang_config.php:41 language/lang_config.php:42
 msgid "True"
 msgstr "Cierto"
 
-#: language/lang_config.php:42
+#: language/lang_config.php:42 language/lang_config.php:43
 msgid "False"
 msgstr "Falso"
 
 #: classes/Birthday.class.php:702 classes/Birthday.class.php:700
+#: classes/Birthday.class.php:709
 msgid "Delete"
 msgstr "Eliminar"
 
@@ -219,10 +234,28 @@ msgstr "noviembre"
 msgid "December"
 msgstr "diciembre"
 
-#: classes/Birthday.class.php:767
+#: classes/Birthday.class.php:767 classes/Birthday.class.php:776
 msgid "Click to Unsubscribe"
 msgstr "Haga clic para cancelar la suscripción"
 
-#: classes/Birthday.class.php:771
+#: classes/Birthday.class.php:771 classes/Birthday.class.php:780
 msgid "Click to Subscribe"
 msgstr "Haga clic para suscribirse"
+
+#: classes/Birthday.class.php:341
+msgid "Today"
+msgstr "Hoy"
+
+#: functions.inc:745
+#, fuzzy, php-format
+msgid "It's %s's birthday today!"
+msgstr "Cumpleaños de %s"
+
+#: functions.inc:749
+#, fuzzy, php-format
+msgid "Happy Birthday from %s"
+msgstr "¡Feliz cumpleaños, %s!"
+
+#: language/lang_config.php:37
+msgid "Show in upcoming events (evList)?"
+msgstr "¿Mostrar en próximos eventos (evList)?"
