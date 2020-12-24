@@ -74,7 +74,7 @@ $birthdaysConfigData = array(
         'set' => true,
         'group' => 'birthdays',
     ),
-    array(
+    /*array(
         'name' => 'grp_cards',
         'default_value' => 13,
         'type' => 'select',
@@ -84,7 +84,7 @@ $birthdaysConfigData = array(
         'sort' => 40,
         'set' => true,
         'group' => 'birthdays',
-    ),
+    ),*/
     array(
         'name' => 'grp_access',
         'default_value' => 13,

@@ -645,7 +645,7 @@ function plugin_runScheduledTask_birthdays()
     $today = sprintf("%4d%02d%02d", $dt['year'], $dt['month'], $dt['day']);
     $lastrun = isset($_VARS['birthdays_lastrun']) ? $_VARS['birthdays_lastrun'] : '';
     if ($lastrun == $today) {
-//        return;     // run once daily only
+        return;     // run once daily only
     }
     DB_query(
         "INSERT INTO {$_TABLES['vars']} VALUES('birthdays_lastrun', '$today')
