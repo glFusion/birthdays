@@ -1,13 +1,15 @@
 {# begin {templatelocation} #}
 <form class="uk-form uk-form-horizontal" method="post" action="{site_url}/birthdays/index.php">
   {lang_my_birthday}:
-    <select name="birthday_month" onchange="javascript:BDAY_updateDay(this.options[this.selectedIndex].value);">
+    <select id="bday_month_sel_{rnd}" name="birthday_month" onchange="javascript:BDAY_updateDay(this.options[this.selectedIndex].value);">
       {month_select}
     </select>
-    <select name="birthday_day">
+    <select id="bday_day_sel_{rnd}" name="birthday_day">
       {day_select}
     </select>
     <button type="submit" class="uk-button uk-button-small uk-button-success" name="addbday">Submit</button>
+      <button type="reset" class="uk-button uk-button-primary uk-button-mini"
+        onclick="BDAY_setToday('{rnd}');">{lang_today}</button>
 </form>
 <script type="text/javascript">
 BDAY_updateDay({month});

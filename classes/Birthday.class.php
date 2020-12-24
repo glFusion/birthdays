@@ -334,9 +334,13 @@ class Birthday
                 $opt .= "<option $sel value=\"$i\">" . MO::_('None') . "</option>";
             }
         }
-        $T->set_var('day_select', $opt);
-        $T->set_var('month', $bday->month);
-        $T->set_var('lang_my_birthday', _('My Birthday'));
+        $T->set_var(array(
+            'day_select' => $opt,
+            'month' => $bday->month,
+            'lang_my_birthday' => _('My Birthday'),
+            'lang_today' => _('Today'),
+            'rnd' => rand(1,1000),
+        ) );
         $T->parse('output', 'edit');
         return $T->finish($T->get_var('output'));
     }
