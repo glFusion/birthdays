@@ -323,7 +323,7 @@ class Birthday
         $bday = self::getInstance($uid);
         $T = new \Template(__DIR__ . '/../templates');
         $T->set_file('edit', $tpl . '.thtml');
-        $opt = self::selectMonth($bday->month, MO::_('None'));
+        $opt = self::selectMonth($bday->month, _('None'));
         $T->set_var('month_select', $opt);
         $opt = '';
         for ($i = 0; $i < 32; $i++) {
@@ -331,7 +331,7 @@ class Birthday
             if ($i > 0) {
                 $opt .= "<option id=\"bday_day_$i\" $sel value=\"$i\">$i</option>";
             } else {
-                $opt .= "<option $sel value=\"$i\">" . MO::_('None') . "</option>";
+                $opt .= "<option $sel value=\"$i\">" . _('None') . "</option>";
             }
         }
         $T->set_var(array(
@@ -691,22 +691,22 @@ class Birthday
 
         $header_arr = array(
             array(
-                'text' => MO::_('User ID'),
+                'text' => _('User ID'),
                 'field' => 'uid',
                 'sort' => true,
             ),
             array(
-                'text' => MO::_('Name'),
+                'text' => _('Name'),
                 'field' => 'fullname',
                 'sort' => false,
             ),
             array(
-                'text'  => MO::_('Birthday'),
+                'text'  => _('Birthday'),
                 'field' => 'birthday',
                 'sort'  => false,
             ),
             array(
-                'text' => MO::_('Delete'),
+                'text' => _('Delete'),
                 'field' => 'delete',
                 'sort' => false,
                 'align' => 'center',
