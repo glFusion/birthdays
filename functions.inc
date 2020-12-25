@@ -651,16 +651,21 @@ function plugin_runScheduledTask_birthdays()
     foreach ($bdays as $bday) {
         $uid = $bday->getUid();
 
-        if ($_BD_CONF['enable_subs']) {
+        if ($_BD_CONF['enable_subs'] && SEC_hasRights('birthdays.view')) {
             PLG_sendSubscriptionNotification('birthdays', 'birthday_sub', '', $uid, 0);
         }
 
-        if ($_BD_CONF['grp_cards'] > 0) {
+        //if ($_BD_CONF['grp_cards'] > 0) {
             // Check if the user can receive birthday cards.
-            
-            if (!SEC_inGroup($_BD_CONF['grp_cards'], $uid)) {
+            // Hack since SEC_hasRights() only operates on the current user ID.
+            $saveUser = $_USER['uid'];
+            $_USER['uid'] = $uid;
+            $cansend = SEC_hasRights('birthdays.card');
+            $_USER['uid'] = $saveUser;
+            if (!$cansend) {
                 continue;
             }
+
             // Borrow the email format function to create the message
             $msg = plugin_subscription_email_format_birthdays('birthday_card', '', $uid, '');
             $name = COM_getDisplayName($uid);
@@ -677,7 +682,7 @@ function plugin_runScheduledTask_birthdays()
                 ),
             );
             COM_emailNotification($msgData);
-        }
+        //}
     }
 }
 
