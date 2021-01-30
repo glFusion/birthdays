@@ -162,7 +162,9 @@ class Birthday
             self::clearCache('range');
             // Put this in cache to save a lookup in plugin_getiteminfo
             self::setCache('uid_' . $this->uid, $this);
-            PLG_itemSaved($this->uid, $_BD_CONF['pi_name']);
+            if (!isset($vals['call_itemsaved'])) {
+                PLG_itemSaved($this->uid, $_BD_CONF['pi_name']);
+            }
             return true;
         } else {
             return false;
@@ -794,5 +796,3 @@ class Birthday
     }
 
 }
-
-?>

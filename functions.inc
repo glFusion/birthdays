@@ -264,8 +264,9 @@ function plugin_profilesave_birthdays($uid = 0)
 
     $bday = \Birthdays\Birthday::getInstance($uid);
     $bday->Save(array(
-            'month' => $_POST['birthday_month'],
-            'day' => $_POST['birthday_day'],
+        'month' => $_POST['birthday_month'],
+        'day' => $_POST['birthday_day'],
+        'call_itemsaved' => false,
     ) );
 }
 
@@ -931,4 +932,3 @@ function BIRTHDAYS_loadLanguage($uid)
 
 require_once __DIR__ . '/services.inc.php';
 
-?>
