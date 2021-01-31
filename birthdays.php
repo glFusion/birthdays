@@ -18,15 +18,11 @@
 if (!defined ('GVERSION')) {
     die ('This file can not be used on its own.');
 }
-
+use Birthdays\Config;
 global $_DB_table_prefix, $_TABLES;
-global $_BD_CONF;
 
-$_BD_CONF['pi_name']            = 'birthdays';
-$_BD_CONF['pi_display_name']    = 'Birthdays';
-$_BD_CONF['pi_version']         = '1.0.2';
-$_BD_CONF['gl_version']         = '1.7.8';
-$_BD_CONF['pi_url']             = 'http://www.glfusion.org';
+Config::set('pi_version', '1.0.2');
+Config::set('gl_version', '1.7.8');
 
 $_TABLES['birthdays']      = $_DB_table_prefix . 'birthdays';
 

@@ -13,6 +13,7 @@
  * @filesource
  */
 require_once('../lib-common.php');
+use Birthdays\Config;
 
 if (!\Birthdays\Birthday::canView()) {
     COM_404();
@@ -62,8 +63,8 @@ $display = COM_siteHeader('menu');
 $T = new Template($_CONF['path'] . 'plugins/birthdays/templates');
 $T->set_file('header', 'index.thtml');
 $T->set_var(array(
-    'header'    => $_BD_CONF['pi_display_name'],
-    'pi_name'   => $_BD_CONF['pi_name'],
+    'header'    => Config::get('pi_display_name'),
+    'pi_name'   => Config::PI_NAME,
     'logo'      => plugin_geticon_birthdays(),
     'my_form'   => COM_isAnonUser() ? '' : \Birthdays\Birthday::editForm($_USER['uid'], 'edit_index'),
     'month_select' => \Birthdays\Birthday::selectMonth($filter_month),

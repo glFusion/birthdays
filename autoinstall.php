@@ -23,9 +23,10 @@ global $_DB_dbms;
 require_once __DIR__ . '/functions.inc';
 require_once __DIR__ . '/birthdays.php';
 require_once __DIR__ . "/sql/{$_DB_dbms}_install.php";
+use Birthdays\Config;
 
 //  Plugin installation options
-$INSTALL_plugin[$_BD_CONF['pi_name']] = array(
+$INSTALL_plugin[Config::PI_NAME] = array(
     'installer' => array(
         'type'  => 'installer',
         'version' => '1',
@@ -33,11 +34,11 @@ $INSTALL_plugin[$_BD_CONF['pi_name']] = array(
     ),
     'plugin' => array(
         'type' => 'plugin',
-        'name'      => $_BD_CONF['pi_name'],
-        'ver'       => $_BD_CONF['pi_version'],
-        'gl_ver'    => $_BD_CONF['gl_version'],
-        'url'       => $_BD_CONF['pi_url'],
-        'display'   => $_BD_CONF['pi_display_name']
+        'name'      => Config::PI_NAME,
+        'ver'       => Config::get('pi_version'),
+        'gl_ver'    => Config::get('gl_version'),
+        'url'       => Config::get('pi_url'),
+        'display'   => Config::get('pi_display_name'),
     ),
     array(
         'type'  => 'table',
@@ -109,10 +110,10 @@ $INSTALL_plugin[$_BD_CONF['pi_name']] = array(
  */
 function plugin_install_birthdays()
 {
-    global $INSTALL_plugin, $_BD_CONF;
+    global $INSTALL_plugin;
 
-    COM_errorLog("Attempting to install the {$_BD_CONF['pi_name']} plugin", 1);
-    $ret = INSTALLER_install($INSTALL_plugin[$_BD_CONF['pi_name']]);
+    COM_errorLog("Attempting to install the " . Config::PI_NAME . " plugin", 1);
+    $ret = INSTALLER_install($INSTALL_plugin[Config::PI_NAME]);
     if ($ret > 0) {
         return false;
     } else {

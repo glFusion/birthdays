@@ -135,7 +135,7 @@ class Birthday
      */
     public function Save($vals = NULL)
     {
-        global $_TABLES, $_BD_CONF;;
+        global $_TABLES;
 
         if (is_array($vals)) {
             $this->SetVars($vals);
@@ -145,7 +145,7 @@ class Birthday
         // as a deletion request
         if ($this->month == 0 || $this->day == 0) {
             self::Delete($this->uid);
-            PLG_itemDeleted($this->uid, $_BD_CONF['pi_name']);
+            PLG_itemDeleted($this->uid, Config::PI_NAME);
             return true;
         }
 
@@ -163,7 +163,7 @@ class Birthday
             // Put this in cache to save a lookup in plugin_getiteminfo
             self::setCache('uid_' . $this->uid, $this);
             if (!isset($vals['call_itemsaved'])) {
-                PLG_itemSaved($this->uid, $_BD_CONF['pi_name']);
+                PLG_itemSaved($this->uid, Config::PI_NAME);
             }
             return true;
         } else {
@@ -399,7 +399,7 @@ class Birthday
      */
     public static function formatDate($month, $day = '', $year = '')
     {
-        global $_CONF, $_BD_CONF;
+        global $_CONF;
         static $dt = NULL;
 
         if (is_array($month)) {
@@ -438,7 +438,7 @@ class Birthday
 
         // Format the date
         $dt->setDate($year, $month, $day);
-        return $dt->Format($_BD_CONF['format'], true);
+        return $dt->Format(Config::get('format'), true);
     }
 
 
@@ -449,11 +449,11 @@ class Birthday
      */
     public static function canView()
     {
-        global $_BD_CONF;
         static $canView = NULL;
 
         if ($canView === NULL) {
-            $canView = SEC_hasRights('birthdays.view,birthdays.admin') || SEC_inGroup($_BD_CONF['grp_access']);
+            $canView = SEC_hasRights('birthdays.view,birthdays.admin') ||
+                SEC_inGroup(Config::get('grp_access'));
         }
         return $canView;
     }
@@ -613,7 +613,7 @@ class Birthday
      */
     public static function publicList($filter_month=0)
     {
-        global $_TABLES, $LANG_BD00, $_BD_CONF;
+        global $_TABLES, $LANG_BD00;
 
         $retval = '';
 
@@ -631,7 +631,7 @@ class Birthday
                 'align' => 'center',
             ),
         );
-        if ($_BD_CONF['enable_subs']) {
+        if (Config::get('enable_subs')) {
             $header_arr[] =  array(
                 'text' => $LANG_BD00['subscribe'],
                 'field' => 'subscribe',
@@ -645,7 +645,7 @@ class Birthday
             'has_menu'     => false,
             'has_extras'   => false,
             'title'        => $LANG_BD00['pi_title'],
-            'form_url'     => $_BD_CONF['url'] . '/index.php?filter_month=' . $filter_month,
+            'form_url'     => Config::get('url') . '/index.php?filter_month=' . $filter_month,
             'help_url'     => ''
         );
         $filter = $filter_month == 0 ? '' : " AND month = $filter_month";
@@ -662,7 +662,7 @@ class Birthday
             'query_fields' => array(),
         );
         $text_arr = array(
-            'form_url' => $_BD_CONF['url'] . '/index.php?filter_month=' . $filter_month,
+            'form_url' => Config::get('url') . '/index.php?filter_month=' . $filter_month,
             'has_search' => false,
             'has_limit'     => true,
             'has_paging'    => true,
@@ -684,7 +684,7 @@ class Birthday
      */
     public static function adminList()
     {
-        global $LANG_ADMIN, $LANG_BD00, $_TABLES, $_CONF, $_BD_CONF;
+        global $LANG_ADMIN, $LANG_BD00, $_TABLES, $_CONF;
 
         $retval = '';
         $form_arr = array();
@@ -721,7 +721,7 @@ class Birthday
                     ON u.uid = b.uid";
         $text_arr = array(
             'has_extras' => false,
-            'form_url' => $_BD_CONF['admin_url'] . '/index.php',
+            'form_url' => Config::get('admin_url') . '/index.php',
         );
         $options = array('chkdelete' => 'true', 'chkfield' => 'uid');
         $defsort_arr = array('field' => 'uid', 'direction' => 'asc');
@@ -752,7 +752,7 @@ class Birthday
      */
     public static function getListField($fieldname, $fieldvalue, $A, $icon_arr)
     {
-        global $_CONF, $_BD_CONF, $LANG_BD00, $_USER;
+        global $_CONF, $LANG_BD00, $_USER;
 
         $retval = '';
 
@@ -782,7 +782,7 @@ class Birthday
 
         case 'delete':
             $retval = COM_createLink('<i class="uk-icon uk-icon-remove uk-text-danger"></i>',
-                $_BD_CONF['admin_url'] . "/index.php?delitem={$A['uid']}",
+                Config::get('admin_url') . "/index.php?delitem={$A['uid']}",
                 array(
                      'onclick' => "return confirm('{$LANG_BD00['conf_del']}');",
                 ) );
