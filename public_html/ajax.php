@@ -14,13 +14,14 @@
 /** Include required glFusion common functions */
 require_once '../lib-common.php';
 use Birthdays\MO;
+use Birthdays\Config;
 
 $retval = '';
 
 switch ($_POST['action']) {
 case 'toggleSub':
     if (
-        !$_BD_CONF['enable_subs'] ||
+        !Config::get('enable_subs') ||
         COM_isAnonUser() ||
         !isset($_POST['oldval'])
     ) {
@@ -30,12 +31,12 @@ case 'toggleSub':
     switch ($_POST['oldval']) {
     case 0:         // was unsubscribed, now subscribing
         $newval = PLG_subscribe(
-                'birthdays',
-                'birthday_sub',
-                $_POST['uid'],
-                $_USER['uid'],
-                $_BD_CONF['pi_display_name'],
-                sprintf(MO::_('Description'), COM_getDisplayName($_POST['uid']))
+            'birthdays',
+            'birthday_sub',
+            $_POST['uid'],
+            $_USER['uid'],
+            Config::get('pi_display_name'),
+            sprintf(MO::_('Description'), COM_getDisplayName($_POST['uid']))
         ) ? 1 : 0;
         break;
     case 1:         // was subscribed, now unsubscribing

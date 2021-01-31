@@ -17,6 +17,7 @@
  */
 
 require_once '../../../lib-common.php';
+
 if (!SEC_inGroup('Root')) {
     // Someone is trying to illegally access this page
     COM_errorLog("Someone has tried to access the Birthdays Development Code Upgrade Routine without proper permissions.  User id: {$_USER['uid']}, Username: {$_USER['username']}, IP: " . $_SERVER['REMOTE_ADDR'],1);
@@ -28,7 +29,9 @@ if (!SEC_inGroup('Root')) {
     echo $display;
     exit;
 }
-require_once $_BD_CONF['pi_path'] . '/upgrade.php';   // needed for set_version()
+
+use Birthdays\Config;
+require_once Config::get('pi_path') . '/upgrade.php';   // needed for set_version()
 if (function_exists('CACHE_clear')) {
     CACHE_clear();
 }

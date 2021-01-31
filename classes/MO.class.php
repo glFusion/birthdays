@@ -50,11 +50,11 @@ class MO
      */
     public static function init($lang = NULL)
     {
-        global $_CONF, $LANG_LOCALE, $_BD_CONF;
+        global $_CONF, $LANG_LOCALE;
 
         // Set the language domain to separate strings from the global
         // namespace.
-        self::$domain = $_BD_CONF['pi_name'];
+        self::$domain = Config::PI_NAME;
 
         if (empty($lang)) {
             $lang = $_CONF['language'];

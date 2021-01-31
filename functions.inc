@@ -13,38 +13,6 @@
  * @filesource
  */
 
-/** Import configuration-handling class */
-$config = \config::get_instance();
-$_BD_CONF = $config->get_config('birthdays');
-
-require_once __DIR__ . '/birthdays.php';
-
-// Set commonly-used variables from the config
-$_BD_CONF['url'] = "{$_CONF['site_url']}/{$_BD_CONF['pi_name']}";
-$_BD_CONF['admin_url'] = "{$_CONF['site_admin_url']}/plugins/{$_BD_CONF['pi_name']}";
-$_BD_CONF['pi_path'] = __DIR__;
-
-// Include the user-supplied configuration file, if any
-if (is_file(__DIR__ . '/config.php')) {
-    include_once __DIR__ . '/config.php';
-}
-
-// Disable features that don't work in older glFusion versions
-if (version_compare(GVERSION, '1.7.4', '<')) {
-    // Cards work, but Subscriptions require an update to
-    // PLG_sendSubscriptionNotification()
-    $_BD_CONF['enable_subs'] = 0;
-}
-
-// Use the global dateonly format as a default if the format isn't defined
-if (!isset($_BD_CONF['format']) || empty($_BD_CONF['format'])) {
-    if ($_CONF['dateonly'] != '') {
-        $_BD_CONF['format'] = $_CONF['dateonly'];
-    } else {
-        $_BD_CONF['format'] = 'M d';    // final fallback
-    }
-}
-
 spl_autoload_register(function($class)
 {
     // project-specific namespace prefix
@@ -73,11 +41,17 @@ spl_autoload_register(function($class)
         require $file;
     }
 });
-
+use Birthdays\Config;
 use Birthdays\MO;
 MO::init();
 require_once __DIR__ . '/language/lang_config.php';
 
+require_once __DIR__ . '/birthdays.php';
+
+// Include the user-supplied configuration file, if any
+if (is_file(__DIR__ . '/config.php')) {
+    include_once __DIR__ . '/config.php';
+}
 
 /**
  * Returns the items for this plugin that should appear on the main menu.
@@ -88,11 +62,9 @@ require_once __DIR__ . '/language/lang_config.php';
  */
 function plugin_getmenuitems_birthdays()
 {
-    global $_BD_CONF;
-
     $menuitems = array();
     if (\Birthdays\Birthday::canView()) {
-        $menuitems[MO::_('Birthdays')] = $_BD_CONF['url'];
+        $menuitems[MO::_('Birthdays')] = Config::get('url');
     }
     return $menuitems;
 }
@@ -105,12 +77,10 @@ function plugin_getmenuitems_birthdays()
  */
 function plugin_getadminoption_birthdays()
 {
-    global $_BD_CONF;
-
     if (plugin_ismoderator_birthdays()) {
         return array(
             MO::_('Birthdays'),
-            $_BD_CONF['admin_url'] . '/index.php'
+            Config::get('admin_url') . '/index.php'
         );
     } else {
         return false;
@@ -125,12 +95,10 @@ function plugin_getadminoption_birthdays()
  */
 function plugin_cclabel_birthdays()
 {
-    global $_BD_CONF;
-
     if (plugin_ismoderator_birthdays()) {
         return array(
             MO::_('Birthdays'),
-            $_BD_CONF['admin_url'] . '/index.php',
+            Config::get('admin_url') . '/index.php',
             plugin_geticon_birthdays()
         );
     } else {
@@ -157,8 +125,7 @@ function plugin_commentsupport_birthdays()
  */
 function plugin_chkVersion_birthdays()
 {
-    global $_BD_CONF;
-    return $_BD_CONF['pi_version'];
+    return Config::get('pi_version');
 }
 
 
@@ -169,8 +136,8 @@ function plugin_chkVersion_birthdays()
  */
 function plugin_geticon_birthdays()
 {
-    global $_CONF, $_BD_CONF;
-    return "{$_CONF['site_url']}/{$_BD_CONF['pi_name']}/images/birthdays.png";
+    global $_CONF;
+    return Config::get('url') . '/images/birthdays.png';
 }
 
 
@@ -194,14 +161,14 @@ function plugin_upgrade_birthdays()
  */
 function plugin_getheadercss_birthdays()
 {
-    global $_CONF, $_BD_CONF;
+    global $_CONF;
 
     $styles = array();
     $files = array(
         'style.css',
     );
     $pi_css = __DIR__ . '/css/';
-    $layout_css = "{$_CONF['path_layout']}plugins/{$_BD_CONF['pi_name']}/";
+    $layout_css = "{$_CONF['path_layout']}plugins/" . Config::PI_NAME . '/';
     foreach ($files as $file) {
         if (@file_exists($layout_css . 'custom/' . $file)) {
             $styles[] = $layout_css . 'custom/' . $file;
@@ -271,8 +238,9 @@ function plugin_profilesave_birthdays($uid = 0)
 
     $bday = \Birthdays\Birthday::getInstance($uid);
     $bday->Save(array(
-            'month' => $_POST['birthday_month'],
-            'day' => $_POST['birthday_day'],
+        'month' => $_POST['birthday_month'],
+        'day' => $_POST['birthday_day'],
+        'call_itemsaved' => false,
     ) );
 }
 
@@ -325,7 +293,7 @@ function plugin_user_delete_birthdays($uid)
  */
 function phpblock_birthdays_month($blkinfo=array(), $months=2)
 {
-    global $_BD_CONF, $_CONF, $LANG_MONTH;
+    global $_CONF, $LANG_MONTH;
 
     $M = \Birthdays\Birthday::currentDate()['month'];  // starting month
     $have_data = false;
@@ -378,7 +346,7 @@ function phpblock_birthdays_month($blkinfo=array(), $months=2)
  */
 function phpblock_birthdays_week($blkinfo=array(), $weeks=2)
 {
-    global $_BD_CONF, $_CONF;
+    global $_CONF;
 
     $s_dt = new \Date('now', $_CONF['timezone']);
     $e_dt = new \Date();      // Just create a date object for later
@@ -435,18 +403,16 @@ function phpblock_birthdays_week($blkinfo=array(), $weeks=2)
  */
 function plugin_getconfigelementhelp_birthdays($option, $doclang='english')
 {
-    global $_CONF, $_BD_CONF;
+    global $_CONF;
 
     $file = 'config.html';
-    $pi_name = $_BD_CONF['pi_name'];
-    //$doc_url = SRCH_getDocURL($file, $_SRCH_CONF['pi_name'], $doclang);
-    $doc_path = "{$_CONF['path_html']}$pi_name/docs/$doclang/";
+    $doc_path = Config::get('url') . "/docs/$doclang/";
     $doc_url = '';
 
     if (!is_file($doc_path . $file)) {
         $doclang = 'english';
     }
-    $doc_url = "{$_CONF['site_url']}/$pi_name/docs/$doclang/$file";
+    $doc_url = Config::get('url') . "/docs/$doclang/$file";
     if (!empty($option)) {
         $doc_url .= '#desc_' . $option;
     }
@@ -461,7 +427,7 @@ function plugin_getconfigelementhelp_birthdays($option, $doclang='english')
  */
 function plugin_enablestatechange_birthdays($enabled)
 {
-    global $_TABLES, $_PLUGINS, $_BD_CONF;
+    global $_TABLES, $_PLUGINS;
 
     $enabled = $enabled == true ? 1 : 0;
 
@@ -469,7 +435,7 @@ function plugin_enablestatechange_birthdays($enabled)
     // take no action and return
     if ($enabled && !in_array('lglib', $_PLUGINS)) {
         // Re-disable the plugin
-        DB_change($_TABLES['plugins'], 'pi_enabled', 0, 'pi_name', $_BD_CONF['pi_name']);
+        DB_change($_TABLES['plugins'], 'pi_enabled', 0, 'pi_name', Config::PI_NAME);
         $enabled = 0;
     }
 
@@ -490,10 +456,10 @@ function plugin_enablestatechange_birthdays($enabled)
  */
 function plugin_user_login_birthdays($uid)
 {
-    global $_CONF, $_BD_CONF;
+    global $_CONF;
 
     // Show nothing if disabled
-    if (!$_BD_CONF['login_greeting']) return;
+    if (!Config::get('login_greeting')) return;
 
     $month = \Birthdays\Birthday::currentDate()['month'];
     $day = \Birthdays\Birthday::currentDate()['day'];
@@ -534,7 +500,7 @@ function plugin_ismoderator_birthdays()
  */
 function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
 {
-    global $_TABLES, $_BD_CONF, $_CONF;
+    global $_TABLES, $_CONF;
 
     $properties = explode(',', $what);
     $retval = array();
@@ -548,7 +514,7 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
         foreach ($properties as $p) {
             switch ($p) {
             case 'group_id':
-                $props[$p] = $_BD_CONF['grp_access'];
+                $props[$p] = Config::get('grp_access');
                 break;
             case 'id':
             case 'author':
@@ -590,7 +556,11 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
                 $props[$p] = $_CONF['site_url'] . '/users.php?mode=profile&uid=' . $bday->getUid();
                 break;
             case 'show_upcoming':
-                $props[$p] = isset($_BD_CONF['show_upcoming']) && $_BD_CONF['show_upcoming'] ? 1 : 0;
+                if (Config::get('show_upcoming')) {
+                    $props[$p] = 1;
+                } else {
+                    $props[$p] = 0;
+                }
                 break;
             case 'search_index':
                 return NULL;        // Birthdays does not support searching
@@ -635,9 +605,9 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
  */
 function plugin_runScheduledTask_birthdays()
 {
-    global $_TABLES, $_VARS, $_BD_CONF, $_USER;
+    global $_TABLES, $_VARS, $_USER;
 
-    if (!$_BD_CONF['enable_subs'] && !$_BD_CONF['enable_cards']) {
+    if (!Config::get('enable_subs') && !Config::get('enable_cards')) {
         return;     // don't go through the loop if nothing will be sent
     }
 
@@ -655,16 +625,21 @@ function plugin_runScheduledTask_birthdays()
     foreach ($bdays as $bday) {
         $uid = $bday->getUid();
 
-        if ($_BD_CONF['enable_subs']) {
-            PLG_sendSubscriptionNotification('birthdays', 'birthday_sub', $uid, $uid, 0);
+        if (Config::get('enable_subs') && SEC_hasRights('birthdays.view')) {
+            PLG_sendSubscriptionNotification('birthdays', 'birthday_sub', '', $uid, 0);
         }
 
-        if ($_BD_CONF['grp_cards'] > 0) {
+        //if (Config::get('grp_cards') > 0) {
             // Check if the user can receive birthday cards.
-            
-            if (!SEC_inGroup($_BD_CONF['grp_cards'], $uid)) {
+            // Hack since SEC_hasRights() only operates on the current user ID.
+            $saveUser = $_USER['uid'];
+            $_USER['uid'] = $uid;
+            $cansend = SEC_hasRights('birthdays.card');
+            $_USER['uid'] = $saveUser;
+            if (!$cansend) {
                 continue;
             }
+
             // Borrow the email format function to create the message
             $msg = plugin_subscription_email_format_birthdays('birthday_card', '', $uid, '');
             $name = COM_getDisplayName($uid);
@@ -681,7 +656,7 @@ function plugin_runScheduledTask_birthdays()
                 ),
             );
             COM_emailNotification($msgData);
-        }
+        //}
     }
 }
 
@@ -697,7 +672,7 @@ function plugin_runScheduledTask_birthdays()
  */
 function plugin_subscription_email_format_birthdays($category, $track_id, $uid, $poster_id)
 {
-    global $_CONF, $_BD_CONF;
+    global $_CONF;
 
     $uid = (int)$uid;
     $name = COM_getDisplayName($uid);
@@ -882,4 +857,3 @@ function plugin_privacy_export_birthdays($uid, $email='', $username='', $ip='')
 
 require_once __DIR__ . '/services.inc.php';
 
-?>

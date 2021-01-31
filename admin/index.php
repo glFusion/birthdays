@@ -18,6 +18,7 @@ if (!plugin_ismoderator_birthdays()) {
     COM_404();
 }
 USES_lib_admin();
+use Birthdays\Config;
 
 $expected = array(
     'syncall', 'delitem',
@@ -42,9 +43,9 @@ case 'syncall':
     // Re-save all items to sync with other plugins
     $Birthdays= \Birthdays\Birthday::getAll();
     foreach ($Birthdays as $B) {
-        PLG_itemSaved($B->getUid(), $_BD_CONF['pi_name']);
+        PLG_itemSaved($B->getUid(), Config::PI_NAME);
     }
-    COM_refresh($_BD_CONF['admin_url'] . '/index.php');
+    COM_refresh(Config::get('admin_url') . '/index.php');
     break;
 
 case 'delitem':
@@ -55,7 +56,7 @@ case 'delitem':
     foreach ($actionval as $val) {
         \Birthdays\Birthday::Delete($val);
     }
-    echo COM_refresh($_BD_CONF['admin_url']);
+    echo COM_refresh(Config::get('admin_url'));
     break;
 
 default:
@@ -75,11 +76,11 @@ echo COM_siteFooter();
  */
 function BIRTHDAYS_adminMenu()
 {
-    global $_CONF, $_BD_CONF, $LANG01;
+    global $_CONF, $LANG01;
 
     $menu_arr = array (
         array(
-            'url' => $_BD_CONF['admin_url'] . '/index.php?syncall=x',
+            'url' => Config::get('admin_url') . '/index.php?syncall=x',
             'text' => MO::_('Sync All'),
         ),
         array(
@@ -87,10 +88,10 @@ function BIRTHDAYS_adminMenu()
             'text' => $LANG01[53]       // Admin Home,
         ),
     );
-    $T = new \Template($_BD_CONF['pi_path'] . '/templates');
+    $T = new \Template(Config::get('pi_path') . '/templates');
     $T->set_file('title', 'admin.thtml');
     $T->set_var(array(
-        'version'   => $_BD_CONF['pi_version'],
+        'version'   => Config::get('pi_version'),
         'logo_url' => plugin_geticon_birthdays(),
         'lang_pi_title' => MO::_('Birthdays'),
     ) );

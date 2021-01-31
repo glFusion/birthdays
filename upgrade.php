@@ -14,6 +14,7 @@
 if (!defined('GVERSION')) {
     die('This file can not be used on its own.');
 }
+use Birthdays\Config;
 
 /**
  * Upgrade the plugin.
@@ -23,14 +24,11 @@ if (!defined('GVERSION')) {
  */
 function BIRTHDAYS_do_upgrade($dvlp = false)
 {
-    global $_TABLES, $_CONF, $_PLUGINS, $_BD_CONF, $_PLUGIN_INFO;;
+    global $_TABLES, $_CONF, $_PLUGINS, $_PLUGIN_INFO;;
 
-    $installed_ver = $_PLUGIN_INFO[$_BD_CONF['pi_name']]['pi_version'];
+    $installed_ver = $_PLUGIN_INFO[Config::PI_NAME)]['pi_version'];
     $code_ver = plugin_chkVersion_birthdays();
     $current_ver = $installed_ver;
-
-    // Get the config instance, several upgrades might need it
-    $c = config::get_instance();
 
     if (!COM_checkVersion($current_ver, '0.0.2')) {
         // upgrade to 0.0.2
@@ -93,7 +91,7 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
  */
 function BIRTHDAYS_do_upgrade_sql($version, $ignore_error=false)
 {
-    global $_TABLES, $_BD_CONF, $BD_UPGRADE;
+    global $_TABLES, $BD_UPGRADE;
 
     // If no sql statements passed in, return success
     if (!isset($BD_UPGRADE[$version]) || !is_array($BD_UPGRADE[$version]))
@@ -126,18 +124,19 @@ function BIRTHDAYS_do_upgrade_sql($version, $ignore_error=false)
  */
 function BIRTHDAYS_do_set_version($ver)
 {
-    global $_TABLES, $_BD_CONF;
+    global $_TABLES;
 
     // now update the current version number.
     $sql = "UPDATE {$_TABLES['plugins']} SET
             pi_version = '$ver',
-            pi_gl_version = '{$_BD_CONF['gl_version']}',
-            pi_homepage = '{$_BD_CONF['pi_url']}'
-        WHERE pi_name = '{$_BD_CONF['pi_name']}'";
+            pi_gl_version = '" . Config::get('gl_version') . "',
+            pi_homepage = '" . Config::get('pi_url') . "'
+        WHERE pi_name = '" . Config::PI_NAME;
 
     $res = DB_query($sql, 1);
     if (DB_error()) {
-        COM_errorLog("Error updating the {$_BD_CONF['pi_display_name']} Plugin version to $ver",1);
+        COM_errorLog("Error updating the " . Config::get('pi_display_name') .
+            " Plugin version to $ver",1);
         return false;
     } else {
         return true;
@@ -170,5 +169,3 @@ function BIRTHDAYS_remove_old_files()
         }
     }
 }
-
-?>
