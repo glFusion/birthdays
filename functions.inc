@@ -36,7 +36,7 @@ $langpath = __DIR__ . '/language';
 if (is_file("$langpath/{$_CONF['language']}.php")) {
     $langfile = "{$_CONF['language']}.php";
 } else {
-    $langfile = 'english.php';
+    $langfile = 'english_utf-8.php';
 }
 require_once "$langpath/$langfile";
 
