@@ -60,7 +60,7 @@ case 'addbday':
 }
 
 $display = COM_siteHeader('menu');
-$T = new Template($_CONF['path'] . 'plugins/birthdays/templates');
+$T = new Template(Config::path_template());
 $T->set_file('header', 'index.thtml');
 $T->set_var(array(
     'header'    => Config::get('pi_display_name'),

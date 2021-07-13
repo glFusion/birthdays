@@ -263,7 +263,7 @@ function plugin_profilevariablesdisplay_birthdays($uid, &$T)
         return '';
     }
 
-    $LT = new Template(__DIR__ . '/templates');
+    $LT = new Config::path_template();
     $LT->set_file(array(
         'block' => 'profileblock.thtml',
     ));
@@ -305,7 +305,7 @@ function phpblock_birthdays_month($blkinfo=array(), $months=2)
     $have_data = false;
     $retval = '';
 
-    $T = new Template(__DIR__ . '/templates');
+    $T = new Config::path_template();
     $T->set_file('block', 'phpblock.thtml');
     $T->set_block('block', 'month', 'mon');
     for ($i = 0; $i < $months; $i++) {
@@ -357,7 +357,7 @@ function phpblock_birthdays_week($blkinfo=array(), $weeks=2)
     $e_dt = new \Date();      // Just create a date object for later
     $have_data = false;
 
-    $T = new Template(__DIR__ . '/templates');
+    $T = new Config::path_template();
     $T->set_file('block', 'phpblock.thtml');
     $T->set_block('block', 'month', 'mon');
     for ($i = 0; $i < $weeks; $i++) {

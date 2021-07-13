@@ -11,9 +11,11 @@
  * @filesource
  */
 namespace Birthdays;
+use \glFusion\FieldList;
+
 
 /**
- * Class for birthdays.
+ * Class for birthday events.
  * @package birthdays
  */
 class Birthday
@@ -27,6 +29,7 @@ class Birthday
     const CACHE_GVERSION = '2.0.0';
 
     /** Year to used to create date objects.
+     * Using 2016 as it is a leap year.
      * The actual birth year is not included in the saved birthdays.
      * @const integer */
     CONST YEAR = 2016;
@@ -297,6 +300,7 @@ class Birthday
         global $_TABLES;
 
         $uid = (int)$uid;
+        $key = 'uid_' . $uid;
         $retval = self::getCache($uid);
         if ($retval === NULL) {
             $sql = "SELECT * FROM {$_TABLES['birthdays']}
@@ -304,7 +308,7 @@ class Birthday
             $res = DB_query($sql);
             if (!DB_error()) {
                 $retval = DB_fetchArray($res, false);
-                self::setCache($uid, $retval);
+                self::setCache($key, $retval);
             }
         }
         return $retval;
@@ -323,7 +327,7 @@ class Birthday
         global $LANG_MONTH, $LANG_BD00;
 
         $bday = self::getInstance($uid);
-        $T = new \Template(__DIR__ . '/../templates');
+        $T = new \Template(Config::path_template());
         $T->set_file('edit', $tpl . '.thtml');
         $opt = self::selectMonth($bday->month, $LANG_BD00['none']);
         $T->set_var('month_select', $opt);
@@ -338,7 +342,6 @@ class Birthday
         }
         $T->set_var('day_select', $opt);
         $T->set_var('month', $bday->month);
-        //$T->set_var('year', $bday->year);
         $T->parse('output', 'edit');
         return $T->finish($T->get_var('output'));
     }
@@ -561,7 +564,7 @@ class Birthday
     public static function getCache($key)
     {
         if (version_compare(GVERSION, self::CACHE_GVERSION, '<')) {
-            return;
+            return NULL;
         }
         $key = self::_makeKey($key);
         if (\glFusion\Cache\Cache::getInstance()->has($key)) {
@@ -781,11 +784,19 @@ class Birthday
             break;
 
         case 'delete':
-            $retval = COM_createLink('<i class="uk-icon uk-icon-remove uk-text-danger"></i>',
+            /*$retval = FieldList::delete(array(
+                'url' => Config::get('admin_url') . "/index.php?delitem={$A['uid']}",
+                'attr' => array(
+                     'onclick' => "return confirm('{$LANG_BD00['conf_del']}');",
+                ),
+            ) );*/
+            $retval = COM_createLink(
+                '<i class="uk-icon uk-icon-remove uk-text-danger"></i>',
                 Config::get('admin_url') . "/index.php?delitem={$A['uid']}",
                 array(
                      'onclick' => "return confirm('{$LANG_BD00['conf_del']}');",
-                ) );
+                )
+            );
             break;
         
         default:

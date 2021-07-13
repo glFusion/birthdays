@@ -63,7 +63,7 @@ final class Config
         $this->properties['pi_url'] = 'http://www.glfusion.org';
         $this->properties['url'] = $_CONF['site_url'] . '/' . self::PI_NAME;
         $this->properties['admin_url'] = $_CONF['site_admin_url'] . '/plugins/' . self::PI_NAME;
-        $this->properties['pi_path'] = __DIR__ . '/../';
+        $this->properties['pi_path'] = $_CONF['path'] . 'plugins/' . self::PI_NAME . '/';
         // Use the global dateonly format as a default if the format isn't defined
         if (
             !isset($this->properties['format']) ||
@@ -138,6 +138,28 @@ final class Config
     public static function get($key=NULL, $default=NULL)
     {
         return self::getInstance()->_get($key);
+    }
+
+
+    /**
+     * Convenience function to get the base plugin path.
+     *
+     * @return  string      Path to main plugin directory.
+     */
+    public static function path()
+    {
+        return self::_get('pi_path');
+    }
+
+
+    /**
+     * Convenience function to get the path to plugin templates.
+     *
+     * @return  string      Template path
+     */
+    public static function path_template()
+    {
+        return self::get('path') . 'templates/';
     }
 
 }

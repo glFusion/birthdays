@@ -87,7 +87,7 @@ function BIRTHDAYS_adminMenu()
             'text' => $LANG01[53]       // Admin Home,
         ),
     );
-    $T = new \Template(Config::get('pi_path') . '/templates');
+    $T = new \Template(Config::path_template());
     $T->set_file('title', 'admin.thtml');
     $T->set_var(array(
         'version'   => Config::get('pi_version'),
