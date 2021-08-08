@@ -159,7 +159,7 @@ final class Config
      */
     public static function path_template()
     {
-        return self::get('path') . 'templates/';
+        return self::get('pi_path') . 'templates/';
     }
 
 }
