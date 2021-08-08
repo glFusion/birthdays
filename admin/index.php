@@ -2,12 +2,12 @@
 /**
  * Admin entry point for the Birthdays plugin.
  *
- * @author     Lee Garner <lee@leegarner.com>
- * @author     Mike Lynn <mike@mlynn.com>
- * @copyright  Copyright (c) 2018-2020 Lee Garner <lee@leegarner.com>
- * @package    birthdays
- * @version    v1.0/0
- * @license    http://opensource.org/licenses/gpl-2.0.php
+ * @author      Lee Garner <lee@leegarner.com>
+ * @author      Mike Lynn <mike@mlynn.com>
+ * @copyright   Copyright (c) 2018-2021 Lee Garner <lee@leegarner.com>
+ * @package     birthdays
+ * @version     v1.0.0
+ * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
  */
@@ -88,7 +88,7 @@ function BIRTHDAYS_adminMenu()
             'text' => $LANG01[53]       // Admin Home,
         ),
     );
-    $T = new \Template(Config::get('pi_path') . '/templates');
+    $T = new \Template(Config::path_template());
     $T->set_file('title', 'admin.thtml');
     $T->set_var(array(
         'version'   => Config::get('pi_version'),
