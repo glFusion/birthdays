@@ -75,17 +75,7 @@ class Birthday
      */
     public static function getInstance($uid)
     {
-        static $bdays = array();
-        $uid = (int)$uid;
-        $key = 'uid_' . $uid;
-        if (!array_key_exists($uid, $bdays)) {
-            $bdays[$uid] = self::getCache($key);
-            if (!$bdays[$uid]) {
-                $bdays[$uid] = new self($uid);
-                self::setCache($key, $bdays[$uid]);
-            }
-        }
-        return $bdays[$uid];
+        return new self($uid);
     }
 
 
@@ -94,7 +84,7 @@ class Birthday
      *
      * @param   array   $row    Array of values, from DB or $_POST
      */
-    public function SetVars($row)
+    public function setVars($row)
     {
         if (!is_array($row)) return;
 
@@ -295,7 +285,7 @@ class Birthday
      * @param   integer $uid    User ID
      * @return  array       Array of fields, NULL if not found.
      */
-    public static function getUser($uid)
+    public static function XgetUser($uid)
     {
         global $_TABLES;
 
@@ -322,18 +312,17 @@ class Birthday
      * @param  string  $tpl    Template name, default="edit"
      * @return string      HTML for edit form
      */
-    public static function editForm($uid, $tpl = 'edit')
+    public function editForm($tpl = 'edit')
     {
         global $LANG_MONTH, $LANG_BD00;
 
-        $bday = self::getInstance($uid);
         $T = new \Template(Config::path_template());
         $T->set_file('edit', $tpl . '.thtml');
-        $opt = self::selectMonth($bday->month, $LANG_BD00['none']);
+        $opt = self::selectMonth($this->month, $LANG_BD00['none']);
         $T->set_var('month_select', $opt);
         $opt = '';
         for ($i = 0; $i < 32; $i++) {
-            $sel = $bday->day == $i ? 'selected="selected"' : '';
+            $sel = $this->day == $i ? 'selected="selected"' : '';
             if ($i > 0) {
                 $opt .= "<option id=\"bday_day_$i\" $sel value=\"$i\">$i</option>";
             } else {
@@ -341,7 +330,7 @@ class Birthday
             }
         }
         $T->set_var('day_select', $opt);
-        $T->set_var('month', $bday->month);
+        $T->set_var('month', $this->month);
         $T->parse('output', 'edit');
         return $T->finish($T->get_var('output'));
     }

@@ -66,7 +66,7 @@ $T->set_var(array(
     'header'    => Config::get('pi_display_name'),
     'pi_name'   => Config::PI_NAME,
     'logo'      => plugin_geticon_birthdays(),
-    'my_form'   => COM_isAnonUser() ? '' : \Birthdays\Birthday::editForm($_USER['uid'], 'edit_index'),
+    'my_form'   => COM_isAnonUser() ? '' : \Birthdays\Birthday::getInstance($_USER['uid'])->editForm('edit_index'),
     'month_select' => \Birthdays\Birthday::selectMonth($filter_month),
 ) );
 $T->parse('output','header');

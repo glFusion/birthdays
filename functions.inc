@@ -216,7 +216,7 @@ function plugin_profileedit_birthdays($uid, $panel, $fieldset)
 {
     $retval = '';
     if ($panel == 'userinfo' && $fieldset == 'personalinfo') {
-        $retval = \Birthdays\Birthday::editForm($uid);
+        $retval = \Birthdays\Birthday::getInstance($uid)->editForm();
     }
     return $retval;
 }
@@ -263,11 +263,11 @@ function plugin_profilevariablesdisplay_birthdays($uid, &$T)
         return '';
     }
 
-    $LT = new Config::path_template();
+    $LT = new Template(Config::path_template());
     $LT->set_file(array(
         'block' => 'profileblock.thtml',
     ));
-    $bday = \Birthdays\Birthday::getUser($uid);
+    $bday = \Birthdays\Birthday::getInstance($uid);
     if (empty($bday)) return;
     $LT->set_var('birthday', \Birthdays\Birthday::formatDate($bday));
     $LT->parse('output', 'block');
@@ -305,7 +305,7 @@ function phpblock_birthdays_month($blkinfo=array(), $months=2)
     $have_data = false;
     $retval = '';
 
-    $T = new Config::path_template();
+    $T = new Template(Config::path_template());
     $T->set_file('block', 'phpblock.thtml');
     $T->set_block('block', 'month', 'mon');
     for ($i = 0; $i < $months; $i++) {
@@ -357,7 +357,7 @@ function phpblock_birthdays_week($blkinfo=array(), $weeks=2)
     $e_dt = new \Date();      // Just create a date object for later
     $have_data = false;
 
-    $T = new Config::path_template();
+    $T = new Template(Config::path_template());
     $T->set_file('block', 'phpblock.thtml');
     $T->set_block('block', 'month', 'mon');
     for ($i = 0; $i < $weeks; $i++) {
@@ -852,7 +852,7 @@ function plugin_configmanager_select_grp_cards_birthdays()
 function plugin_privacy_export_birthdays($uid, $email='', $username='', $ip='')
 {
     $retval = '';
-    $bday = \Birthdays\Birthday::getUser($uid);
+    $bday = \Birthdays\Birthday::getInstance($uid);
     if ($bday !== NULL) {
         $retval .= "<birthdays>\n";
         $retval .= '<birthday>' . \Birthdays\Birthday::formatDate($bday) . '</birthday>' . "\n";
