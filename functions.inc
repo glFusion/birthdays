@@ -630,7 +630,7 @@ function plugin_runScheduledTask_birthdays()
             PLG_sendSubscriptionNotification('birthdays', 'birthday_sub', '', $uid, 0);
         }
 
-        if (Config::get('enable_cards'] && in_array('birthdays.card', $rights)) {
+        if (Config::get('enable_cards') && in_array('birthdays.card', $rights)) {
             // Borrow the email format function to create the message
             $msg = plugin_subscription_email_format_birthdays('birthday_card', '', $uid, '');
             $name = COM_getDisplayName($uid);
