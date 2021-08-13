@@ -315,7 +315,7 @@ class Birthday
      */
     public function editForm($tpl = 'edit')
     {
-        $bday = self::getInstance($uid);
+        $bday = self::getInstance($this->uid);
         $opt = self::selectMonth($this->month, _('None'));
         $T = new \Template(Config::path_template());
         $T->set_file('edit', $tpl . '.thtml');
