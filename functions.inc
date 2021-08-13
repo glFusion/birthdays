@@ -624,22 +624,13 @@ function plugin_runScheduledTask_birthdays()
     $bdays = \Birthdays\Birthday::getAll($dt['month'], $dt['day']);
     foreach ($bdays as $bday) {
         $uid = $bday->getUid();
+        $rights = explode(',', SEC_getUserPermissions('', $uid));
 
-        if (Config::get('enable_subs') && SEC_hasRights('birthdays.view')) {
+        if (Config::get('enable_subs') && in_array('birthdays.view', $rights)) {
             PLG_sendSubscriptionNotification('birthdays', 'birthday_sub', '', $uid, 0);
         }
 
-        //if (Config::get('grp_cards') > 0) {
-            // Check if the user can receive birthday cards.
-            // Hack since SEC_hasRights() only operates on the current user ID.
-            $saveUser = $_USER['uid'];
-            $_USER['uid'] = $uid;
-            $cansend = SEC_hasRights('birthdays.card');
-            $_USER['uid'] = $saveUser;
-            if (!$cansend) {
-                continue;
-            }
-
+        if (Config::get('enable_cards'] && in_array('birthdays.card', $rights)) {
             // Borrow the email format function to create the message
             $msg = plugin_subscription_email_format_birthdays('birthday_card', '', $uid, '');
             $name = COM_getDisplayName($uid);
@@ -656,7 +647,7 @@ function plugin_runScheduledTask_birthdays()
                 ),
             );
             COM_emailNotification($msgData);
-        //}
+        }
     }
 }
 
