@@ -623,30 +623,12 @@ function plugin_runScheduledTask_birthdays()
     );
     $bdays = \Birthdays\Birthday::getAll($dt['month'], $dt['day']);
     foreach ($bdays as $bday) {
-        $uid = $bday->getUid();
-        $rights = explode(',', SEC_getUserPermissions('', $uid));
-
+        $rights = explode(',', SEC_getUserPermissions('', $this->uid));
         if (Config::get('enable_subs') && in_array('birthdays.view', $rights)) {
-            PLG_sendSubscriptionNotification('birthdays', 'birthday_sub', '', $uid, 0);
+            PLG_sendSubscriptionNotification('birthdays', 'birthday_sub', '', $this->uid, 0);
         }
-
         if (Config::get('enable_cards') && in_array('birthdays.card', $rights)) {
-            // Borrow the email format function to create the message
-            $msg = plugin_subscription_email_format_birthdays('birthday_card', '', $uid, '');
-            $name = COM_getDisplayName($uid);
-            $email = DB_getItem($_TABLES['users'], 'email', "uid = $uid");
-            if (empty($email)) continue;    // need a valid email
-            $msgData = array(
-                'htmlmessage'   => $msg['msghtml'],
-                'textmessage'   => $msg['msgtext'],
-                'subject'       => $msg['subject'],
-                'from'          => NULL,
-                'to'            => array(
-                    'name'  => $name,
-                    'email' => $email,
-                ),
-            );
-            COM_emailNotification($msgData);
+            $bday->sendCard();
         }
     }
 }

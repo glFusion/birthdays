@@ -804,4 +804,35 @@ class Birthday
         return $retval;
     }
 
+
+    /**
+     * Send a card to the current birthday user.
+     *
+     * @return  void
+     */
+    public function sendCard() : void
+    {
+        global $_TABLES;
+
+        // Borrow the email format function to create the message
+        $msg = plugin_subscription_email_format_birthdays('birthday_card', '', $this->uid, '');
+        $name = COM_getDisplayName($this->uid);
+        $email = DB_getItem($_TABLES['users'], 'email', "uid = $this->uid");
+        if (empty($email)) {
+            return;    // need a valid email
+        }
+        $msgData = array(
+            'htmlmessage'   => $msg['msghtml'],
+            'textmessage'   => $msg['msgtext'],
+            'subject'       => $msg['subject'],
+            'from'          => NULL,
+            'to'            => array(
+                'name'  => $name,
+                'email' => $email,
+            ),
+        );
+        COM_emailNotification($msgData);
+        Logger::Audit("Sent card to user {$this->uid} ({$name})");
+    }
+
 }
