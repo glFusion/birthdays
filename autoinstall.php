@@ -93,13 +93,13 @@ $INSTALL_plugin[Config::PI_NAME] = array(
         'type' => 'mapping',
         'findgroup' => 'Logged-In Users',   // all users can receive cards
         'feature' => 'card_feature_id',
-        'log' => 'Adding card feature to the users group',
+        'log' => 'Adding card feature to the logged-in users group',
     ),
     array(
         'type' => 'mapping',
         'findgroup' => 'Logged-In Users',   // all users can receive cards
         'feature' => 'view_feature_id',
-        'log' => 'Adding view feature to the users group',
+        'log' => 'Adding view feature to the logged-in users group',
     ),
 );
 
