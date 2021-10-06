@@ -127,9 +127,12 @@ class Birthday
      * @param   array   $vals   Optional array of values to set
      * @return  boolean     True on success, False on error
      */
-    public function Save($vals = NULL)
+    public function Save(?array $vals = NULL) : bool
     {
         global $_TABLES;
+
+        $orig_month = $this->month;
+        $orig_day = $this->day;
 
         if (is_array($vals)) {
             $this->SetVars($vals);
@@ -140,6 +143,11 @@ class Birthday
         if ($this->month == 0 || $this->day == 0) {
             self::Delete($this->uid);
             PLG_itemDeleted($this->uid, Config::PI_NAME);
+            return true;
+        }
+
+        // If the date wasn't changed, nothing to do.
+        if ($this->month == $orig_month && $this->day == $orig_day) {
             return true;
         }
 
@@ -447,8 +455,7 @@ class Birthday
         static $canView = NULL;
 
         if ($canView === NULL) {
-            $canView = SEC_hasRights('birthdays.view,birthdays.admin') ||
-                SEC_inGroup(Config::get('grp_access'));
+            $canView = SEC_hasRights('birthdays.view,birthdays.admin');
         }
         return $canView;
     }

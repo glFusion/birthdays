@@ -60,7 +60,7 @@ class Month
         if (isset(self::$NAMES[$key])) {
             return self::$NAMES[$key];
         } else {
-            return MO::_('Unknoen');
+            return MO::_('Unknown');
         }
     }
 
@@ -77,7 +77,7 @@ class Month
         if (isset(self::$NAMES[$key])) {
             return substr(self::$NAMES[$key], 0, 3);
         } else {
-            return MO::_('Unknoen');
+            return MO::_('Unknown');
         }
     }
 
