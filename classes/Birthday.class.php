@@ -11,9 +11,11 @@
  * @filesource
  */
 namespace Birthdays;
+use \glFusion\FieldList;
+
 
 /**
- * Class for birthdays.
+ * Class for birthday events.
  * @package birthdays
  */
 class Birthday
@@ -25,6 +27,12 @@ class Birthday
     /** Minimum glFusion version that supports caching.
      * @const string */
     const CACHE_GVERSION = '2.0.0';
+
+    /** Year to used to create date objects.
+     * Using 2016 as it is a leap year.
+     * The actual birth year is not included in the saved birthdays.
+     * @const integer */
+    CONST YEAR = 2016;
 
     /** User ID.
      * @var integer */
@@ -67,17 +75,7 @@ class Birthday
      */
     public static function getInstance($uid)
     {
-        static $bdays = array();
-        $uid = (int)$uid;
-        $key = 'uid_' . $uid;
-        if (!array_key_exists($uid, $bdays)) {
-            $bdays[$uid] = self::getCache($key);
-            if (!$bdays[$uid]) {
-                $bdays[$uid] = new self($uid);
-                self::setCache($key, $bdays[$uid]);
-            }
-        }
-        return $bdays[$uid];
+        return new self($uid);
     }
 
 
@@ -86,7 +84,7 @@ class Birthday
      *
      * @param   array   $row    Array of values, from DB or $_POST
      */
-    public function SetVars($row)
+    public function setVars($row)
     {
         if (!is_array($row)) return;
 
@@ -130,7 +128,7 @@ class Birthday
      */
     public function Save($vals = NULL)
     {
-        global $_TABLES, $_BD_CONF;;
+        global $_TABLES;
 
         if (is_array($vals)) {
             $this->SetVars($vals);
@@ -140,7 +138,7 @@ class Birthday
         // as a deletion request
         if ($this->month == 0 || $this->day == 0) {
             self::Delete($this->uid);
-            PLG_itemDeleted($this->uid, $_BD_CONF['pi_name']);
+            PLG_itemDeleted($this->uid, Config::PI_NAME);
             return true;
         }
 
@@ -157,7 +155,9 @@ class Birthday
             self::clearCache('range');
             // Put this in cache to save a lookup in plugin_getiteminfo
             self::setCache('uid_' . $this->uid, $this);
-            PLG_itemSaved($this->uid, $_BD_CONF['pi_name']);
+            if (!isset($vals['call_itemsaved'])) {
+                PLG_itemSaved($this->uid, Config::PI_NAME);
+            }
             return true;
         } else {
             return false;
@@ -192,7 +192,7 @@ class Birthday
             $where .= ' AND b.day = ' . $day;
         }
         // The year isn't stored, so use a bogus leap year.
-        $sql = "SELECT 2016 as year, CONCAT(
+        $sql = "SELECT " . self::YEAR . " as year, CONCAT(
                     LPAD(b.month,2,0),LPAD(b.day,2,0)
                 ) as birthday, b.*, u.username, u.fullname
                 FROM {$_TABLES['birthdays']} b
@@ -285,11 +285,12 @@ class Birthday
      * @param   integer $uid    User ID
      * @return  array       Array of fields, NULL if not found.
      */
-    public static function getUser($uid)
+    public static function XgetUser($uid)
     {
         global $_TABLES;
 
         $uid = (int)$uid;
+        $key = 'uid_' . $uid;
         $retval = self::getCache($uid);
         if ($retval === NULL) {
             $sql = "SELECT * FROM {$_TABLES['birthdays']}
@@ -297,7 +298,7 @@ class Birthday
             $res = DB_query($sql);
             if (!DB_error()) {
                 $retval = DB_fetchArray($res, false);
-                self::setCache($uid, $retval);
+                self::setCache($key, $retval);
             }
         }
         return $retval;
@@ -311,18 +312,17 @@ class Birthday
      * @param  string  $tpl    Template name, default="edit"
      * @return string      HTML for edit form
      */
-    public static function editForm($uid, $tpl = 'edit')
+    public function editForm($tpl = 'edit')
     {
         global $LANG_MONTH, $LANG_BD00;
 
-        $bday = self::getInstance($uid);
-        $T = new \Template(__DIR__ . '/../templates');
+        $T = new \Template(Config::path_template());
         $T->set_file('edit', $tpl . '.thtml');
-        $opt = self::selectMonth($bday->month, $LANG_BD00['none']);
+        $opt = self::selectMonth($this->month, $LANG_BD00['none']);
         $T->set_var('month_select', $opt);
         $opt = '';
         for ($i = 0; $i < 32; $i++) {
-            $sel = $bday->day == $i ? 'selected="selected"' : '';
+            $sel = $this->day == $i ? 'selected="selected"' : '';
             if ($i > 0) {
                 $opt .= "<option id=\"bday_day_$i\" $sel value=\"$i\">$i</option>";
             } else {
@@ -330,8 +330,7 @@ class Birthday
             }
         }
         $T->set_var('day_select', $opt);
-        $T->set_var('month', $bday->month);
-        //$T->set_var('year', $bday->year);
+        $T->set_var('month', $this->month);
         $T->parse('output', 'edit');
         return $T->finish($T->get_var('output'));
     }
@@ -392,7 +391,7 @@ class Birthday
      */
     public static function formatDate($month, $day = '', $year = '')
     {
-        global $_CONF, $_BD_CONF;
+        global $_CONF;
         static $dt = NULL;
 
         if (is_array($month)) {
@@ -401,9 +400,9 @@ class Birthday
             $year = isset($month['year']) ? $month['year'] : '';
             $month = isset($month['month']) ? $month['month'] : '';
         } elseif (is_object($month)) {  // a Birthday object received
-            $day = $month->day;
-            $year = $month->year;
-            $month = $month->month;
+            $day = $month->getDay();
+            $year = self::YEAR;
+            $month = $month->getMonth();
         } elseif (is_string($month) && strpos($month, '-')) {
             // YYYY-MM-DD format, separate into component parts
             $A = explode('-', $month);
@@ -431,7 +430,7 @@ class Birthday
 
         // Format the date
         $dt->setDate($year, $month, $day);
-        return $dt->Format($_BD_CONF['format'], true);
+        return $dt->Format(Config::get('format'), true);
     }
 
 
@@ -442,11 +441,11 @@ class Birthday
      */
     public static function canView()
     {
-        global $_BD_CONF;
         static $canView = NULL;
 
         if ($canView === NULL) {
-            $canView = SEC_hasRights('birthdays.view,birthdays.admin') || SEC_inGroup($_BD_CONF['grp_access']);
+            $canView = SEC_hasRights('birthdays.view,birthdays.admin') ||
+                SEC_inGroup(Config::get('grp_access'));
         }
         return $canView;
     }
@@ -554,7 +553,7 @@ class Birthday
     public static function getCache($key)
     {
         if (version_compare(GVERSION, self::CACHE_GVERSION, '<')) {
-            return;
+            return NULL;
         }
         $key = self::_makeKey($key);
         if (\glFusion\Cache\Cache::getInstance()->has($key)) {
@@ -606,7 +605,7 @@ class Birthday
      */
     public static function publicList($filter_month=0)
     {
-        global $_TABLES, $LANG_BD00, $_BD_CONF;
+        global $_TABLES, $LANG_BD00;
 
         $retval = '';
 
@@ -624,7 +623,7 @@ class Birthday
                 'align' => 'center',
             ),
         );
-        if ($_BD_CONF['enable_subs']) {
+        if (Config::get('enable_subs')) {
             $header_arr[] =  array(
                 'text' => $LANG_BD00['subscribe'],
                 'field' => 'subscribe',
@@ -638,11 +637,11 @@ class Birthday
             'has_menu'     => false,
             'has_extras'   => false,
             'title'        => $LANG_BD00['pi_title'],
-            'form_url'     => $_BD_CONF['url'] . '/index.php?filter_month=' . $filter_month,
+            'form_url'     => Config::get('url') . '/index.php?filter_month=' . $filter_month,
             'help_url'     => ''
         );
         $filter = $filter_month == 0 ? '' : " AND month = $filter_month";
-        $sql = "SELECT 2016 as year, CONCAT(
+        $sql = "SELECT " . self::YEAR . " as year, CONCAT(
                     LPAD(b.month,2,0),LPAD(b.day,2,0)
                 ) as birthday, b.*, u.username, u.fullname
                 FROM {$_TABLES['birthdays']} b
@@ -655,7 +654,7 @@ class Birthday
             'query_fields' => array(),
         );
         $text_arr = array(
-            'form_url' => $_BD_CONF['url'] . '/index.php?filter_month=' . $filter_month,
+            'form_url' => Config::get('url') . '/index.php?filter_month=' . $filter_month,
             'has_search' => false,
             'has_limit'     => true,
             'has_paging'    => true,
@@ -677,7 +676,7 @@ class Birthday
      */
     public static function adminList()
     {
-        global $LANG_ADMIN, $LANG_BD00, $_TABLES, $_CONF, $_BD_CONF;
+        global $LANG_ADMIN, $LANG_BD00, $_TABLES, $_CONF;
 
         $retval = '';
         $form_arr = array();
@@ -706,7 +705,7 @@ class Birthday
             ),
         );
 
-        $sql = "SELECT 2016 as year, CONCAT(
+        $sql = "SELECT " . self::YEAR . " as year, CONCAT(
                     LPAD(b.month,2,0),LPAD(b.day,2,0)
                 ) as birthday, b.*, u.username, u.fullname
                 FROM {$_TABLES['birthdays']} b
@@ -714,7 +713,7 @@ class Birthday
                     ON u.uid = b.uid";
         $text_arr = array(
             'has_extras' => false,
-            'form_url' => $_BD_CONF['admin_url'] . '/index.php',
+            'form_url' => Config::get('admin_url') . '/index.php',
         );
         $options = array('chkdelete' => 'true', 'chkfield' => 'uid');
         $defsort_arr = array('field' => 'uid', 'direction' => 'asc');
@@ -745,7 +744,7 @@ class Birthday
      */
     public static function getListField($fieldname, $fieldvalue, $A, $icon_arr)
     {
-        global $_CONF, $_BD_CONF, $LANG_BD00, $_USER;
+        global $_CONF, $LANG_BD00, $_USER;
 
         $retval = '';
 
@@ -774,11 +773,19 @@ class Birthday
             break;
 
         case 'delete':
-            $retval = COM_createLink('<i class="uk-icon uk-icon-trash uk-text-danger"></i>',
-                $_BD_CONF['admin_url'] . "/index.php?delitem={$A['uid']}",
+            /*$retval = FieldList::delete(array(
+                'url' => Config::get('admin_url') . "/index.php?delitem={$A['uid']}",
+                'attr' => array(
+                     'onclick' => "return confirm('{$LANG_BD00['conf_del']}');",
+                ),
+            ) );*/
+            $retval = COM_createLink(
+                '<i class="uk-icon uk-icon-remove uk-text-danger"></i>',
+                Config::get('admin_url') . "/index.php?delitem={$A['uid']}",
                 array(
                      'onclick' => "return confirm('{$LANG_BD00['conf_del']}');",
-                ) );
+                )
+            );
             break;
         
         default:
@@ -788,7 +795,4 @@ class Birthday
         return $retval;
     }
 
-
 }
-
-?>

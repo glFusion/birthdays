@@ -16,6 +16,7 @@
 if (!defined ('GVERSION')) {
     die ('This file can not be used on its own!');
 }
+use Birthdays\Config;
 
 
 /**
@@ -30,9 +31,9 @@ if (!defined ('GVERSION')) {
  */
 function service_profilefields_birthdays($args, &$output, &$svc_msg)
 {
-    global $LANG_BD00, $_BD_CONF, $_TABLES;
+    global $LANG_BD00, $_TABLES;
 
-    $pi = $_BD_CONF['pi_name'];
+    $pi = Config::PI_NAME;
     $tbl = $_TABLES['birthdays'];
 
     // Does not support remote web services, must be local only.

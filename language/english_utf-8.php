@@ -70,8 +70,9 @@ $LANG_confignames['birthdays'] = array(
     'format'   => 'Date Display Format',
     'login_greeting' => 'Greeting message upon login?',
     'enable_subs' => 'Allow subscripttions to birthday announcements?',
-    'enable_cards' => 'Enable birthday cards?',
+    'grp_cards' => 'Group allowed to receive cards',
     'grp_access' => 'Group allowed to view birthdays',
+    'show_upcoming' => 'Show in upcoming events (evList)?'
 );
 
 $LANG_configselects['birthdays'] = array(
