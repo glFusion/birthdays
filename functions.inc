@@ -503,7 +503,9 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
     global $_TABLES, $_CONF;
 
     $properties = explode(',', $what);
+    $props = array();
     $retval = array();
+
     if ($id == '*') {
         $bdays = \Birthdays\Birthday::getAll();
     } else {
@@ -511,6 +513,7 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
     }
 
     foreach ($bdays as $bday) {
+        $username = COM_getDisplayName($bday->getUid());
         foreach ($properties as $p) {
             switch ($p) {
             case 'group_id':
@@ -541,10 +544,18 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
                 $props[$p] = sprintf('2016-%02d-%02d', $bday->getMonth(), $bday->getDay());
                 break;
             case 'title':
-            case 'description':
             case 'excerpt':
+                $props[$p] = sprintf(MO::_('%s\'s Birthday'), $username);
+                break;
             case 'summary':
-                $props[$p] = sprintf(MO::_('%s\'s Birthday'), COM_getDisplayName($bday->getUid()));
+                $props[$p] = sprintf(MO::_("It's %s's birthday today!"), $username);
+                break;
+            case 'description':
+                $props[$p] = '';
+                if (Config::get('sign_in_calendar')) {
+                    $props[$p] .= MO::_('Astrological Sign:') . ' ' .
+                        Birthdays\Models\Zodiac::getSign($bday->getMonth(), $bday->getMonth());
+                }
                 break;
             case 'author_name':
                 $props[$p] = COM_getDisplayName($bday->getUid());
