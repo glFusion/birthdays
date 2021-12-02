@@ -1,5 +1,11 @@
 # Changelog for the Birthdays plugin
 
+## Version 1.1.0
+Release TBD
+- Implement logging of birthday cards.
+- Implement phpGettext class.
+- Optionally don't send cards to non-active accounts.
+
 ## Version 1.0.2
 Release 2021-10-31
 - Better description in events, allow zodiac sign inclusion.

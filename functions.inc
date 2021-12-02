@@ -632,14 +632,18 @@ function plugin_runScheduledTask_birthdays()
         "INSERT INTO {$_TABLES['vars']} VALUES('birthdays_lastrun', '$today')
         ON DUPLICATE KEY UPDATE value = '$today'"
     );
-    $bdays = \Birthdays\Birthday::getAll($dt['month'], $dt['day']);
-    foreach ($bdays as $bday) {
-        $rights = explode(',', SEC_getUserPermissions('', $this->uid));
-        if (Config::get('enable_subs') && in_array('birthdays.view', $rights)) {
-            PLG_sendSubscriptionNotification('birthdays', 'birthday_sub', '', $this->uid, 0);
+    $BDays = Birthdays\Birthday::getAll($dt['month'], $dt['day']);
+    foreach ($BDays as $BDay) {
+        if (Config::get('enable_subs')) {
+            PLG_sendSubscriptionNotification('birthdays', 'birthday_sub', '', $BDay->getUid(), 0);
         }
-        if (Config::get('enable_cards') && in_array('birthdays.card', $rights)) {
-            $bday->sendCard();
+
+        $U = new Birthdays\Models\User($BDay->getUid());
+        if (
+            (!Config::get('cards_only_active') || $U->isActive()) &&
+            $U->hasRight('birthday.card')
+        ) {
+            $BDay->sendCard();
         }
     }
 }
