@@ -3,7 +3,7 @@
  * Class to manage locale settings.
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2020 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2021 Lee Garner <lee@leegarner.com>
  * @package     birthdays
  * @version     v1.1.0
  * @since       v1.1.0
@@ -12,6 +12,8 @@
  * @filesource
  */
 namespace Birthdays;
+use Birthdays\phpGettext\phpGettext;
+
 
 /**
  * Manage locale settings for the Birthdays plugin.
@@ -59,32 +61,37 @@ class MO
         if (empty($lang)) {
             $lang = $_CONF['language'];
         }
+
+        // If not using the system language, then the locale
+        // hasn't been determined yet.
         if (!empty($lang) && $lang != $_CONF['language']) {
+            // Save the current locale for reset()
+            self::$old_locale = setlocale(LC_MESSAGES, "0");
+
             // Validate and use the appropriate locale code.
-            // Defaults to 'en_US' if a supportated locale wasn't requested.
+            // Tries to look up the locale for the language first.
+            // Then uses the global locale (ignoring the requested language).
+            // Defaults to 'en_US' if a supportated locale wasn't found.
             if (isset(self::$lang2locale[$lang])) {
                 $locale = self::$lang2locale[$lang];
-            } elseif (isset($LANG_LOCALE) && !empty($LANG_LOCALE)) {
+            } elseif (
+                isset($LANG_LOCALE) &&
+                !empty($LANG_LOCALE) &&
+                in_array($LANG_LOCALE, self::$lang2locale)
+            ) {
                 // Not found, try the global variable
                 $locale = $LANG_LOCALE;
             } else {
                 // global not set, fall back to US english
                 $locale = 'en_US';
             }
-            self::$old_locale = setlocale(LC_MESSAGES, "0");
-            $lang = str_replace($lang, '_utf-8', '');
-            $results = setlocale(
-                LC_MESSAGES,
-                $locale.'.utf8', $locale, $lang
-            );
-        } else {
-            // Didn't need to run setlocale, so fake a true result so 
-            // the bind functions will be called.
-            $results = true;
         }
+
+        $results = phpGettext::_setlocale(LC_MESSAGES, $locale);
         if ($results) {
-            bind_textdomain_codeset(self::$domain, 'UTF-8');
-            bindtextdomain(self::$domain, __DIR__ . "/../locale");
+            phpGettext::_bindtextdomain(self::$domain, __DIR__ . "/../locale");
+            phpGettext::_bind_textdomain_codeset(self::$domain, 'UTF-8');
+            phpGettext::_textdomain(self::$domain);
         }
     }
 
@@ -130,7 +137,8 @@ class MO
     public static function dngettext($single, $plural, $number)
     {
         if (!self::$domain) self::init();
-        return \dngettext(self::$domain, $single, $plural, $number);
+        return phpGettext::_dngettext(self::$domain, $single, $plural, $number);
+        //return \dngettext(self::$domain, $single, $plural, $number);
     }
     public static function _n($single, $plural, $number)
     {
@@ -149,7 +157,8 @@ class MO
         if (!self::$domain) {
             self::init();
         }
-        return \dgettext(self::$domain, $txt);
+        return phpGettext::_dgettext(self::$domain, $txt);
+        //return \dgettext(self::$domain, $txt);
     }
     public static function _($txt)
     {
@@ -184,4 +193,3 @@ function _($txt)
     return MO::dgettext($txt);
 }
 
-?>
