@@ -22,15 +22,39 @@ use Birthdays\Config;
  */
 class User
 {
+    const STATUS_REGISTERED = 1;
     const STATUS_ACTIVE = 3;
 
+    /** User ID.
+     * @var integer */
     private $uid = 0;
+
+    /** Login name.
+     * @var string */
     private $username = '';
+
+    /** Full name.
+     * @var string */
     private $fullname = '';
+
+    /** Account status.
+     * @var integer */
     private $status = 0;
+
+    /** Email address.
+     * @var string */
     private $email = '';
+
+    /* Array of privileges (features).
+     * @var array */
     private $_rights = NULL;
 
+
+    /**
+     * Read the pertinent user information from the database.
+     *
+     * @param   integer $uid    Optional user ID, current user if empty
+     */
     public function __construct(?int $uid)
     {
         global $_USER, $_TABLES;
@@ -116,7 +140,7 @@ class User
      */
     public function isActive() : bool
     {
-        return $this->status == self::STATUS_ACTIVE;
+        return $this->status == self::STATUS_ACTIVE || $this->status == self::STATUS_REGISTERED;
     }
 
 
@@ -153,6 +177,12 @@ class User
     }
 
 
+    /**
+     * Utility function to decrypt a string using an internal salt.
+     *
+     * @param   string  $str    String to decrypt
+     * @return  string      Decrypted value
+     */
     public static function decrypt(string $str) : string
     {
         global $_VARS;
@@ -161,6 +191,13 @@ class User
     }
 
 
+    /**
+     * Utility function to encrypt the user ID using an internal salt.
+     * Used to create a query string authorizing (un)subscribe requests.
+     *
+     * @param   integer $uid    User ID
+     * @return  string      Encrypted string
+     */
     public static function encrypt(int $uid) : string
     {
         global $_VARS;
