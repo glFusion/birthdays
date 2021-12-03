@@ -122,7 +122,7 @@ class Birthday
             WHERE uid = $uid"
         );
         $row = DB_fetchArray($result, false);
-        $this->SetVars($row);
+        $this->setVars($row);
     }
 
 
@@ -138,9 +138,10 @@ class Birthday
 
         $orig_month = $this->month;
         $orig_day = $this->day;
+        $orig_sendcards = $this->sendcards;
 
         if (is_array($vals)) {
-            $this->SetVars($vals);
+            $this->setVars($vals);
         }
 
         // If "0" is entered for either month or day, consider this
@@ -153,23 +154,28 @@ class Birthday
 
         // If the date wasn't changed, nothing to do.
         if ($this->month == $orig_month && $this->day == $orig_day) {
-            return true;
+            if ($this->sendcards == $orig_sendcards) {
+                return true;
+            }
+            $vals['call_itemsaved'] = true;
         }
 
         $sql = "INSERT INTO {$_TABLES['birthdays']} SET
                     uid = {$this->uid},
                     month = {$this->month},
-                    day = {$this->day}
+                    day = {$this->day},
+                    sendcards = {$this->sendcards}
                 ON DUPLICATE KEY UPDATE
                     month = {$this->month},
-                    day = {$this->day}";
+                    day = {$this->day},
+                    sendcards = {$this->sendcards}";
         //echo $sql;die;
         $res = DB_query($sql);
         if (!DB_error()) {
             self::clearCache('range');
             // Put this in cache to save a lookup in plugin_getiteminfo
             self::setCache('uid_' . $this->uid, $this);
-            if (!isset($vals['call_itemsaved'])) {
+            if (!isset($vals['call_itemsaved']) || !$vals['call_itemsaved']) {
                 PLG_itemSaved($this->uid, Config::PI_NAME);
             }
             return true;
@@ -328,6 +334,8 @@ class Birthday
      */
     public function editForm($tpl = 'edit')
     {
+        global $_USER;
+
         $bday = self::getInstance($this->uid);
         $opt = self::selectMonth($this->month, _('None'));
         $T = new \Template(Config::path_template());
@@ -348,6 +356,9 @@ class Birthday
             'lang_my_birthday' => _('My Birthday'),
             'lang_today' => _('Today'),
             'rnd' => rand(1,1000),
+            'lang_send_cards' => _('Send me birthday cards'),
+            'cards_chk' => $this->sendcards ? 'checked="checked"' : '',
+            'is_current_user' => $this->uid == $_USER['uid'],
         ) );
         $T->parse('output', 'edit');
         return $T->finish($T->get_var('output'));

@@ -10,6 +10,7 @@
     <button type="submit" class="uk-button uk-button-small uk-button-success" name="addbday">Submit</button>
       <button type="reset" class="uk-button uk-button-primary uk-button-mini"
         onclick="BDAY_setToday('{rnd}');">{lang_today}</button>
+	<br />{lang_send_cards}: <input type="checkbox" name="sendcards" value="1" {cards_chk} />
 </form>
 <script type="text/javascript">
 BDAY_updateDay({month});

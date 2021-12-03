@@ -240,6 +240,7 @@ function plugin_profilesave_birthdays($uid = 0)
     $bday->Save(array(
         'month' => $_POST['birthday_month'],
         'day' => $_POST['birthday_day'],
+        'sendcards' => isset($_POST['birthday_sendcards']) ? 1 : 0,
         //'call_itemsaved' => false,
     ) );
 }

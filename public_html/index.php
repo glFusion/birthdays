@@ -53,6 +53,7 @@ case 'addbday':
         $bday->Save(array(
             'month' => $_POST['birthday_month'],
             'day' => $_POST['birthday_day'],
+            'sendcards' => isset($_POST['sendcards']) ? 1 : 0,
         ) );
         echo COM_refresh($_CONF['site_url'] . '/birthdays/index.php');
     }

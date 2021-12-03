@@ -5,6 +5,7 @@ Release TBD
 - Implement logging of birthday cards.
 - Implement phpGettext class.
 - Optionally don't send cards to non-active accounts.
+- Add user option to receive cards or not.
 
 ## Version 1.0.2
 Release 2021-10-31
