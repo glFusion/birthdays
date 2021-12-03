@@ -552,9 +552,9 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
                 break;
             case 'description':
                 $props[$p] = '';
-                if (Config::get('sign_in_calendar')) {
+                if (Config::get('zodiac_in_dscp')) {
                     $props[$p] .= MO::_('Astrological Sign:') . ' ' .
-                        Birthdays\Models\Zodiac::getSign($bday->getMonth(), $bday->getMonth());
+                        Birthdays\Models\Zodiac::getSign($bday->getMonth(), $bday->getDay());
                 }
                 break;
             case 'author_name':
