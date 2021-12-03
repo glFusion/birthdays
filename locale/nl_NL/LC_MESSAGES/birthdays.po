@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 07:58-0700\n"
+"POT-Creation-Date: 2021-12-03 13:21-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,16 +21,19 @@ msgstr ""
 #: classes/Birthday.class.php:326 classes/Birthday.class.php:334
 #: functions.inc:821 classes/Birthday.class.php:327
 #: classes/Birthday.class.php:337 functions.inc:778
+#: classes/Birthday.class.php:332 classes/Birthday.class.php:342
+#: functions.inc:790
 msgid "None"
 msgstr "Geen"
 
 #: classes/Birthday.class.php:334 classes/Birthday.class.php:340
-#: classes/Birthday.class.php:343
+#: classes/Birthday.class.php:343 classes/Birthday.class.php:348
 msgid "My Birthday"
 msgstr "Mijn verjaardag"
 
 #: classes/Birthday.class.php:370 classes/Birthday.class.php:368
 #: classes/Birthday.class.php:377 classes/Birthday.class.php:380
+#: classes/Birthday.class.php:385
 msgid "All"
 msgstr "Alle"
 
@@ -38,6 +41,7 @@ msgstr "Alle"
 #: classes/Birthday.class.php:615 classes/Birthday.class.php:692
 #: classes/Birthday.class.php:622 classes/Birthday.class.php:699
 #: classes/Birthday.class.php:624 classes/Birthday.class.php:701
+#: classes/Birthday.class.php:629 classes/Birthday.class.php:714
 msgid "Name"
 msgstr "Naam"
 
@@ -47,12 +51,14 @@ msgstr "Naam"
 #: classes/Birthday.class.php:628 classes/Birthday.class.php:704
 #: functions.inc:300 classes/Birthday.class.php:630
 #: classes/Birthday.class.php:706 functions.inc:268
+#: classes/Birthday.class.php:635 classes/Birthday.class.php:719
 msgid "Birthday"
 msgstr "Verjaardag"
 
 #: classes/Birthday.class.php:627 classes/Birthday.class.php:771
 #: classes/Birthday.class.php:629 classes/Birthday.class.php:773
 #: classes/Birthday.class.php:636 classes/Birthday.class.php:638
+#: classes/Birthday.class.php:651
 msgid "Subscribe"
 msgstr "Abonneren"
 
@@ -63,22 +69,25 @@ msgstr "Abonneren"
 #: admin/index.php:95 functions.inc:112 functions.inc:132
 #: classes/Birthday.class.php:649 public_html/index.php:70 admin/index.php:96
 #: functions.inc:67 functions.inc:82 functions.inc:100
+#: classes/Birthday.class.php:662 public_html/index.php:92
 msgid "Birthdays"
 msgstr "Verjaardagen"
 
 #: classes/Birthday.class.php:685 classes/Birthday.class.php:687
 #: classes/Birthday.class.php:694 classes/Birthday.class.php:696
+#: classes/Birthday.class.php:709
 msgid "User ID"
 msgstr "Gebruikers-ID"
 
 #: classes/Birthday.class.php:767 functions.inc:727
 #: classes/Birthday.class.php:769 functions.inc:745 functions.inc:737
-#: functions.inc:694
+#: functions.inc:694 functions.inc:703
 msgid "Unsubscribe"
 msgstr "Uitschrijven"
 
 #: classes/Birthday.class.php:784 classes/Birthday.class.php:786
 #: classes/Birthday.class.php:793 classes/Birthday.class.php:802
+#: classes/Birthday.class.php:819
 msgid "Do you really want to delete this item?"
 msgstr "Wilt u dit item echt verwijderen?"
 
@@ -95,7 +104,7 @@ msgstr "Abonnement is bijgewerkt"
 msgid "Error updating subscription"
 msgstr "Fout bij updaten van abonnement"
 
-#: public_html/index.php:80 public_html/index.php:69
+#: public_html/index.php:80 public_html/index.php:69 public_html/index.php:91
 msgid "Select Month"
 msgstr "Selecteer maand"
 
@@ -131,6 +140,7 @@ msgid "Happy Birthday, %s!"
 msgstr "Gefeliciteerd, %s!"
 
 #: functions.inc:573 functions.inc:591 functions.inc:581 functions.inc:546
+#: functions.inc:548
 #, php-format
 msgid "%s's Birthday"
 msgstr "%s's verjaardag"
@@ -140,6 +150,7 @@ msgid "To unsubscribe from these notifications, please click this link"
 msgstr "Om u af te melden voor deze meldingen, klik op deze link"
 
 #: functions.inc:729 functions.inc:747 functions.inc:739 functions.inc:696
+#: functions.inc:706
 msgid ""
 "This email was generated automatically. Please do not reply to this email."
 msgstr ""
@@ -180,17 +191,18 @@ msgid "Group allowed to view birthdays"
 msgstr "Groep mag verjaardagen bekijken"
 
 #: language/lang_config.php:41 language/lang_config.php:42
-#: language/lang_config.php:43
+#: language/lang_config.php:43 language/lang_config.php:44
 msgid "True"
 msgstr "True"
 
 #: language/lang_config.php:42 language/lang_config.php:43
-#: language/lang_config.php:44
+#: language/lang_config.php:44 language/lang_config.php:45
 msgid "False"
 msgstr "False"
 
 #: classes/Birthday.class.php:702 classes/Birthday.class.php:700
 #: classes/Birthday.class.php:709 classes/Birthday.class.php:711
+#: classes/Birthday.class.php:724
 msgid "Delete"
 msgstr "Verwijderen"
 
@@ -243,41 +255,63 @@ msgid "December"
 msgstr "december"
 
 #: classes/Birthday.class.php:767 classes/Birthday.class.php:776
-#: classes/Birthday.class.php:778
+#: classes/Birthday.class.php:778 classes/Birthday.class.php:795
 msgid "Click to Unsubscribe"
 msgstr "Klik om u uit te schrijven"
 
 #: classes/Birthday.class.php:771 classes/Birthday.class.php:780
-#: classes/Birthday.class.php:782
+#: classes/Birthday.class.php:782 classes/Birthday.class.php:799
 msgid "Click to Subscribe"
 msgstr "Klik om te abonneren"
 
 #: classes/Birthday.class.php:341 classes/Birthday.class.php:344
+#: classes/Birthday.class.php:349
 msgid "Today"
 msgstr ""
 
-#: functions.inc:745 functions.inc:549 functions.inc:702
-#, fuzzy, php-format
+#: functions.inc:745 functions.inc:549 functions.inc:702 functions.inc:551
+#: functions.inc:713
+#, php-format
 msgid "It's %s's birthday today!"
-msgstr "%s's verjaardag"
+msgstr "Het is %s' verjaardag vandaag!"
 
-#: functions.inc:749 functions.inc:706
-#, fuzzy, php-format
+#: functions.inc:749 functions.inc:706 functions.inc:718
+#, php-format
 msgid "Happy Birthday from %s"
-msgstr "Gefeliciteerd, %s!"
+msgstr "Gefeliciteerd met %s"
 
 #: language/lang_config.php:37
 msgid "Show in upcoming events (evList)?"
-msgstr ""
-
-#: functions.inc:554
-msgid "Astrological Sign:"
-msgstr ""
+msgstr "Toon in aankomende evenementen (evList)?"
 
 #: language/lang_config.php:38
 msgid "Astrological sign in calendar description?"
-msgstr ""
+msgstr "Astrologisch teken in kalenderbeschrijving?"
 
 #: classes/Models/Month.class.php:63 classes/Models/Month.class.php:80
 msgid "Unknown"
-msgstr ""
+msgstr "Onbekend"
+
+#: public_html/index.php:65
+msgid "You will no longer receive birthday cards"
+msgstr "Je ontvangt geen verjaardagskaarten meer"
+
+#: public_html/index.php:79
+msgid "You have been unsubscribed from birthday notifications"
+msgstr "Je bent afgemeld voor verjaardagsmeldingen"
+
+#: functions.inc:704
+msgid "To unsubscribe from these notifications, please click"
+msgstr "Klik om u af te melden voor deze meldingen"
+
+#: functions.inc:705
+msgid "this link"
+msgstr "deze link"
+
+#: language/lang_config.php:39
+msgid "Send cards only to active accounts?"
+msgstr "Alleen kaarten naar actieve accounts verzenden?"
+
+#: functions.inc:556 classes/Birthday.class.php:643
+msgid "Astrological Sign"
+msgstr "Astrologisch teken"

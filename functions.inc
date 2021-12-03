@@ -553,7 +553,7 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
             case 'description':
                 $props[$p] = '';
                 if (Config::get('zodiac_in_dscp')) {
-                    $props[$p] .= MO::_('Astrological Sign:') . ' ' .
+                    $props[$p] .= MO::_('Astrological Sign') . ': ' .
                         Birthdays\Models\Zodiac::getSign($bday->getMonth(), $bday->getDay());
                 }
                 break;

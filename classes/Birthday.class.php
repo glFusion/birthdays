@@ -640,7 +640,7 @@ class Birthday
         );
         if (Config::get('zodiac_in_dscp')) {
             $header_arr[] = array(
-                'text' => _('Asrological Sign'),
+                'text' => _('Astrological Sign'),
                 'field' => 'zodiac',
                 'sort' => false,
                 'align' => 'left',
