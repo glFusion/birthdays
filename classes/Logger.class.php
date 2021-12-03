@@ -25,9 +25,9 @@ class Logger
      *
      * @param   string  $logentry   Text to log
      * @param   string  $logfile    Log filename
-     * @return  void
+     * @return  string      Logging error, if any
      */
-    private static function write(string $logentry, string $logfile) : void
+    private static function write(string $logentry, string $logfile) : string
     {
         global $_CONF, $_USER, $LANG01;
 
