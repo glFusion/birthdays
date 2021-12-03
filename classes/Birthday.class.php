@@ -47,6 +47,10 @@ class Birthday
      * @var integer */
     private $day = 0;
 
+    /** Flag to indicate that cards should be sent to this user.
+     * @var boolean */
+    private $sendcards = 1;
+
 
     /**
      * Instantiate an object for the specified user, or a new entry.
@@ -89,7 +93,7 @@ class Birthday
     {
         if (!is_array($row)) return;
 
-        foreach (array('uid', 'month', 'day') as $key) {
+        foreach (array('uid', 'month', 'day', 'sendcards') as $key) {
             if (isset($row[$key])) {
                 $this->$key = (int)$row[$key];
             }
@@ -821,6 +825,11 @@ class Birthday
     {
         global $_TABLES;
 
+        if (!$this->sendcards) {
+            // User has unsubscribed, do nothing.
+            return;
+        }
+
         // Borrow the email format function to create the message
         $msg = plugin_subscription_email_format_birthdays('birthday_card', '', $this->uid, '');
         $name = COM_getDisplayName($this->uid);
@@ -840,6 +849,22 @@ class Birthday
         );
         COM_emailNotification($msgData);
         Logger::Audit("Sent card to user {$this->uid} ({$name})");
+    }
+
+
+    /**
+     * Unsubscribe this user from receiving birthday cards.
+     *
+     * @return  boolean     True if unsubscribed, False if not
+     */
+    public function unsubCard() : bool
+    {
+        global $_TABLES;
+
+        $sql = "UPDATE {$_TABLES['birthdays']} SET sendcards = 0 WHERE uid = {$this->uid}";
+        DB_query($sql, 1);
+        Logger::Audit("User {$this->uid} unsubscribed from birthday cards");
+        return true;
     }
 
 }

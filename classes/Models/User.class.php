@@ -110,6 +110,17 @@ class User
 
 
     /**
+     * Check if this user is active.
+     *
+     * @return  bool        True if active
+     */
+    public function isActive() : bool
+    {
+        return $this->status == self::STATUS_ACTIVE;
+    }
+
+
+    /**
      * Get all the privileges that this user has.
      *
      * @return  array       Array of privilege names
@@ -139,6 +150,22 @@ class User
         } else {
             return in_array($right, $this->getRights());
         }
+    }
+
+
+    public static function decrypt(string $str) : string
+    {
+        global $_VARS;
+
+        return COM_decrypt($str, $_VARS['guid']);
+    }
+
+
+    public static function encrypt(int $uid) : string
+    {
+        global $_VARS;
+
+        return COM_encrypt($uid, $_VARS['guid']);
     }
 
 }

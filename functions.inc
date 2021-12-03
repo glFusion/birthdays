@@ -632,6 +632,7 @@ function plugin_runScheduledTask_birthdays()
         "INSERT INTO {$_TABLES['vars']} VALUES('birthdays_lastrun', '$today')
         ON DUPLICATE KEY UPDATE value = '$today'"
     );
+
     $BDays = Birthdays\Birthday::getAll($dt['month'], $dt['day']);
     foreach ($BDays as $BDay) {
         if (Config::get('enable_subs')) {
@@ -641,7 +642,7 @@ function plugin_runScheduledTask_birthdays()
         $U = new Birthdays\Models\User($BDay->getUid());
         if (
             (!Config::get('cards_only_active') || $U->isActive()) &&
-            $U->hasRight('birthday.card')
+            $U->hasRight('birthdays.card')
         ) {
             $BDay->sendCard();
         }
@@ -660,7 +661,7 @@ function plugin_runScheduledTask_birthdays()
  */
 function plugin_subscription_email_format_birthdays($category, $track_id, $uid, $poster_id)
 {
-    global $_CONF;
+    global $_CONF, $_VARS;
 
     $uid = (int)$uid;
     $name = COM_getDisplayName($uid);
@@ -692,15 +693,19 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
         'htmlcard'  => 'html_card.thtml',
         'htmlsub'   => 'html_sub.thtml',
     ));
+
     $T->set_var(array(          // common text elements
         'uid'           => $uid,
+        'uid_code'      => urlencode(Birthdays\Models\User::encrypt($uid)),
         'firstname'     => $fname,
         'lastname'      => $lname,
         'fullname'      => $fullname,
         'lang_unsub'    => MO::_('Unsubscribe'),
-        'lang_to_unsub' => MO::_('To unsubscribe from these notifications, please click this link'),
+        'lang_to_unsub' => MO::_('To unsubscribe from these notifications, please click'),
+        'lang_this_link' => MO::_('this link'),
         'lang_noreply'  => MO::_('This email was generated automatically. Please do not reply to this email.'),
         'site_name'     => $_CONF['site_name'],
+        'site_email'    => $_CONF['site_mail'],
     ) );
 
     if ($category == 'birthday_sub') {
@@ -708,6 +713,7 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
         $subject = sprintf(MO::_("It's %s's birthday today!"), $name);
         $T->parse('htmlmessage', 'htmlsub');
     } else {
+        $B = new Birthdays\Birthday($uid);
         // Happy Birthday message to users.
         $subject = sprintf(MO::_('Happy Birthday from %s'), $_CONF['site_name']);
         $T->parse('htmlmessage', 'htmlcard');

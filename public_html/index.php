@@ -24,7 +24,7 @@ USES_lib_admin();
 
 // MAIN
 
-$expected = array('list', 'addbday', 'mode');
+$expected = array('list', 'addbday', 'mode', 'nocards', 'unsub');
 foreach($expected as $provided) {
     // Get requested action and page from GET or POST variables.
     // Most could come in either way.  They are not sanitized, so they must
@@ -56,6 +56,28 @@ case 'addbday':
         ) );
         echo COM_refresh($_CONF['site_url'] . '/birthdays/index.php');
     }
+    break;
+case 'nocards':
+    $uid = (int)Birthdays\Models\User::decrypt($actionval);
+    if ($uid > 1) {
+        Birthdays\Birthday::getInstance($uid)->unsubCard();
+    }
+    COM_setMsg(MO::_('You will no longer receive birthday cards'));
+    COM_refresh($_CONF['site_url'] . '/index.php');
+    break;
+case 'unsub':
+    // Unsubscribe from all birthday notifications
+    $uid = Birthdays\Models\User::decrypt($actionval);
+    if ($uid > 1) {
+        $sql = "DELETE FROM {$_TABLES['subscriptions']}
+            WHERE type = 'birthdays'
+            AND category = 'birthday_sub'
+            AND uid = $uid";
+        DB_query($sql, 1);
+        Birthdays\Logger::Audit("User {$uid} unsubscribed from birthday notifications");
+    }
+    COM_setMsg(MO::_('You have been unsubscribed from birthday notifications'));
+    COM_refresh($_CONF['site_url'] . '/index.php');
     break;
 }
 
