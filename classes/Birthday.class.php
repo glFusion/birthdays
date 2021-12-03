@@ -12,6 +12,7 @@
  */
 namespace Birthdays;
 use Birthdays\Models\Month;
+use Birthdays\Models\Zodiac;
 //use \glFusion\FieldList;
 
 
@@ -637,6 +638,14 @@ class Birthday
                 'align' => 'center',
             ),
         );
+        if (Config::get('zodiac_in_dscp')) {
+            $header_arr[] = array(
+                'text' => _('Asrological Sign'),
+                'field' => 'zodiac',
+                'sort' => false,
+                'align' => 'left',
+            );
+        }
         if (Config::get('enable_subs')) {
             $header_arr[] =  array(
                 'text' => _('Subscribe'),
@@ -775,6 +784,10 @@ class Birthday
 
         case 'birthday':
             $retval .= \Birthdays\Birthday::formatDate($A);
+            break;
+
+        case 'zodiac':
+            $retval .= Zodiac::getSign($A['month'], $A['day']);
             break;
 
         case 'subscribe':
