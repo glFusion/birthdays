@@ -629,7 +629,7 @@ function plugin_runScheduledTask_birthdays()
     foreach ($bdays as $bday) {
         $uid = $bday->getUid();
 
-        if (Config::get('enable_subs') && SEC_hasRights('birthdays.view')) {
+        if (Config::get('enable_subs')) {
             PLG_sendSubscriptionNotification('birthdays', 'birthday_sub', '', $uid, 0);
         }
 
@@ -676,12 +676,13 @@ function plugin_runScheduledTask_birthdays()
  */
 function plugin_subscription_email_format_birthdays($category, $track_id, $uid, $poster_id)
 {
-    global $_CONF;
+    global $_CONF, $_TABLES;
 
     $uid = (int)$uid;
     $name = COM_getDisplayName($uid);
     $name = @htmlspecialchars($name,ENT_QUOTES, COM_getEncodingt(),true);
     $lang = BIRTHDAYS_loadLanguage($uid);
+    $lang_str = DB_getItem($_TABLES['users'], 'language', "uid = $uid");
     $fullname = $name;
     $nameparts = PLG_callFunctionForOnePlugin(
         'plugin_parseName_lglib',
@@ -700,6 +701,7 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
 
     $T = new Template(array(
         $_CONF['path_layout'] . 'email/',
+        __DIR__ . '/templates/notify/' . $lang_str,
         __DIR__ . '/templates/notify', // catch templates using language strings
     ) );
     $T->set_file (array(
