@@ -1,0 +1,9 @@
+<h2>
+    Wszystkiego najlepszego z {site_name}!
+</h2>
+<p>
+Otrzymujesz tę wiadomość, ponieważ podałeś datę urodzenia na {site_url}.
+Możesz tam zaktualizować ustawienia swojego konta, zrezygnować z subskrypcji, klikając
+<a href="{site_url}/birthdays/index.php?nocards={uid_code}">tutaj</a>
+lub skontaktuj się z {site_email}, aby uzyskać pomoc.
+</p>
