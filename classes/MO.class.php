@@ -21,6 +21,14 @@ use Birthdays\phpGettext\phpGettext;
  */
 class MO
 {
+    /** Language string.
+     * @var string */
+    private static $lang = 'english_utf-8';
+
+    /** Locale string.
+     * @var string */
+    private static $locale = 'en_US';
+
     /** Language domain, e.g. plugin name.
      * @var string */
     private static $domain = NULL;
@@ -59,35 +67,39 @@ class MO
         self::$domain = Config::PI_NAME;
 
         if (empty($lang)) {
-            $lang = $_CONF['language'];
+            self::$lang = $_CONF['language'];
+        } else {
+            self::$lang = $lang;
         }
 
         // If not using the system language, then the locale
         // hasn't been determined yet.
-        if (!empty($lang) && $lang != $_CONF['language']) {
+        //if (!empty($lang) && $lang != $_CONF['language']) {
+
             // Save the current locale for reset()
-            self::$old_locale = setlocale(LC_MESSAGES, "0");
+            //self::$old_locale = setlocale(LC_MESSAGES, "0");
 
             // Validate and use the appropriate locale code.
             // Tries to look up the locale for the language first.
             // Then uses the global locale (ignoring the requested language).
             // Defaults to 'en_US' if a supportated locale wasn't found.
-            if (isset(self::$lang2locale[$lang])) {
-                $locale = self::$lang2locale[$lang];
+            if (isset(self::$lang2locale[self::$lang])) {
+                self::$locale = self::$lang2locale[self::$lang];
             } elseif (
                 isset($LANG_LOCALE) &&
                 !empty($LANG_LOCALE) &&
                 in_array($LANG_LOCALE, self::$lang2locale)
             ) {
                 // Not found, try the global variable
-                $locale = $LANG_LOCALE;
+                self::$locale = $LANG_LOCALE;
             } else {
                 // global not set, fall back to US english
-                $locale = 'en_US';
+                self::$locale = 'en_US';
+                self::$lang = 'english_utf-8';
             }
-        }
+        //}
 
-        $results = phpGettext::_setlocale(LC_MESSAGES, $locale);
+        $results = phpGettext::_setlocale(LC_MESSAGES, self::$locale);
         if ($results) {
             phpGettext::_bindtextdomain(self::$domain, __DIR__ . "/../locale");
             phpGettext::_bind_textdomain_codeset(self::$domain, 'UTF-8');
@@ -103,9 +115,12 @@ class MO
      */
     public static function reset()
     {
-        if (self::$old_locale !== NULL) {
-            setlocale(LC_MESSAGES, self::$old_locale);
-        }
+        global $_CONF;
+
+        self::init($_CONF['language']);
+        /*if (self::$old_locale !== NULL) {
+            phpGettext::_setlocale(LC_MESSAGES, self::$old_locale);
+        }*/
     }
 
 
@@ -124,6 +139,28 @@ class MO
         }
         $lang = DB_getItem($_TABLES['users'], 'language', 'uid = ' . (int)$uid);
         self::init($lang);
+    }
+
+
+    /**
+     * Get the currently-used language string, e.g. `english_utf-8`.
+     *
+     * @return  string      Language string
+     */
+    public static function getLanguage() : string
+    {
+        return self::$lang;
+    }
+
+
+    /**
+     * Get the locale code, e.g. `en_US`.
+     *
+     * @return  string      Locale code
+     */
+    public static function getLocale() : string
+    {
+        return self::$locale;
     }
 
 

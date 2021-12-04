@@ -686,6 +686,7 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
 
     $T = new Template(array(
         $_CONF['path_layout'] . 'email/',
+        __DIR__ . '/templates/notify/' . MO::getLanguage(),
         __DIR__ . '/templates/notify', // catch templates using language strings
     ) );
     $T->set_file (array(
