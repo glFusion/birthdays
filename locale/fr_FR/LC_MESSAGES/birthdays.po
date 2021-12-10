@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-03 13:21-0800\n"
+"POT-Creation-Date: 2021-12-08 16:05-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,18 +22,20 @@ msgstr ""
 #: functions.inc:821 classes/Birthday.class.php:327
 #: classes/Birthday.class.php:337 functions.inc:778
 #: classes/Birthday.class.php:332 classes/Birthday.class.php:342
-#: functions.inc:790
+#: functions.inc:790 classes/Birthday.class.php:340
+#: classes/Birthday.class.php:350 functions.inc:792
 msgid "None"
 msgstr "Aucun"
 
 #: classes/Birthday.class.php:334 classes/Birthday.class.php:340
 #: classes/Birthday.class.php:343 classes/Birthday.class.php:348
+#: classes/Birthday.class.php:356
 msgid "My Birthday"
 msgstr "Mon anniversaire"
 
 #: classes/Birthday.class.php:370 classes/Birthday.class.php:368
 #: classes/Birthday.class.php:377 classes/Birthday.class.php:380
-#: classes/Birthday.class.php:385
+#: classes/Birthday.class.php:385 classes/Birthday.class.php:396
 msgid "All"
 msgstr "Tout"
 
@@ -42,6 +44,7 @@ msgstr "Tout"
 #: classes/Birthday.class.php:622 classes/Birthday.class.php:699
 #: classes/Birthday.class.php:624 classes/Birthday.class.php:701
 #: classes/Birthday.class.php:629 classes/Birthday.class.php:714
+#: classes/Birthday.class.php:640 classes/Birthday.class.php:725
 msgid "Name"
 msgstr "Nom"
 
@@ -52,13 +55,15 @@ msgstr "Nom"
 #: functions.inc:300 classes/Birthday.class.php:630
 #: classes/Birthday.class.php:706 functions.inc:268
 #: classes/Birthday.class.php:635 classes/Birthday.class.php:719
+#: classes/Birthday.class.php:646 classes/Birthday.class.php:730
+#: functions.inc:269
 msgid "Birthday"
 msgstr "Anniversaire"
 
 #: classes/Birthday.class.php:627 classes/Birthday.class.php:771
 #: classes/Birthday.class.php:629 classes/Birthday.class.php:773
 #: classes/Birthday.class.php:636 classes/Birthday.class.php:638
-#: classes/Birthday.class.php:651
+#: classes/Birthday.class.php:651 classes/Birthday.class.php:662
 msgid "Subscribe"
 msgstr "S'abonner"
 
@@ -70,24 +75,25 @@ msgstr "S'abonner"
 #: classes/Birthday.class.php:649 public_html/index.php:70 admin/index.php:96
 #: functions.inc:67 functions.inc:82 functions.inc:100
 #: classes/Birthday.class.php:662 public_html/index.php:92
+#: classes/Birthday.class.php:673 public_html/index.php:93
 msgid "Birthdays"
 msgstr "Anniversaires"
 
 #: classes/Birthday.class.php:685 classes/Birthday.class.php:687
 #: classes/Birthday.class.php:694 classes/Birthday.class.php:696
-#: classes/Birthday.class.php:709
+#: classes/Birthday.class.php:709 classes/Birthday.class.php:720
 msgid "User ID"
 msgstr "ID utilisateur"
 
 #: classes/Birthday.class.php:767 functions.inc:727
 #: classes/Birthday.class.php:769 functions.inc:745 functions.inc:737
-#: functions.inc:694 functions.inc:703
+#: functions.inc:694 functions.inc:703 functions.inc:705
 msgid "Unsubscribe"
 msgstr "Se désabonner"
 
 #: classes/Birthday.class.php:784 classes/Birthday.class.php:786
 #: classes/Birthday.class.php:793 classes/Birthday.class.php:802
-#: classes/Birthday.class.php:819
+#: classes/Birthday.class.php:819 classes/Birthday.class.php:830
 msgid "Do you really want to delete this item?"
 msgstr "Voulez-vous vraiment supprimer cet élément?"
 
@@ -105,6 +111,7 @@ msgid "Error updating subscription"
 msgstr "Erreur lors de la mise à jour de l'abonnement"
 
 #: public_html/index.php:80 public_html/index.php:69 public_html/index.php:91
+#: public_html/index.php:92
 msgid "Select Month"
 msgstr "Sélectionner le mois"
 
@@ -131,16 +138,18 @@ msgstr ""
 
 #: functions.inc:329 functions.inc:382 functions.inc:347 functions.inc:400
 #: functions.inc:337 functions.inc:390 functions.inc:305 functions.inc:358
+#: functions.inc:306 functions.inc:359
 msgid "View All"
 msgstr "Afficher tout"
 
 #: functions.inc:498 functions.inc:516 functions.inc:506 functions.inc:472
+#: functions.inc:473
 #, php-format
 msgid "Happy Birthday, %s!"
 msgstr "Joyeux anniversaire, %s!"
 
 #: functions.inc:573 functions.inc:591 functions.inc:581 functions.inc:546
-#: functions.inc:548
+#: functions.inc:548 functions.inc:549
 #, php-format
 msgid "%s's Birthday"
 msgstr "Anniversaire de %s"
@@ -151,7 +160,7 @@ msgstr ""
 "Pour vous désabonner de ces notifications, veuillez cliquer sur ce lien"
 
 #: functions.inc:729 functions.inc:747 functions.inc:739 functions.inc:696
-#: functions.inc:706
+#: functions.inc:706 functions.inc:708
 msgid ""
 "This email was generated automatically. Please do not reply to this email."
 msgstr ""
@@ -203,7 +212,7 @@ msgstr "False"
 
 #: classes/Birthday.class.php:702 classes/Birthday.class.php:700
 #: classes/Birthday.class.php:709 classes/Birthday.class.php:711
-#: classes/Birthday.class.php:724
+#: classes/Birthday.class.php:724 classes/Birthday.class.php:735
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -257,26 +266,28 @@ msgstr "Décembre"
 
 #: classes/Birthday.class.php:767 classes/Birthday.class.php:776
 #: classes/Birthday.class.php:778 classes/Birthday.class.php:795
+#: classes/Birthday.class.php:806
 msgid "Click to Unsubscribe"
 msgstr "Cliquez pour vous désabonner"
 
 #: classes/Birthday.class.php:771 classes/Birthday.class.php:780
 #: classes/Birthday.class.php:782 classes/Birthday.class.php:799
+#: classes/Birthday.class.php:810
 msgid "Click to Subscribe"
 msgstr "Cliquez pour vous abonner"
 
 #: classes/Birthday.class.php:341 classes/Birthday.class.php:344
-#: classes/Birthday.class.php:349
+#: classes/Birthday.class.php:349 classes/Birthday.class.php:357
 msgid "Today"
 msgstr "Aujourd'hui"
 
 #: functions.inc:745 functions.inc:549 functions.inc:702 functions.inc:551
-#: functions.inc:713
+#: functions.inc:713 functions.inc:552 functions.inc:715
 #, php-format
 msgid "It's %s's birthday today!"
 msgstr "C'est l'anniversaire de %s aujourd'hui !"
 
-#: functions.inc:749 functions.inc:706 functions.inc:718
+#: functions.inc:749 functions.inc:706 functions.inc:718 functions.inc:720
 #, php-format
 msgid "Happy Birthday from %s"
 msgstr "Joyeux anniversaire de %s"
@@ -290,22 +301,23 @@ msgid "Astrological sign in calendar description?"
 msgstr "Signe astrologique dans la description du calendrier ?"
 
 #: classes/Models/Month.class.php:63 classes/Models/Month.class.php:80
+#: classes/Models/Zodiac.class.php:71
 msgid "Unknown"
 msgstr "Inconnu"
 
-#: public_html/index.php:65
+#: public_html/index.php:65 public_html/index.php:66
 msgid "You will no longer receive birthday cards"
 msgstr "Vous ne recevrez plus de cartes d'anniversaire"
 
-#: public_html/index.php:79
+#: public_html/index.php:79 public_html/index.php:80
 msgid "You have been unsubscribed from birthday notifications"
 msgstr "Vous avez été désabonné des notifications d'anniversaire"
 
-#: functions.inc:704
+#: functions.inc:704 functions.inc:706
 msgid "To unsubscribe from these notifications, please click"
 msgstr "Pour vous désinscrire de ces notifications, veuillez cliquer sur"
 
-#: functions.inc:705
+#: functions.inc:705 functions.inc:707
 msgid "this link"
 msgstr "ce lien"
 
@@ -314,5 +326,59 @@ msgid "Send cards only to active accounts?"
 msgstr "Envoyer les cartes uniquement aux comptes actifs ?"
 
 #: functions.inc:556 classes/Birthday.class.php:643
+#: classes/Birthday.class.php:654 functions.inc:557
 msgid "Astrological Sign"
 msgstr "Signe astrologique"
+
+#: classes/Birthday.class.php:359
+#, fuzzy
+msgid "Send me birthday cards"
+msgstr "Activer les cartes d'anniversaire?"
+
+#: classes/Models/Zodiac.class.php:37 classes/Models/Zodiac.class.php:49
+msgid "Capricorn"
+msgstr "Capricorne"
+
+#: classes/Models/Zodiac.class.php:38
+msgid "Aquarius"
+msgstr "Verseau"
+
+#: classes/Models/Zodiac.class.php:39
+msgid "Pisces"
+msgstr "Poissons"
+
+#: classes/Models/Zodiac.class.php:40
+msgid "Aries"
+msgstr "Bélier"
+
+#: classes/Models/Zodiac.class.php:41
+msgid "Taurus"
+msgstr "Taureau"
+
+#: classes/Models/Zodiac.class.php:42
+msgid "Gemini"
+msgstr "Gémeaux"
+
+#: classes/Models/Zodiac.class.php:43
+msgid "Cancer"
+msgstr "Cancer"
+
+#: classes/Models/Zodiac.class.php:44
+msgid "Leo"
+msgstr "Léo"
+
+#: classes/Models/Zodiac.class.php:45
+msgid "Virgo"
+msgstr "Vierge"
+
+#: classes/Models/Zodiac.class.php:46
+msgid "Libra"
+msgstr "Balance"
+
+#: classes/Models/Zodiac.class.php:47
+msgid "Scorpio"
+msgstr "Scorpion"
+
+#: classes/Models/Zodiac.class.php:48
+msgid "Sagittarius"
+msgstr "Sagittaire"
