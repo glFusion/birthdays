@@ -43,6 +43,10 @@ site users on their birthday.
 and the birthday field in other users' profiles.
   * Default: All logged-in users
 
+## Evlist Integration
+If you wish to have birthdays appear in a separate calendar in Evlist, go into the Evlist
+plugin configuration and add a new Plugin-Calendar Mapping under Integrations. Name the item "birthdays" and select the Evlist calendar to use for birthday events.
+
 ## Management
 The only option in the Administration area is to sync all birthdays.
 This simply re-saves all records, thus forcing other plugins to be
