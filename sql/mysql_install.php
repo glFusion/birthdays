@@ -15,15 +15,18 @@ global $BD_UPGRADE;
 
 $_SQL = array(
 'birthdays' => "CREATE TABLE {$_TABLES['birthdays']} (
-  uid int(10) NOT NULL,
-  month int(2) default NULL,
-  day int(2) default NULL,
+  `uid` int(10) NOT NULL,
+  `month` int(2) DEFAULT NULL,
+  `day` int(2) DEFAULT NULL,
+  `sendcards` tinyint(1) unsigned NOT NULL DEFAULT 1,
   PRIMARY KEY (`uid`),
   KEY `mon_day` (`month`,`day`)
 ) TYPE=MyISAM;",
 );
 
 $BD_UPGRADE = array(
+    '1.1.0' => array(
+        "ALTER TABLE {$_TABLES['birthdays']} ADD `sendcards` tinyint(1) unsigned NOT NULL DEFAULT 1 AFTER `day`",
+    ),
 );
 
-?>

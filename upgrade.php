@@ -57,6 +57,12 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
         if (!BIRTHDAYS_do_set_version($current_ver)) return false;
     }
 
+    if (!COM_checkVersion($current_ver, '1.1.0')) {
+        $current_ver = '1.1.0';
+        if (!BIRTHDAYS_do_upgrade_sql($current_ver, $dvlp)) return false;
+        if (!BIRTHDAYS_do_set_version($current_ver)) return false;
+    }
+
     // Final version update to catch any code-only updates
     if (!COM_checkVersion($current_ver, $code_ver)) {
         if (!BIRTHDAYS_do_set_version($code_ver)) return false;
