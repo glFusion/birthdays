@@ -1,0 +1,411 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-12-08 16:19-0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: classes/Birthday.class.php:321 classes/Birthday.class.php:329
+#: classes/Birthday.class.php:326 classes/Birthday.class.php:334
+#: functions.inc:821 classes/Birthday.class.php:327
+#: classes/Birthday.class.php:337 functions.inc:778
+#: classes/Birthday.class.php:332 classes/Birthday.class.php:342
+#: functions.inc:790 classes/Birthday.class.php:340
+#: classes/Birthday.class.php:350 functions.inc:792
+#: classes/Birthday.class.php:340 classes/Birthday.class.php:350
+#: functions.inc:792
+msgid "None"
+msgstr ""
+
+#: classes/Birthday.class.php:334 classes/Birthday.class.php:340
+#: classes/Birthday.class.php:343 classes/Birthday.class.php:348
+#: classes/Birthday.class.php:356 classes/Birthday.class.php:356
+msgid "My Birthday"
+msgstr ""
+
+#: classes/Birthday.class.php:370 classes/Birthday.class.php:368
+#: classes/Birthday.class.php:377 classes/Birthday.class.php:380
+#: classes/Birthday.class.php:385 classes/Birthday.class.php:396
+#: classes/Birthday.class.php:396
+msgid "All"
+msgstr ""
+
+#: classes/Birthday.class.php:613 classes/Birthday.class.php:690
+#: classes/Birthday.class.php:615 classes/Birthday.class.php:692
+#: classes/Birthday.class.php:622 classes/Birthday.class.php:699
+#: classes/Birthday.class.php:624 classes/Birthday.class.php:701
+#: classes/Birthday.class.php:629 classes/Birthday.class.php:714
+#: classes/Birthday.class.php:640 classes/Birthday.class.php:725
+#: classes/Birthday.class.php:640 classes/Birthday.class.php:725
+msgid "Name"
+msgstr ""
+
+#: classes/Birthday.class.php:619 classes/Birthday.class.php:695
+#: functions.inc:287 classes/Birthday.class.php:621
+#: classes/Birthday.class.php:697 functions.inc:305
+#: classes/Birthday.class.php:628 classes/Birthday.class.php:704
+#: functions.inc:300 classes/Birthday.class.php:630
+#: classes/Birthday.class.php:706 functions.inc:268
+#: classes/Birthday.class.php:635 classes/Birthday.class.php:719
+#: classes/Birthday.class.php:646 classes/Birthday.class.php:730
+#: functions.inc:269 classes/Birthday.class.php:646
+#: classes/Birthday.class.php:730 functions.inc:269
+msgid "Birthday"
+msgstr ""
+
+#: classes/Birthday.class.php:627 classes/Birthday.class.php:771
+#: classes/Birthday.class.php:629 classes/Birthday.class.php:773
+#: classes/Birthday.class.php:636 classes/Birthday.class.php:638
+#: classes/Birthday.class.php:651 classes/Birthday.class.php:662
+#: classes/Birthday.class.php:662
+msgid "Subscribe"
+msgstr ""
+
+#: classes/Birthday.class.php:638 public_html/index.php:81 admin/index.php:94
+#: functions.inc:78 functions.inc:95 functions.inc:115
+#: language/lang_config.php:19 classes/Birthday.class.php:640 functions.inc:96
+#: functions.inc:113 functions.inc:133 classes/Birthday.class.php:647
+#: admin/index.php:95 functions.inc:112 functions.inc:132
+#: classes/Birthday.class.php:649 public_html/index.php:70 admin/index.php:96
+#: functions.inc:67 functions.inc:82 functions.inc:100
+#: classes/Birthday.class.php:662 public_html/index.php:92
+#: classes/Birthday.class.php:673 public_html/index.php:93
+#: classes/Birthday.class.php:673 public_html/index.php:93 admin/index.php:96
+#: functions.inc:67 functions.inc:82 functions.inc:100
+#: language/lang_config.php:19
+msgid "Birthdays"
+msgstr ""
+
+#: classes/Birthday.class.php:685 classes/Birthday.class.php:687
+#: classes/Birthday.class.php:694 classes/Birthday.class.php:696
+#: classes/Birthday.class.php:709 classes/Birthday.class.php:720
+#: classes/Birthday.class.php:720
+msgid "User ID"
+msgstr ""
+
+#: classes/Birthday.class.php:767 functions.inc:727
+#: classes/Birthday.class.php:769 functions.inc:745 functions.inc:737
+#: functions.inc:694 functions.inc:703 functions.inc:705 functions.inc:705
+msgid "Unsubscribe"
+msgstr ""
+
+#: classes/Birthday.class.php:784 classes/Birthday.class.php:786
+#: classes/Birthday.class.php:793 classes/Birthday.class.php:802
+#: classes/Birthday.class.php:819 classes/Birthday.class.php:830
+#: classes/Birthday.class.php:830
+msgid "Do you really want to delete this item?"
+msgstr ""
+
+#: public_html/ajax.php:38 public_html/ajax.php:39 public_html/ajax.php:39
+#, php-format
+msgid "Description"
+msgstr ""
+
+#: public_html/ajax.php:51 public_html/ajax.php:52 public_html/ajax.php:52
+msgid "Subscription has been updated"
+msgstr ""
+
+#: public_html/ajax.php:52 public_html/ajax.php:53 public_html/ajax.php:53
+msgid "Error updating subscription"
+msgstr ""
+
+#: public_html/index.php:80 public_html/index.php:69 public_html/index.php:91
+#: public_html/index.php:92 public_html/index.php:92
+msgid "Select Month"
+msgstr ""
+
+#: autoinstall.php:51 autoinstall.php:52 autoinstall.php:52
+msgid "Birthdays This Month"
+msgstr ""
+
+#: autoinstall.php:61 autoinstall.php:62 autoinstall.php:62
+msgid "Birthdays This Week"
+msgstr ""
+
+#: admin/index.php:82 admin/index.php:83 admin/index.php:84 admin/index.php:84
+msgid "Sync All"
+msgstr ""
+
+#: admin/index.php:99 admin/index.php:100 admin/index.php:101
+#: admin/index.php:101
+msgid ""
+"Sync All: Re-saves all birthday entries so other plugins will update their "
+"records if they use data from this plugin."
+msgstr ""
+
+#: functions.inc:329 functions.inc:382 functions.inc:347 functions.inc:400
+#: functions.inc:337 functions.inc:390 functions.inc:305 functions.inc:358
+#: functions.inc:306 functions.inc:359 functions.inc:306 functions.inc:359
+msgid "View All"
+msgstr ""
+
+#: functions.inc:498 functions.inc:516 functions.inc:506 functions.inc:472
+#: functions.inc:473 functions.inc:473
+#, php-format
+msgid "Happy Birthday, %s!"
+msgstr ""
+
+#: functions.inc:573 functions.inc:591 functions.inc:581 functions.inc:546
+#: functions.inc:548 functions.inc:549 functions.inc:549
+#, php-format
+msgid "%s's Birthday"
+msgstr ""
+
+#: functions.inc:728 functions.inc:746 functions.inc:738 functions.inc:695
+msgid "To unsubscribe from these notifications, please click this link"
+msgstr ""
+
+#: functions.inc:729 functions.inc:747 functions.inc:739 functions.inc:696
+#: functions.inc:706 functions.inc:708 functions.inc:708
+msgid ""
+"This email was generated automatically. Please do not reply to this email."
+msgstr ""
+
+#: functions.inc:737 functions.inc:755
+#, php-format
+msgid "Birthday Notification from %s"
+msgstr ""
+
+#: language/lang_config.php:20 language/lang_config.php:20
+msgid "Birthdays Plugin Configuration"
+msgstr ""
+
+#: language/lang_config.php:24 language/lang_config.php:28
+#: language/lang_config.php:24 language/lang_config.php:28
+msgid "Main Settings"
+msgstr ""
+
+#: language/lang_config.php:32 language/lang_config.php:32
+msgid "Date Display Format"
+msgstr ""
+
+#: language/lang_config.php:33 language/lang_config.php:33
+msgid "Greeting message upon login?"
+msgstr ""
+
+#: language/lang_config.php:34 language/lang_config.php:34
+msgid "Allow subscriptions to birthday announcements?"
+msgstr ""
+
+#: language/lang_config.php:35 language/lang_config.php:35
+msgid "Enable birthday cards?"
+msgstr ""
+
+#: language/lang_config.php:36 language/lang_config.php:36
+msgid "Group allowed to view birthdays"
+msgstr ""
+
+#: language/lang_config.php:41 language/lang_config.php:42
+#: language/lang_config.php:43 language/lang_config.php:44
+#: language/lang_config.php:44
+msgid "True"
+msgstr ""
+
+#: language/lang_config.php:42 language/lang_config.php:43
+#: language/lang_config.php:44 language/lang_config.php:45
+#: language/lang_config.php:45
+msgid "False"
+msgstr ""
+
+#: classes/Birthday.class.php:702 classes/Birthday.class.php:700
+#: classes/Birthday.class.php:709 classes/Birthday.class.php:711
+#: classes/Birthday.class.php:724 classes/Birthday.class.php:735
+#: classes/Birthday.class.php:735
+msgid "Delete"
+msgstr ""
+
+#: classes/Models/Month.class.php:15 classes/Models/Month.class.php:35
+#: classes/Models/Month.class.php:35
+msgid "January"
+msgstr ""
+
+#: classes/Models/Month.class.php:16 classes/Models/Month.class.php:36
+#: classes/Models/Month.class.php:36
+msgid "February"
+msgstr ""
+
+#: classes/Models/Month.class.php:17 classes/Models/Month.class.php:37
+#: classes/Models/Month.class.php:37
+msgid "March"
+msgstr ""
+
+#: classes/Models/Month.class.php:18 classes/Models/Month.class.php:38
+#: classes/Models/Month.class.php:38
+msgid "April"
+msgstr ""
+
+#: classes/Models/Month.class.php:19 classes/Models/Month.class.php:39
+#: classes/Models/Month.class.php:39
+msgid "May"
+msgstr ""
+
+#: classes/Models/Month.class.php:20 classes/Models/Month.class.php:40
+#: classes/Models/Month.class.php:40
+msgid "June"
+msgstr ""
+
+#: classes/Models/Month.class.php:21 classes/Models/Month.class.php:41
+#: classes/Models/Month.class.php:41
+msgid "July"
+msgstr ""
+
+#: classes/Models/Month.class.php:22 classes/Models/Month.class.php:42
+#: classes/Models/Month.class.php:42
+msgid "August"
+msgstr ""
+
+#: classes/Models/Month.class.php:23 classes/Models/Month.class.php:43
+#: classes/Models/Month.class.php:43
+msgid "September"
+msgstr ""
+
+#: classes/Models/Month.class.php:24 classes/Models/Month.class.php:44
+#: classes/Models/Month.class.php:44
+msgid "October"
+msgstr ""
+
+#: classes/Models/Month.class.php:25 classes/Models/Month.class.php:45
+#: classes/Models/Month.class.php:45
+msgid "November"
+msgstr ""
+
+#: classes/Models/Month.class.php:26 classes/Models/Month.class.php:46
+#: classes/Models/Month.class.php:46
+msgid "December"
+msgstr ""
+
+#: classes/Birthday.class.php:767 classes/Birthday.class.php:776
+#: classes/Birthday.class.php:778 classes/Birthday.class.php:795
+#: classes/Birthday.class.php:806 classes/Birthday.class.php:806
+msgid "Click to Unsubscribe"
+msgstr ""
+
+#: classes/Birthday.class.php:771 classes/Birthday.class.php:780
+#: classes/Birthday.class.php:782 classes/Birthday.class.php:799
+#: classes/Birthday.class.php:810 classes/Birthday.class.php:810
+msgid "Click to Subscribe"
+msgstr ""
+
+#: classes/Birthday.class.php:341 classes/Birthday.class.php:344
+#: classes/Birthday.class.php:349 classes/Birthday.class.php:357
+#: classes/Birthday.class.php:357
+msgid "Today"
+msgstr ""
+
+#: functions.inc:745 functions.inc:549 functions.inc:702 functions.inc:551
+#: functions.inc:713 functions.inc:552 functions.inc:715 functions.inc:552
+#: functions.inc:715
+#, php-format
+msgid "It's %s's birthday today!"
+msgstr ""
+
+#: functions.inc:749 functions.inc:706 functions.inc:718 functions.inc:720
+#: functions.inc:720
+#, php-format
+msgid "Happy Birthday from %s"
+msgstr ""
+
+#: language/lang_config.php:37 language/lang_config.php:37
+msgid "Show in upcoming events (evList)?"
+msgstr ""
+
+#: language/lang_config.php:38 language/lang_config.php:38
+msgid "Astrological sign in calendar description?"
+msgstr ""
+
+#: classes/Models/Month.class.php:63 classes/Models/Month.class.php:80
+#: classes/Models/Zodiac.class.php:71 classes/Models/Month.class.php:63
+#: classes/Models/Month.class.php:80 classes/Models/Zodiac.class.php:71
+msgid "Unknown"
+msgstr ""
+
+#: public_html/index.php:65 public_html/index.php:66 public_html/index.php:66
+msgid "You will no longer receive birthday cards"
+msgstr ""
+
+#: public_html/index.php:79 public_html/index.php:80 public_html/index.php:80
+msgid "You have been unsubscribed from birthday notifications"
+msgstr ""
+
+#: functions.inc:704 functions.inc:706 functions.inc:706
+msgid "To unsubscribe from these notifications, please click"
+msgstr ""
+
+#: functions.inc:705 functions.inc:707 functions.inc:707
+msgid "this link"
+msgstr ""
+
+#: language/lang_config.php:39 language/lang_config.php:39
+msgid "Send cards only to active accounts?"
+msgstr ""
+
+#: functions.inc:556 classes/Birthday.class.php:643
+#: classes/Birthday.class.php:654 functions.inc:557
+#: classes/Birthday.class.php:654 functions.inc:557
+msgid "Astrological Sign"
+msgstr ""
+
+#: classes/Birthday.class.php:359 classes/Birthday.class.php:359
+msgid "Send me birthday cards"
+msgstr ""
+
+#: classes/Models/Zodiac.class.php:37 classes/Models/Zodiac.class.php:49
+#: classes/Models/Zodiac.class.php:37 classes/Models/Zodiac.class.php:49
+msgid "Capricorn"
+msgstr ""
+
+#: classes/Models/Zodiac.class.php:38 classes/Models/Zodiac.class.php:38
+msgid "Aquarius"
+msgstr ""
+
+#: classes/Models/Zodiac.class.php:39 classes/Models/Zodiac.class.php:39
+msgid "Pisces"
+msgstr ""
+
+#: classes/Models/Zodiac.class.php:40 classes/Models/Zodiac.class.php:40
+msgid "Aries"
+msgstr ""
+
+#: classes/Models/Zodiac.class.php:41 classes/Models/Zodiac.class.php:41
+msgid "Taurus"
+msgstr ""
+
+#: classes/Models/Zodiac.class.php:42 classes/Models/Zodiac.class.php:42
+msgid "Gemini"
+msgstr ""
+
+#: classes/Models/Zodiac.class.php:43 classes/Models/Zodiac.class.php:43
+msgid "Cancer"
+msgstr ""
+
+#: classes/Models/Zodiac.class.php:44 classes/Models/Zodiac.class.php:44
+msgid "Leo"
+msgstr ""
+
+#: classes/Models/Zodiac.class.php:45 classes/Models/Zodiac.class.php:45
+msgid "Virgo"
+msgstr ""
+
+#: classes/Models/Zodiac.class.php:46 classes/Models/Zodiac.class.php:46
+msgid "Libra"
+msgstr ""
+
+#: classes/Models/Zodiac.class.php:47 classes/Models/Zodiac.class.php:47
+msgid "Scorpio"
+msgstr ""
+
+#: classes/Models/Zodiac.class.php:48 classes/Models/Zodiac.class.php:48
+msgid "Sagittarius"
+msgstr ""

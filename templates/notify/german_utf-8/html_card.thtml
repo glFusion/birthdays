@@ -1,0 +1,9 @@
+<h2>
+    Alles Gute zum Geburtstag von {site_name}!
+</h2>
+<p>
+Sie erhalten diese Nachricht, weil Sie Ihr Geburtsdatum unter {site_url} eingegeben haben.
+Sie können dort Ihre Kontoeinstellungen aktualisieren, sich abmelden, indem Sie auf klicken
+<a href="{site_url}/birthdays/index.php?nocards={uid_code}">hier</a>
+oder wenden Sie sich an {site_email}, um Hilfe zu erhalten.
+</p>

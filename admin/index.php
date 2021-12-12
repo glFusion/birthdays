@@ -2,16 +2,17 @@
 /**
  * Admin entry point for the Birthdays plugin.
  *
- * @author     Lee Garner <lee@leegarner.com>
- * @author     Mike Lynn <mike@mlynn.com>
- * @copyright  Copyright (c) 2018-2019 Lee Garner <lee@leegarner.com>
- * @package    birthdays
- * @version    0.1.2
- * @license    http://opensource.org/licenses/gpl-2.0.php
+ * @author      Lee Garner <lee@leegarner.com>
+ * @author      Mike Lynn <mike@mlynn.com>
+ * @copyright   Copyright (c) 2018-2021 Lee Garner <lee@leegarner.com>
+ * @package     birthdays
+ * @version     v1.0.0
+ * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
  */
 require_once('../../../lib-common.php');
+use Birthdays\MO;
 
 if (!plugin_ismoderator_birthdays()) {
     COM_404();
@@ -75,12 +76,12 @@ echo COM_siteFooter();
  */
 function BIRTHDAYS_adminMenu()
 {
-    global $_CONF, $LANG_BD00, $LANG01;
+    global $_CONF, $LANG01;
 
     $menu_arr = array (
         array(
             'url' => Config::get('admin_url') . '/index.php?syncall=x',
-            'text' => $LANG_BD00['sync_all'],
+            'text' => MO::_('Sync All'),
         ),
         array(
             'url' => $_CONF['site_admin_url'],
@@ -92,11 +93,12 @@ function BIRTHDAYS_adminMenu()
     $T->set_var(array(
         'version'   => Config::get('pi_version'),
         'logo_url' => plugin_geticon_birthdays(),
+        'lang_pi_title' => MO::_('Birthdays'),
     ) );
     $retval = $T->parse('', 'title');
     $retval .= ADMIN_createMenu(
         $menu_arr,
-        $LANG_BD00['hlp_sync_all'],
+        MO::_('Sync All: Re-saves all birthday entries so other plugins will update their records if they use data from this plugin.'),
         plugin_geticon_birthdays()
     );
     return $retval;

@@ -11,7 +11,9 @@
  * @filesource
  */
 namespace Birthdays;
-use \glFusion\FieldList;
+use Birthdays\Models\Month;
+use Birthdays\Models\Zodiac;
+//use \glFusion\FieldList;
 
 
 /**
@@ -45,6 +47,10 @@ class Birthday
     /** Birth Day.
      * @var integer */
     private $day = 0;
+
+    /** Flag to indicate that cards should be sent to this user.
+     * @var boolean */
+    private $sendcards = 1;
 
 
     /**
@@ -88,7 +94,7 @@ class Birthday
     {
         if (!is_array($row)) return;
 
-        foreach (array('uid', 'month', 'day') as $key) {
+        foreach (array('uid', 'month', 'day', 'sendcards') as $key) {
             if (isset($row[$key])) {
                 $this->$key = (int)$row[$key];
             }
@@ -116,7 +122,7 @@ class Birthday
             WHERE uid = $uid"
         );
         $row = DB_fetchArray($result, false);
-        $this->SetVars($row);
+        $this->setVars($row);
     }
 
 
@@ -126,12 +132,16 @@ class Birthday
      * @param   array   $vals   Optional array of values to set
      * @return  boolean     True on success, False on error
      */
-    public function Save($vals = NULL)
+    public function Save(?array $vals = NULL) : bool
     {
         global $_TABLES;
 
+        $orig_month = $this->month;
+        $orig_day = $this->day;
+        $orig_sendcards = $this->sendcards;
+
         if (is_array($vals)) {
-            $this->SetVars($vals);
+            $this->setVars($vals);
         }
 
         // If "0" is entered for either month or day, consider this
@@ -142,20 +152,30 @@ class Birthday
             return true;
         }
 
+        // If the date wasn't changed, nothing to do.
+        if ($this->month == $orig_month && $this->day == $orig_day) {
+            if ($this->sendcards == $orig_sendcards) {
+                return true;
+            }
+            $vals['call_itemsaved'] = true;
+        }
+
         $sql = "INSERT INTO {$_TABLES['birthdays']} SET
                     uid = {$this->uid},
                     month = {$this->month},
-                    day = {$this->day}
+                    day = {$this->day},
+                    sendcards = {$this->sendcards}
                 ON DUPLICATE KEY UPDATE
                     month = {$this->month},
-                    day = {$this->day}";
+                    day = {$this->day},
+                    sendcards = {$this->sendcards}";
         //echo $sql;die;
         $res = DB_query($sql);
         if (!DB_error()) {
             self::clearCache('range');
             // Put this in cache to save a lookup in plugin_getiteminfo
             self::setCache('uid_' . $this->uid, $this);
-            if (!isset($vals['call_itemsaved'])) {
+            if (!isset($vals['call_itemsaved']) || !$vals['call_itemsaved']) {
                 PLG_itemSaved($this->uid, Config::PI_NAME);
             }
             return true;
@@ -314,11 +334,12 @@ class Birthday
      */
     public function editForm($tpl = 'edit')
     {
-        global $LANG_MONTH, $LANG_BD00;
+        global $_USER;
 
+        $bday = self::getInstance($this->uid);
+        $opt = self::selectMonth($this->month, _('None'));
         $T = new \Template(Config::path_template());
         $T->set_file('edit', $tpl . '.thtml');
-        $opt = self::selectMonth($this->month, $LANG_BD00['none']);
         $T->set_var('month_select', $opt);
         $opt = '';
         for ($i = 0; $i < 32; $i++) {
@@ -326,11 +347,19 @@ class Birthday
             if ($i > 0) {
                 $opt .= "<option id=\"bday_day_$i\" $sel value=\"$i\">$i</option>";
             } else {
-                $opt .= "<option $sel value=\"$i\">{$LANG_BD00['none']}</option>";
+                $opt .= "<option $sel value=\"$i\">" . _('None') . "</option>";
             }
         }
-        $T->set_var('day_select', $opt);
-        $T->set_var('month', $this->month);
+        $T->set_var(array(
+            'day_select' => $opt,
+            'month' => $this->month,
+            'lang_my_birthday' => _('My Birthday'),
+            'lang_today' => _('Today'),
+            'rnd' => rand(1,1000),
+            'lang_send_cards' => _('Send me birthday cards'),
+            'cards_chk' => $this->sendcards ? 'checked="checked"' : '',
+            'is_current_user' => $this->uid == $_USER['uid'],
+        ) );
         $T->parse('output', 'edit');
         return $T->finish($T->get_var('output'));
     }
@@ -364,14 +393,12 @@ class Birthday
      */
     public static function selectMonth($thismonth = 0, $all_prompt = '')
     {
-        global $LANG_BD00, $LANG_MONTH;
-
-        if ($all_prompt == '') $all_prompt = $LANG_BD00['all'];
+        if ($all_prompt == '') $all_prompt = _('All');
         $opt = '';
         for ($i = 0; $i < 13; $i++) {
             $sel = $thismonth == $i ? 'selected="selected"' : '';
             if ($i > 0) {
-                $opt .= "<option $sel value=\"$i\">{$LANG_MONTH[$i]}</option>";
+                $opt .= "<option $sel value=\"$i\">" . Month::getName($i) . "</option>";
             } else {
                 $opt .= "<option $sel value=\"$i\">{$all_prompt}</option>";
             }
@@ -444,8 +471,7 @@ class Birthday
         static $canView = NULL;
 
         if ($canView === NULL) {
-            $canView = SEC_hasRights('birthdays.view,birthdays.admin') ||
-                SEC_inGroup(Config::get('grp_access'));
+            $canView = SEC_hasRights('birthdays.view,birthdays.admin');
         }
         return $canView;
     }
@@ -605,27 +631,35 @@ class Birthday
      */
     public static function publicList($filter_month=0)
     {
-        global $_TABLES, $LANG_BD00;
+        global $_TABLES;
 
         $retval = '';
 
         $header_arr = array(
             array(
-                'text' => $LANG_BD00['name'],
+                'text' => _('Name'),
                 'field' => 'fullname',
                 'sort' => false,
                 'align' => '',
             ),
             array(
-                'text' => $LANG_BD00['birthday'],
+                'text' => _('Birthday'),
                 'field' => 'birthday',
                 'sort' => true,
                 'align' => 'center',
             ),
         );
+        if (Config::get('zodiac_in_dscp')) {
+            $header_arr[] = array(
+                'text' => _('Astrological Sign'),
+                'field' => 'zodiac',
+                'sort' => false,
+                'align' => 'left',
+            );
+        }
         if (Config::get('enable_subs')) {
             $header_arr[] =  array(
-                'text' => $LANG_BD00['subscribe'],
+                'text' => _('Subscribe'),
                 'field' => 'subscribe',
                 'sort' => false,
                 'align' => 'center',
@@ -636,7 +670,7 @@ class Birthday
         $text_arr = array(
             'has_menu'     => false,
             'has_extras'   => false,
-            'title'        => $LANG_BD00['pi_title'],
+            'title'        => _('Birthdays'),
             'form_url'     => Config::get('url') . '/index.php?filter_month=' . $filter_month,
             'help_url'     => ''
         );
@@ -676,29 +710,29 @@ class Birthday
      */
     public static function adminList()
     {
-        global $LANG_ADMIN, $LANG_BD00, $_TABLES, $_CONF;
+        global $LANG_ADMIN, $_TABLES, $_CONF;
 
         $retval = '';
         $form_arr = array();
 
         $header_arr = array(
             array(
-                'text' => $LANG_BD00['user_id'],
+                'text' => _('User ID'),
                 'field' => 'uid',
                 'sort' => true,
             ),
             array(
-                'text' => $LANG_BD00['name'],
+                'text' => _('Name'),
                 'field' => 'fullname',
                 'sort' => false,
             ),
             array(
-                'text'  => $LANG_BD00['birthday'],
+                'text'  => _('Birthday'),
                 'field' => 'birthday',
                 'sort'  => false,
             ),
             array(
-                'text' => $LANG_ADMIN['delete'],
+                'text' => _('Delete'),
                 'field' => 'delete',
                 'sort' => false,
                 'align' => 'center',
@@ -715,8 +749,14 @@ class Birthday
             'has_extras' => false,
             'form_url' => Config::get('admin_url') . '/index.php',
         );
-        $options = array('chkdelete' => 'true', 'chkfield' => 'uid');
-        $defsort_arr = array('field' => 'uid', 'direction' => 'asc');
+        $options = array(
+            'chkdelete' => 'true',
+            'chkfield' => 'uid',
+        );
+        $defsort_arr = array(
+            'field' => 'uid',
+            'direction' => 'asc',
+        );
         $query_arr = array(
             'table' => 'birthdays',
             'sql' => $sql,
@@ -744,7 +784,7 @@ class Birthday
      */
     public static function getListField($fieldname, $fieldvalue, $A, $icon_arr)
     {
-        global $_CONF, $LANG_BD00, $_USER;
+        global $_CONF, $_USER;
 
         $retval = '';
 
@@ -757,18 +797,22 @@ class Birthday
             $retval .= \Birthdays\Birthday::formatDate($A);
             break;
 
+        case 'zodiac':
+            $retval .= Zodiac::getSign($A['month'], $A['day']);
+            break;
+
         case 'subscribe':
             if (PLG_isSubscribed('birthdays', 'birthday_sub', $A['uid'], $_USER['uid'])) {
-                $text = $LANG_BD00['unsubscribe'];
+                $tooltip = _('Click to Unsubscribe');
                 $current_val = 1;
                 $chk = 'checked="checked"';
             } else {
-                $text = $LANG_BD00['subscribe'];
+                $tooltip = _('Click to Subscribe');
                 $current_val = 0;
                 $chk = '';
             }
             $retval = '<input type="checkbox" value="1" ' . $chk .
-                ' data-uk-tooltip title="' . $LANG_BD00['click_to'] . $text .
+                ' data-uk-tooltip title="' . $tooltip .
                 '" onclick="javascript:BDAY_toggleSub(this, ' . $A['uid'] . ', ' . $current_val . ');" />';
             break;
 
@@ -783,16 +827,68 @@ class Birthday
                 '<i class="uk-icon uk-icon-remove uk-text-danger"></i>',
                 Config::get('admin_url') . "/index.php?delitem={$A['uid']}",
                 array(
-                     'onclick' => "return confirm('{$LANG_BD00['conf_del']}');",
+                     'onclick' => "return confirm('" . _('Do you really want to delete this item?') . "');",
                 )
             );
             break;
-        
+
         default:
             $retval = $fieldvalue;
             break;
         }
         return $retval;
+    }
+
+
+    /**
+     * Send a card to the current birthday user.
+     *
+     * @return  void
+     */
+    public function sendCard() : void
+    {
+        global $_TABLES;
+
+        if (!$this->sendcards) {
+            // User has unsubscribed, do nothing.
+            return;
+        }
+
+        // Borrow the email format function to create the message
+        $msg = plugin_subscription_email_format_birthdays('birthday_card', '', $this->uid, '');
+        $name = COM_getDisplayName($this->uid);
+        $email = DB_getItem($_TABLES['users'], 'email', "uid = $this->uid");
+        if (empty($email)) {
+            return;    // need a valid email
+        }
+        $msgData = array(
+            'htmlmessage'   => $msg['msghtml'],
+            'textmessage'   => $msg['msgtext'],
+            'subject'       => $msg['subject'],
+            'from'          => NULL,
+            'to'            => array(
+                'name'  => $name,
+                'email' => $email,
+            ),
+        );
+        COM_emailNotification($msgData);
+        Logger::Audit("Sent card to user {$this->uid} ({$name})");
+    }
+
+
+    /**
+     * Unsubscribe this user from receiving birthday cards.
+     *
+     * @return  boolean     True if unsubscribed, False if not
+     */
+    public function unsubCard() : bool
+    {
+        global $_TABLES;
+
+        $sql = "UPDATE {$_TABLES['birthdays']} SET sendcards = 0 WHERE uid = {$this->uid}";
+        DB_query($sql, 1);
+        Logger::Audit("User {$this->uid} unsubscribed from birthday cards");
+        return true;
     }
 
 }

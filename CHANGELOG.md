@@ -1,5 +1,16 @@
 # Changelog for the Birthdays plugin
 
+## Version 1.1.0
+Release TBD
+- Implement logging of birthday cards.
+- Implement phpGettext class.
+- Optionally don't send cards to non-active accounts.
+- Add user option to receive cards or not.
+
+## Version 1.0.2
+Release 2021-10-31
+- Better description in events, allow zodiac sign inclusion.
+
 ## Version 1.0.1
 Release 2020-09-12
 - Fix call to glFusion 2.0 cache if GVERSION < 2.0

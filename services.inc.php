@@ -31,7 +31,7 @@ use Birthdays\Config;
  */
 function service_profilefields_birthdays($args, &$output, &$svc_msg)
 {
-    global $LANG_BD00, $_TABLES;
+    global $_TABLES;
 
     $pi = Config::PI_NAME;
     $tbl = $_TABLES['birthdays'];
@@ -45,7 +45,7 @@ function service_profilefields_birthdays($args, &$output, &$svc_msg)
         'names' => array(
             $pi . '_birthday' => array(
                 'field' => "{$tbl}.day",
-                'title' => $LANG_BD00['birthday'],
+                'title' => _('Birthday'),
             ),
         ),
 

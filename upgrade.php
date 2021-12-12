@@ -26,7 +26,7 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
 {
     global $_TABLES, $_CONF, $_PLUGINS, $_PLUGIN_INFO;;
 
-    $installed_ver = $_PLUGIN_INFO[Config::PI_NAME)]['pi_version'];
+    $installed_ver = $_PLUGIN_INFO[Config::PI_NAME]['pi_version'];
     $code_ver = plugin_chkVersion_birthdays();
     $current_ver = $installed_ver;
 
@@ -131,8 +131,7 @@ function BIRTHDAYS_do_set_version($ver)
             pi_version = '$ver',
             pi_gl_version = '" . Config::get('gl_version') . "',
             pi_homepage = '" . Config::get('pi_url') . "'
-        WHERE pi_name = '" . Config::PI_NAME;
-
+        WHERE pi_name = '" . Config::PI_NAME . "'";
     $res = DB_query($sql, 1);
     if (DB_error()) {
         COM_errorLog("Error updating the " . Config::get('pi_display_name') .

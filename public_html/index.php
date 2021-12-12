@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2018-2020 Lee Garner <lee@leegarner.com>
  * @copyright   Copyright (c) 2002 Mike Lynn <mike@mlynn.com>
  * @package     birthdays
- * @version     v0.1.0
+ * @version     v1.0.0
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
@@ -19,12 +19,12 @@ if (!\Birthdays\Birthday::canView()) {
     COM_404();
     exit;
 }
-
+use Birthdays\MO;
 USES_lib_admin();
 
 // MAIN
 
-$expected = array('list', 'addbday', 'mode');
+$expected = array('list', 'addbday', 'mode', 'nocards', 'unsub');
 foreach($expected as $provided) {
     // Get requested action and page from GET or POST variables.
     // Most could come in either way.  They are not sanitized, so they must
@@ -53,9 +53,32 @@ case 'addbday':
         $bday->Save(array(
             'month' => $_POST['birthday_month'],
             'day' => $_POST['birthday_day'],
+            'sendcards' => isset($_POST['sendcards']) ? 1 : 0,
         ) );
         echo COM_refresh($_CONF['site_url'] . '/birthdays/index.php');
     }
+    break;
+case 'nocards':
+    $uid = (int)Birthdays\Models\User::decrypt($actionval);
+    if ($uid > 1) {
+        Birthdays\Birthday::getInstance($uid)->unsubCard();
+    }
+    COM_setMsg(MO::_('You will no longer receive birthday cards'));
+    COM_refresh($_CONF['site_url'] . '/index.php');
+    break;
+case 'unsub':
+    // Unsubscribe from all birthday notifications
+    $uid = Birthdays\Models\User::decrypt($actionval);
+    if ($uid > 1) {
+        $sql = "DELETE FROM {$_TABLES['subscriptions']}
+            WHERE type = 'birthdays'
+            AND category = 'birthday_sub'
+            AND uid = $uid";
+        DB_query($sql, 1);
+        Birthdays\Logger::Audit("User {$uid} unsubscribed from birthday notifications");
+    }
+    COM_setMsg(MO::_('You have been unsubscribed from birthday notifications'));
+    COM_refresh($_CONF['site_url'] . '/index.php');
     break;
 }
 
@@ -66,14 +89,15 @@ $T->set_var(array(
     'header'    => Config::get('pi_display_name'),
     'pi_name'   => Config::PI_NAME,
     'logo'      => plugin_geticon_birthdays(),
+    'lang_sel_month' => MO::_('Select Month'),
+    'lang_pi_title' => MO::_('Birthdays'),
     'my_form'   => COM_isAnonUser() ? '' : \Birthdays\Birthday::getInstance($_USER['uid'])->editForm('edit_index'),
     'month_select' => \Birthdays\Birthday::selectMonth($filter_month),
 ) );
+
 $T->parse('output','header');
 $display .= $T->finish($T->get_var('output'));
-$display .= \Birthdays\Birthday::publicList($filter_month);
+$display .= Birthdays\Birthday::publicList($filter_month);
 $display .= COM_siteFooter();
 echo $display;
 exit;
-
-?>

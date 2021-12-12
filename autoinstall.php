@@ -23,6 +23,7 @@ global $_DB_dbms;
 require_once __DIR__ . '/functions.inc';
 require_once __DIR__ . '/birthdays.php';
 require_once __DIR__ . "/sql/{$_DB_dbms}_install.php";
+use Birthdays\MO;
 use Birthdays\Config;
 
 //  Plugin installation options
@@ -48,7 +49,7 @@ $INSTALL_plugin[Config::PI_NAME] = array(
     array(
         'type'  => 'block',
         'name'  => 'birthdays_month',
-        'title' => $LANG_BD00['birthdays_month'],
+        'title' => MO::_('Birthdays This Month'),
         'phpblockfn' => 'phpblock_birthdays_month',
         'block_type' => 'phpblock',
         'is_enabled' => 0,
@@ -58,7 +59,7 @@ $INSTALL_plugin[Config::PI_NAME] = array(
     array(
         'type'  => 'block',
         'name'  => 'birthdays_week',
-        'title' => $LANG_BD00['birthdays_week'],
+        'title' => MO::_('Birthdays This Week'),
         'phpblockfn' => 'phpblock_birthdays_week',
         'block_type' => 'phpblock',
         'is_enabled' => 0,
@@ -92,13 +93,13 @@ $INSTALL_plugin[Config::PI_NAME] = array(
         'type' => 'mapping',
         'findgroup' => 'Logged-In Users',   // all users can receive cards
         'feature' => 'card_feature_id',
-        'log' => 'Adding card feature to the users group',
+        'log' => 'Adding card feature to the logged-in users group',
     ),
     array(
         'type' => 'mapping',
         'findgroup' => 'Logged-In Users',   // all users can receive cards
         'feature' => 'view_feature_id',
-        'log' => 'Adding view feature to the users group',
+        'log' => 'Adding view feature to the logged-in users group',
     ),
 );
 
