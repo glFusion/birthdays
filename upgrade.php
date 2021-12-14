@@ -24,7 +24,9 @@ use Birthdays\Config;
  */
 function BIRTHDAYS_do_upgrade($dvlp = false)
 {
-    global $_TABLES, $_CONF, $_PLUGINS, $_PLUGIN_INFO;;
+    global $_TABLES, $_CONF, $_PLUGINS, $_PLUGIN_INFO, $BD_UPGRADE;
+
+    include_once __DIR__ . '/sql/mysql_install.php';
 
     $installed_ver = $_PLUGIN_INFO[Config::PI_NAME]['pi_version'];
     $code_ver = plugin_chkVersion_birthdays();
@@ -59,6 +61,45 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
 
     if (!COM_checkVersion($current_ver, '1.1.0')) {
         $current_ver = '1.1.0';
+        // Add the admin feature if not already done.
+        $ft_id = (int)DB_getItem($_TABLES['features'], 'ft_id', "ft_name = 'birthdays.admin'");
+        if ($ft_id == 0) {
+            $sql = "INSERT INTO {$_TABLES['features']} (ft_id, ft_name, ft_descr)
+                VALUES (0, 'birthdays.admin', 'Full access to the Birthdays plugin')";
+            $res = DB_query($sql);
+            if ($res) {
+                $ft_id = DB_insertId();
+                $sql = "INSERT INTO {$_TABLES['access']} (acc_ft_id, acc_grp_id)
+                    VALUES ($ft_id, 1)";
+                $res = DB_query($sql, 1);
+            }
+        }
+        // Add the card feature if not already done.
+        $ft_id = (int)DB_getItem($_TABLES['features'], 'ft_id', "ft_name = 'birthdays.card'");
+        if ($ft_id == 0) {
+            $sql = "INSERT INTO {$_TABLES['features']} (ft_id, ft_name, ft_descr)
+                VALUES (0, 'birthdays.card', 'Can receive birthday cards')";
+            $res = DB_query($sql);
+            if ($res) {
+                $ft_id = DB_insertId();
+                $sql = "INSERT INTO {$_TABLES['access']} (acc_ft_id, acc_grp_id)
+                    VALUES ($ft_id, 13)";
+                $res = DB_query($sql, 1);
+            }
+        }
+        // Add the view feature if not already done.
+        $ft_id = (int)DB_getItem($_TABLES['features'], 'ft_id', "ft_name = 'birthdays.view'");
+        if ($ft_id == 0) {
+            $sql = "INSERT INTO {$_TABLES['features']} (ft_id, ft_name, ft_descr)
+                VALUES (0, 'birthdays.view', 'View access to the Birthdays plugin')";
+            $res = DB_query($sql);
+            if ($res) {
+                $ft_id = DB_insertId();
+                $sql = "INSERT INTO {$_TABLES['access']} (acc_ft_id, acc_grp_id)
+                    VALUES ($ft_id, 13)";
+                $res = DB_query($sql, 1);
+            }
+        }
         if (!BIRTHDAYS_do_upgrade_sql($current_ver, $dvlp)) return false;
         if (!BIRTHDAYS_do_set_version($current_ver)) return false;
     }
@@ -100,8 +141,10 @@ function BIRTHDAYS_do_upgrade_sql($version, $ignore_error=false)
     global $_TABLES, $BD_UPGRADE;
 
     // If no sql statements passed in, return success
-    if (!isset($BD_UPGRADE[$version]) || !is_array($BD_UPGRADE[$version]))
+    if (!isset($BD_UPGRADE[$version]) || !is_array($BD_UPGRADE[$version])) {
+        COM_errorLog("BD_UPGRADE[$version] doesn't exist");
         return true;
+    }
 
     // Execute SQL now to perform the upgrade
     COM_errorLog("--- Updating Birthdays to version $version", 1);
