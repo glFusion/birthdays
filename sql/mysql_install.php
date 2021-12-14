@@ -11,7 +11,7 @@
  * @filesource
  */
 
-global $BD_UPGRADE;
+global $_SQL, $BD_UPGRADE;
 
 $_SQL = array(
 'birthdays' => "CREATE TABLE {$_TABLES['birthdays']} (

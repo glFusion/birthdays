@@ -24,7 +24,9 @@ use Birthdays\Config;
  */
 function BIRTHDAYS_do_upgrade($dvlp = false)
 {
-    global $_TABLES, $_CONF, $_PLUGINS, $_PLUGIN_INFO;;
+    global $_TABLES, $_CONF, $_PLUGINS, $_PLUGIN_INFO, $BD_UPGRADE;
+
+    include_once __DIR__ . '/sql/mysql_install.php';
 
     $installed_ver = $_PLUGIN_INFO[Config::PI_NAME]['pi_version'];
     $code_ver = plugin_chkVersion_birthdays();
@@ -139,8 +141,10 @@ function BIRTHDAYS_do_upgrade_sql($version, $ignore_error=false)
     global $_TABLES, $BD_UPGRADE;
 
     // If no sql statements passed in, return success
-    if (!isset($BD_UPGRADE[$version]) || !is_array($BD_UPGRADE[$version]))
+    if (!isset($BD_UPGRADE[$version]) || !is_array($BD_UPGRADE[$version])) {
+        COM_errorLog("BD_UPGRADE[$version] doesn't exist");
         return true;
+    }
 
     // Execute SQL now to perform the upgrade
     COM_errorLog("--- Updating Birthdays to version $version", 1);
