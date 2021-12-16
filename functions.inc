@@ -4,10 +4,10 @@
  *
  * @author      Lee Garner <lee@leegarner.com>
  * @author      Mike Lynn <mike@mlynn.com>
- * @copyright   Copyright (c) 2018-2020 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018-2021 Lee Garner <lee@leegarner.com>
  * @copyright   Copyright (c) 2002 Mike Lynn <mike@mlynn.com>
  * @package     birthdays
- * @version     v1.0.0
+ * @version     v1.1.1
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
@@ -486,7 +486,11 @@ function plugin_user_login_birthdays($uid)
  */
 function plugin_ismoderator_birthdays()
 {
-    return SEC_hasRights('birthdays.admin');
+    static $isMod = NULL;
+    if ($isMod === NULL ) {
+        $isMod = SEC_hasRights('birthdays.admin');
+    }
+    return $isMod;
 }
 
 
@@ -641,9 +645,14 @@ function plugin_runScheduledTask_birthdays()
         }
 
         $U = new Birthdays\Models\User($BDay->getUid());
+        if (Config::get('grp_cards') > 0) {
+            $hasRight = SEC_inGroup(Config::get('grp_cards'), $BDay->getUid());
+        } else {
+            $hasRight = $U->hasRight('birthdays.card');
+        }
         if (
-            (!Config::get('cards_only_active') || $U->isActive()) &&
-            $U->hasRight('birthdays.card')
+            $hasRight &&
+            (!Config::get('cards_only_active') || $U->isActive())
         ) {
             $BDay->sendCard();
         }
@@ -782,14 +791,21 @@ function service_getBirthdays_birthdays($args, &$output, &$svc_msg)
 }
 
 
-function BD_configlist_groups()
+/**
+ * Get a group list for the configuration elements.
+ * Skip `All Users` since only registered users can submit birthdays.
+ * A value of `0` indicates that the features will be used for access instead.
+ *
+ * @return  arrya       Array of name=>id pairs
+ */
+function BD_configlist_groups() : array
 {
     global $_TABLES;
 
     static $A = NULL;
     if ($A === NULL) {
         $A = array(
-            '-- ' . MO::_('None') . ' --' => 0,
+            '-- ' . MO::_('Feature-Controlled') . ' --' => 0,
         );
 
         $sql = "SELECT grp_id, grp_name FROM {$_TABLES['groups']}
@@ -797,6 +813,11 @@ function BD_configlist_groups()
         $res = DB_query($sql);
         if ($res && DB_numRows($res) > 0) {
             while ($row = DB_fetchArray($res, false)) {
+                if ($row['grp_id'] == 2) {
+                    // All Users group is meaningless, only registered users
+                    // can submit birthdays
+                    continue;
+                }
                 $row['grp_name'] = htmlspecialchars($row['grp_name']);
                 $A[$row['grp_name']] = $row['grp_id'];
             }
@@ -804,6 +825,7 @@ function BD_configlist_groups()
     }
     return $A;
 }
+
 
 /**
  * Create an array of groups for the configmanager.

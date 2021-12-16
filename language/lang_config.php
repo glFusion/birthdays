@@ -34,6 +34,7 @@ $LANG_confignames['birthdays'] = array(
     'enable_subs' => MO::_('Allow subscriptions to birthday announcements?'),
     'enable_cards' => MO::_('Enable birthday cards?'),
     'grp_access' => MO::_('Group allowed to view birthdays'),
+    'grp_cards' => MO::_('Group allowed to receive cards'),
     'show_upcoming' => MO::_('Show in upcoming events (evList)?'),
     'zodiac_in_dscp' => MO::_('Astrological sign in calendar description?'),
     'cards_only_active' => MO::_('Send cards only to active accounts?'),
