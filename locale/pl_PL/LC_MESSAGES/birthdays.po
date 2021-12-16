@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-08 16:05-0800\n"
+"POT-Creation-Date: 2021-12-16 10:18-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,6 +45,7 @@ msgstr "Wszystko"
 #: classes/Birthday.class.php:624 classes/Birthday.class.php:701
 #: classes/Birthday.class.php:629 classes/Birthday.class.php:714
 #: classes/Birthday.class.php:640 classes/Birthday.class.php:725
+#: classes/Birthday.class.php:646 classes/Birthday.class.php:731
 msgid "Name"
 msgstr "Nazwa"
 
@@ -56,7 +57,8 @@ msgstr "Nazwa"
 #: classes/Birthday.class.php:706 functions.inc:268
 #: classes/Birthday.class.php:635 classes/Birthday.class.php:719
 #: classes/Birthday.class.php:646 classes/Birthday.class.php:730
-#: functions.inc:269
+#: functions.inc:269 classes/Birthday.class.php:652
+#: classes/Birthday.class.php:736
 msgid "Birthday"
 msgstr "Urodziny"
 
@@ -64,6 +66,7 @@ msgstr "Urodziny"
 #: classes/Birthday.class.php:629 classes/Birthday.class.php:773
 #: classes/Birthday.class.php:636 classes/Birthday.class.php:638
 #: classes/Birthday.class.php:651 classes/Birthday.class.php:662
+#: classes/Birthday.class.php:668
 msgid "Subscribe"
 msgstr "Subskrybuj"
 
@@ -76,24 +79,27 @@ msgstr "Subskrybuj"
 #: functions.inc:67 functions.inc:82 functions.inc:100
 #: classes/Birthday.class.php:662 public_html/index.php:92
 #: classes/Birthday.class.php:673 public_html/index.php:93
+#: classes/Birthday.class.php:679
 msgid "Birthdays"
 msgstr "Urodziny"
 
 #: classes/Birthday.class.php:685 classes/Birthday.class.php:687
 #: classes/Birthday.class.php:694 classes/Birthday.class.php:696
 #: classes/Birthday.class.php:709 classes/Birthday.class.php:720
+#: classes/Birthday.class.php:726
 msgid "User ID"
 msgstr "Identyfikator użytkownika"
 
 #: classes/Birthday.class.php:767 functions.inc:727
 #: classes/Birthday.class.php:769 functions.inc:745 functions.inc:737
-#: functions.inc:694 functions.inc:703 functions.inc:705
+#: functions.inc:694 functions.inc:703 functions.inc:705 functions.inc:714
 msgid "Unsubscribe"
 msgstr "Wypisz się"
 
 #: classes/Birthday.class.php:784 classes/Birthday.class.php:786
 #: classes/Birthday.class.php:793 classes/Birthday.class.php:802
 #: classes/Birthday.class.php:819 classes/Birthday.class.php:830
+#: classes/Birthday.class.php:836
 msgid "Do you really want to delete this item?"
 msgstr "Czy na pewno chcesz usunąć ten element?"
 
@@ -149,7 +155,7 @@ msgid "Happy Birthday, %s!"
 msgstr "Wszystkiego najlepszego, %s!"
 
 #: functions.inc:573 functions.inc:591 functions.inc:581 functions.inc:546
-#: functions.inc:548 functions.inc:549
+#: functions.inc:548 functions.inc:549 functions.inc:553
 #, php-format
 msgid "%s's Birthday"
 msgstr "Urodziny %sa"
@@ -159,7 +165,7 @@ msgid "To unsubscribe from these notifications, please click this link"
 msgstr "Aby zrezygnować z otrzymywania tych powiadomień, kliknij ten link"
 
 #: functions.inc:729 functions.inc:747 functions.inc:739 functions.inc:696
-#: functions.inc:706 functions.inc:708
+#: functions.inc:706 functions.inc:708 functions.inc:717
 msgid ""
 "This email was generated automatically. Please do not reply to this email."
 msgstr ""
@@ -201,17 +207,20 @@ msgstr "Grupa może wyświetlać urodziny"
 
 #: language/lang_config.php:41 language/lang_config.php:42
 #: language/lang_config.php:43 language/lang_config.php:44
+#: language/lang_config.php:45
 msgid "True"
 msgstr "True"
 
 #: language/lang_config.php:42 language/lang_config.php:43
 #: language/lang_config.php:44 language/lang_config.php:45
+#: language/lang_config.php:46
 msgid "False"
 msgstr "Fałsz"
 
 #: classes/Birthday.class.php:702 classes/Birthday.class.php:700
 #: classes/Birthday.class.php:709 classes/Birthday.class.php:711
 #: classes/Birthday.class.php:724 classes/Birthday.class.php:735
+#: classes/Birthday.class.php:741
 msgid "Delete"
 msgstr "Usuń"
 
@@ -265,13 +274,13 @@ msgstr "grudzień"
 
 #: classes/Birthday.class.php:767 classes/Birthday.class.php:776
 #: classes/Birthday.class.php:778 classes/Birthday.class.php:795
-#: classes/Birthday.class.php:806
+#: classes/Birthday.class.php:806 classes/Birthday.class.php:812
 msgid "Click to Unsubscribe"
 msgstr "Kliknij, aby anulować subskrypcję"
 
 #: classes/Birthday.class.php:771 classes/Birthday.class.php:780
 #: classes/Birthday.class.php:782 classes/Birthday.class.php:799
-#: classes/Birthday.class.php:810
+#: classes/Birthday.class.php:810 classes/Birthday.class.php:816
 msgid "Click to Subscribe"
 msgstr "Kliknij, aby subskrybować"
 
@@ -281,21 +290,23 @@ msgid "Today"
 msgstr "Dzisiaj"
 
 #: functions.inc:745 functions.inc:549 functions.inc:702 functions.inc:551
-#: functions.inc:713 functions.inc:552 functions.inc:715
+#: functions.inc:713 functions.inc:552 functions.inc:715 functions.inc:556
+#: functions.inc:724
 #, php-format
 msgid "It's %s's birthday today!"
 msgstr "Dzisiaj %s ma urodziny!"
 
 #: functions.inc:749 functions.inc:706 functions.inc:718 functions.inc:720
+#: functions.inc:729
 #, php-format
 msgid "Happy Birthday from %s"
 msgstr "Wszystkiego najlepszego od %s"
 
-#: language/lang_config.php:37
+#: language/lang_config.php:37 language/lang_config.php:38
 msgid "Show in upcoming events (evList)?"
 msgstr "Pokazać w nadchodzących wydarzeniach (evList)?"
 
-#: language/lang_config.php:38
+#: language/lang_config.php:38 language/lang_config.php:39
 msgid "Astrological sign in calendar description?"
 msgstr "Znak astrologiczny w opisie kalendarza?"
 
@@ -312,27 +323,27 @@ msgstr "Nie będziesz już otrzymywać kartek urodzinowych"
 msgid "You have been unsubscribed from birthday notifications"
 msgstr "Zostałeś wypisany z powiadomień o urodzinach"
 
-#: functions.inc:704 functions.inc:706
+#: functions.inc:704 functions.inc:706 functions.inc:715
 msgid "To unsubscribe from these notifications, please click"
 msgstr "Aby zrezygnować z otrzymywania tych powiadomień, kliknij"
 
-#: functions.inc:705 functions.inc:707
+#: functions.inc:705 functions.inc:707 functions.inc:716
 msgid "this link"
 msgstr "ten link"
 
-#: language/lang_config.php:39
+#: language/lang_config.php:39 language/lang_config.php:40
 msgid "Send cards only to active accounts?"
 msgstr "Wysyłać karty tylko do aktywnych kont?"
 
 #: functions.inc:556 classes/Birthday.class.php:643
 #: classes/Birthday.class.php:654 functions.inc:557
+#: classes/Birthday.class.php:660 functions.inc:561
 msgid "Astrological Sign"
 msgstr "Znak astrologiczny"
 
 #: classes/Birthday.class.php:359
-#, fuzzy
 msgid "Send me birthday cards"
-msgstr "Włączyć kartki urodzinowe?"
+msgstr "Wyślij mi kartki urodzinowe"
 
 #: classes/Models/Zodiac.class.php:37 classes/Models/Zodiac.class.php:49
 msgid "Capricorn"
@@ -381,3 +392,11 @@ msgstr "Skorpion"
 #: classes/Models/Zodiac.class.php:48
 msgid "Sagittarius"
 msgstr "Strzelec"
+
+#: functions.inc:808
+msgid "Feature-Controlled"
+msgstr "Kontrolowane przez funkcję"
+
+#: language/lang_config.php:37
+msgid "Group allowed to receive cards"
+msgstr "Grupa może otrzymywać karty"

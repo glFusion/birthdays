@@ -1,5 +1,9 @@
 # Changelog for the Birthdays plugin
 
+## Version 1.1.1
+Release 2021-12-16
+- Add group-based access to view and cards as an override to features.
+
 ## Version 1.1.0
 Release 2021-12-12
 - Implement logging of birthday cards.

@@ -466,12 +466,18 @@ class Birthday
      *
      * @return  boolean     True if access is allowed, False if not.
      */
-    public static function canView()
+    public static function canView() : bool
     {
         static $canView = NULL;
 
         if ($canView === NULL) {
-            $canView = SEC_hasRights('birthdays.view,birthdays.admin');
+            if (plugin_ismoderator_birthdays()) {
+                $canView = true;
+            } elseif (Config::get('grp_access') > 0) {
+                $canView = SEC_inGroup(Config::get('grp_access'));
+            } else {
+                $canView = SEC_hasRights('birthdays.view,birthdays.admin');
+            }
         }
         return $canView;
     }
