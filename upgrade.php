@@ -204,6 +204,11 @@ function BIRTHDAYS_remove_old_files()
         __DIR__ => array(
             'classes/Date_Calc.class.php',
             'templates/phpblock_week.thtml',
+            // v1.1.2
+            'templates/notify/html_inner.thtml',
+            'templates/notify/html_outer.thtml',
+            'templates/notify/notifymessage_html.thtml',
+            'templates/notify/text.thtml',
         ),
         // public_html/birthdays
         $_CONF['path_html'] . 'birthdays' => array(

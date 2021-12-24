@@ -1,4 +1,8 @@
 <h2>
 It's {firstname}'s birthday today!
 </h2>
-
+<p>
+You're receiving this message because you've subscribed to birthday notifications at {site_url}.
+You can update your subscriptions at <a href="{site_url}/birthdays/index.php">{site_url}/birthdays/index.php</a>, or unsubscribe from all birthday notifications by clicking
+<a href="{site_url}/birthdays/index.php?unsub={uid_code}">here</a>.
+</p>

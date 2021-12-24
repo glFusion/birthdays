@@ -9,7 +9,7 @@
  * @copyright   Copyright (c) 2017-2021 Lee Garner <lee@leegarner.com>
  * @copyright   Copyright (c) 2002 Mike Lynn <mike@mlynn.com>
  * @package     birthdays
- * @version     v1.1.1
+ * @version     v1.1.2
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
@@ -21,7 +21,7 @@ if (!defined ('GVERSION')) {
 use Birthdays\Config;
 global $_DB_table_prefix, $_TABLES;
 
-Config::set('pi_version', '1.1.1');
+Config::set('pi_version', '1.1.2');
 Config::set('gl_version', '1.7.8');
 
 $_TABLES['birthdays']      = $_DB_table_prefix . 'birthdays';

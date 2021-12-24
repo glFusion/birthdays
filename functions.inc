@@ -696,13 +696,15 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
     $T = new Template(array(
         $_CONF['path_layout'] . 'email/',
         __DIR__ . '/templates/notify/' . MO::getLanguage(),
+        __DIR__ . '/templates/notify/english_utf-8',    // default language
         __DIR__ . '/templates/notify', // catch templates using language strings
     ) );
     $T->set_file (array(
-        'text_outer' => 'mailtemplate_text.thtml',
-        'html_outer' => 'mailtemplate_html.thtml',
-        'htmlcard'  => 'html_card.thtml',
-        'htmlsub'   => 'html_sub.thtml',
+        'header_tpl' => 'header.thtml',     // from templates/notify
+        'text_outer' => 'mailtemplate_text.thtml',  // from layout
+        'html_outer' => 'mailtemplate_html.thtml',  // from layout
+        'htmlcard'  => 'html_card.thtml',   // from templates/notify/lang
+        'htmlsub'   => 'html_sub.thtml',    // from templates/notify/lang
     ));
 
     $T->set_var(array(          // common text elements
@@ -730,6 +732,8 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
         $T->parse('htmlmessage', 'htmlcard');
     }
     $html_content = $T->finish($T->get_var('htmlmessage'));
+    $header = $T->parse('', 'header_tpl');
+    $html_content = $header . $html_content;
     $T->set_block('html_outer', 'content', 'contentblock');
     $T->set_var('content_text', $html_content);
     $T->parse('contentblock', 'content', true);
