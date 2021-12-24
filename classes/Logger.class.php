@@ -25,14 +25,13 @@ class Logger
      *
      * @param   string  $logentry   Text to log
      * @param   string  $logfile    Log filename
-     * @return  string      Logging error, if any
      */
-    private static function write(string $logentry, string $logfile) : string
+    private static function write(string $logentry, string $logfile) : void
     {
         global $_CONF, $_USER, $LANG01;
 
         if ($logentry == '') {
-            return '';
+            return;
         }
 
         // A little sanitizing
@@ -46,7 +45,8 @@ class Logger
 
         // Can't open the log file?  Return an error
         if (!$file = fopen($logfile, 'a')) {
-            return $LANG01[33] . $logfile . ' (' . $timestamp . ')' . PHBR;
+            COM_errorLog("Birthdays Logger: " . $LANG01[33] . $logfile . ' (' . $timestamp . ')' . PHBR;
+            return;
         }
 
         // Get the user name if it's not anonymous
