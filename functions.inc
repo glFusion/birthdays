@@ -511,6 +511,10 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
     $props = array();
     $retval = array();
 
+    if (in_array('search_index', $properties)) {
+        return array();
+    }
+
     if ($id == '*') {
         $bdays = \Birthdays\Birthday::getAll();
     } else {
@@ -579,7 +583,7 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
                 }
                 break;
             case 'search_index':
-                return NULL;        // Birthdays does not support searching
+                return array();
                 break;
             default:
                 $props[$p] = NULL;
