@@ -13,7 +13,8 @@
 namespace Birthdays;
 use Birthdays\Models\Month;
 use Birthdays\Models\Zodiac;
-//use \glFusion\FieldList;
+use glFusion\FieldList;
+use glFusion\Database\Database;
 
 
 /**
@@ -356,7 +357,7 @@ class Birthday
             'lang_my_birthday' => _('My Birthday'),
             'lang_today' => _('Today'),
             'rnd' => rand(1,1000),
-            'lang_send_cards' => _('Send me birthday cards'),
+            'lang_send_cards' => _('Send birthday cards'),
             'cards_chk' => $this->sendcards ? 'checked="checked"' : '',
             'is_current_user' => $this->uid == $_USER['uid'],
         ) );
@@ -738,6 +739,12 @@ class Birthday
                 'sort'  => false,
             ),
             array(
+                'text' => _('Send Cards'),
+                'field' => 'sendcards',
+                'sort' => false,
+                'align' => 'center',
+            ),
+            array(
                 'text' => _('Delete'),
                 'field' => 'delete',
                 'sort' => false,
@@ -822,20 +829,22 @@ class Birthday
                 '" onclick="javascript:BDAY_toggleSub(this, ' . $A['uid'] . ', ' . $current_val . ');" />';
             break;
 
+        case 'sendcards':   // administrator toggle of user's subscription
+            $fieldvalue = (int)$fieldvalue;
+            $retval = FieldList::checkbox(array(
+                'checked' => $fieldvalue == 1,
+                'id' => "togcards{$A['uid']}",
+                'onclick' => "javascript:BDAY_toggleCards(this, '{$A['uid']}', '{$fieldvalue}');",
+            ) );
+            break;
+
         case 'delete':
-            /*$retval = FieldList::delete(array(
+            $retval = FieldList::delete(array(
                 'url' => Config::get('admin_url') . "/index.php?delitem={$A['uid']}",
                 'attr' => array(
-                     'onclick' => "return confirm('{$LANG_BD00['conf_del']}');",
-                ),
-            ) );*/
-            $retval = COM_createLink(
-                '<i class="uk-icon uk-icon-remove uk-text-danger"></i>',
-                Config::get('admin_url') . "/index.php?delitem={$A['uid']}",
-                array(
                      'onclick' => "return confirm('" . _('Do you really want to delete this item?') . "');",
-                )
-            );
+                ),
+            ) );
             break;
 
         default:
@@ -883,18 +892,29 @@ class Birthday
 
 
     /**
-     * Unsubscribe this user from receiving birthday cards.
+     * Toggle this user's subscription to receive birthday cards.
      *
-     * @return  boolean     True if unsubscribed, False if not
+     * @param   integer $oldval Original field value
+     * @return  integer     New field value
      */
-    public function unsubCard() : bool
+    public function toggleCard(int $oldval) : int
     {
         global $_TABLES;
 
-        $sql = "UPDATE {$_TABLES['birthdays']} SET sendcards = 0 WHERE uid = {$this->uid}";
-        DB_query($sql, 1);
-        Logger::Audit("User {$this->uid} unsubscribed from birthday cards");
-        return true;
+        $newval = $oldval ? 0 : 1;  // toggle to opposite
+        COM_errorLog("changing to $newval");
+        $db = Database::getInstance();
+        try {
+            $db->conn->executeUpdate(
+                "UPDATE {$_TABLES['birthdays']} SET sendcards = ? WHERE uid = ?",
+                array($newval, $this->uid),
+                array(Database::INTEGER, Database::INTEGER)
+            );
+            return $newval;
+        } catch (\Throwable $e) {
+            Log::write('system', Log::ERROR, $e->getMessage());
+            return $oldval;
+        }
     }
 
 }
