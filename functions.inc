@@ -645,7 +645,10 @@ function plugin_runScheduledTask_birthdays()
     $BDays = Birthdays\Birthday::getAll($dt['month'], $dt['day']);
     foreach ($BDays as $BDay) {
         if (Config::get('enable_subs')) {
-            PLG_sendSubscriptionNotification('birthdays', 'birthday_sub', '', $BDay->getUid(), 0);
+            PLG_sendSubscriptionNotification(
+                'birthdays', 'birthday_sub',
+                $BDay->getUid(), 0, 0
+            );
         }
 
         $U = new Birthdays\Models\User($BDay->getUid());
