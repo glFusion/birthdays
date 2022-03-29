@@ -1,7 +1,8 @@
 # Changelog for the Birthdays plugin
 
-## Version 1.1.2
+## Version 1.2.0
 Release TBD
+- Require glFusion 2.0.1
 - Add customizable template header for notifications.
 - Add admin access to toggle user's preference to receive cards.
 - Fix parameters passed to `PLG_sendSubscriptionNotification`.

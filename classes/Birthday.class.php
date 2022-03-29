@@ -3,9 +3,9 @@
  * Class to manage birthdays.
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2018-2020 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018-2022 Lee Garner <lee@leegarner.com>
  * @package     birthdays
- * @version     v1.0.0
+ * @version     v1.2.0
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
@@ -117,13 +117,21 @@ class Birthday
         if ($uid == 0) {
             return false;
         }
-
-        $result = DB_query(
-            "SELECT * from {$_TABLES['birthdays']}
-            WHERE uid = $uid"
-        );
-        $row = DB_fetchArray($result, false);
-        $this->setVars($row);
+        $db = Database::getInstance();
+        try {
+            $data = $db->conn->executeQuery(
+                "SELECT * from {$_TABLES['birthdays']}
+                WHERE uid = ?",
+                array($uid),
+                array(Database::INTEGER)
+            )->fetch(Database::ASSOCIATIVE);
+        } catch (\Exception $e) {
+            Logger::logException($e);
+            $data = NULL;
+        }
+        if (is_array($data)) {
+            $this->setVars($data);
+        }
     }
 
 
@@ -161,18 +169,36 @@ class Birthday
             $vals['call_itemsaved'] = true;
         }
 
-        $sql = "INSERT INTO {$_TABLES['birthdays']} SET
-                    uid = {$this->uid},
-                    month = {$this->month},
-                    day = {$this->day},
-                    sendcards = {$this->sendcards}
-                ON DUPLICATE KEY UPDATE
-                    month = {$this->month},
-                    day = {$this->day},
-                    sendcards = {$this->sendcards}";
-        //echo $sql;die;
-        $res = DB_query($sql);
-        if (!DB_error()) {
+        $qb = Database::getInstance()->conn->createQueryBuilder();
+        $qb->setParameter('uid', $this->uid, Database::INTEGER)
+           ->setParameter('month', $this->month, Database::INTEGER)
+           ->setParameter('day', $this->day, Database::INTEGER)
+           ->setParameter('sendcards', $this->sendcards, Database::INTEGER);
+        $error = false;
+        try {
+            $qb->insert($_TABLES['birthdays'])
+               ->setValue('uid', ':uid')
+               ->setValue('month', ':month')
+               ->setValue('day', ':day')
+               ->setValue('sendcards', ':sendcards')
+               ->execute();
+        } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $k) {
+            try {
+                $qb->update($_TABLES['birthdays'])
+                   ->set('month', ':month')
+                   ->set('day', ':day')
+                   ->set('sendcards', ':sendcards')
+                   ->where('uid = :uid')
+                   ->execute();
+            } catch (\Exception $e) {
+                Logger::logException($e);
+                $error = true;
+            }
+        } catch (\Exception $e) {
+            Logger::logException($e);
+            $error = true;
+        }
+        if (!$error) {
             self::clearCache('range');
             // Put this in cache to save a lookup in plugin_getiteminfo
             self::setCache('uid_' . $this->uid, $this);
@@ -202,34 +228,39 @@ class Birthday
         $cache_key = $month . '_' . $day;
         $retval = self::getCache($cache_key);
         if ($retval !== NULL) {
-            return $retval;
+           return $retval;
         }
 
-        $where = '';
+        $qb = Database::getInstance()->conn->createQueryBuilder();
         if ($month > 0) {
-            $where .= ' AND b.month = ' . $month;
+            $qb->andWhere('b.month = :month');
         }
         if ($day > 0) {
-            $where .= ' AND b.day = ' . $day;
+           $qb->andWhere('b.day = :day');
         }
         // The year isn't stored, so use a bogus leap year.
-        $sql = "SELECT " . self::YEAR . " as year, CONCAT(
-                    LPAD(b.month,2,0),LPAD(b.day,2,0)
-                ) as birthday, b.*, u.username, u.fullname
-                FROM {$_TABLES['birthdays']} b
-                LEFT JOIN  {$_TABLES['users']} u
-                    ON u.uid = b.uid
-                WHERE 1=1 $where
-                ORDER BY b.month, b.day";
-        //echo $sql;die;
-        $res = DB_query($sql);
-        // Some issues observed with PHP not supporting mysqli_result::fetch_all()
-        //$retval = DB_fetchAll($res, false);
-        $retval = array();
-        while ($A = DB_fetchArray($res, false)) {
-            $retval[] = new self($A);
+        try {
+            $data = $qb->select(
+                self::YEAR . ' as year',
+                'b.*', 'u.username', 'u.fullname'
+            )
+                       ->from($_TABLES['birthdays'], 'b')
+                       ->leftJoin('b', $_TABLES['users'], 'u', 'u.uid=b.uid')
+                       ->setParameter('month', $month, Database::INTEGER)
+                       ->setParameter('day', $day, Database::INTEGER)
+                       ->execute()
+                       ->fetchAll(Database::ASSOCIATIVE);
+        } catch (\Exception $e) {
+            Logger::logException($e);
+            $data = NULL;
         }
-        self::setCache($cache_key, $retval, 'range');
+        $retval = array();
+        if (is_array($data)) {
+            foreach ($data as $A) {
+                $retval[$A['uid']] = new self($A);
+            }
+            self::setCache($cache_key, $retval, 'range');
+        }
         return $retval;
     }
 
@@ -247,6 +278,7 @@ class Birthday
     {
         global $_TABLES, $_CONF;
 
+        $db = Database::getInstance();
         $cache_key = $start . '_' . $end;
         $retval = self::getCache($cache_key);
         if ($retval !== NULL) {
@@ -279,49 +311,31 @@ class Birthday
             }
         }
         $retval = array();
-        $month_str = implode(',', $months);
-        $sql = "SELECT * FROM {$_TABLES['birthdays']}
-                WHERE month IN ($month_str)
-                ORDER BY month, day";
-        //echo $sql;die;
-        $res = DB_query($sql);
-        while ($A = DB_fetchArray($res, false)) {
-            $year = $A['month'] < $s_month ? $e_year : $s_year;
-            $key1 = sprintf('%d-%02d-%02d', $year, $A['month'], $A['day']);
-            // Return only dates within the range
-            if ($key1 < $dt_s->format('Y-m-d') || $key1 > $dt_e->format('Y-m-d')) {
-                continue;
+        try {
+            $stmt = $db->conn->executeQuery(
+                "SELECT * FROM {$_TABLES['birthdays']}
+                WHERE month IN (?)
+                ORDER BY month, day",
+                array($months),
+                array(Database::PARAM_INT_ARRAY)
+            );
+        } catch (\Exception $e) {
+            Logger::logException($e);
+            $stmt = NULL;
+        }
+        if ($stmt) {
+            while ($A = $stmt->fetch(Database::ASSOCIATIVE)) {
+                $year = $A['month'] < $s_month ? $e_year : $s_year;
+                $key1 = sprintf('%d-%02d-%02d', $year, $A['month'], $A['day']);
+                // Return only dates within the range
+                if ($key1 < $dt_s->format('Y-m-d') || $key1 > $dt_e->format('Y-m-d')) {
+                    continue;
+                }
+                if (!isset($retval[$key1])) $retval[$key1] = array();
+                $retval[$key1][] = $A['uid'];
             }
-            if (!isset($retval[$key1])) $retval[$key1] = array();
-            $retval[$key1][] = $A['uid'];
         }
         self::setCache($cache_key, $retval, 'range');
-        return $retval;
-    }
-
-
-    /**
-     * Get a specific user's birthday for the profile page.
-     *
-     * @param   integer $uid    User ID
-     * @return  array       Array of fields, NULL if not found.
-     */
-    public static function XgetUser($uid)
-    {
-        global $_TABLES;
-
-        $uid = (int)$uid;
-        $key = 'uid_' . $uid;
-        $retval = self::getCache($uid);
-        if ($retval === NULL) {
-            $sql = "SELECT * FROM {$_TABLES['birthdays']}
-                    WHERE uid = $uid";
-            $res = DB_query($sql);
-            if (!DB_error()) {
-                $retval = DB_fetchArray($res, false);
-                self::setCache($key, $retval);
-            }
-        }
         return $retval;
     }
 
@@ -372,11 +386,16 @@ class Birthday
      *
      * @param   integer $uid    User ID
      */
-    public static function Delete($uid)
+    public static function Delete(int $uid) : void
     {
         global $_TABLES;
 
-        DB_delete($_TABLES['birthdays'], 'uid', $uid);
+        $db = Database::getInstance();
+        $db->conn->delete(
+            $_TABLES['birthdays'],
+            array('uid' => $uid),
+            array(Database::INTEGER)
+        );
         PLG_itemDeleted($uid, 'birthdays');
         self::clearCache('range');
         self::deleteCache('uid_' . $uid);
@@ -673,7 +692,7 @@ class Birthday
             );
         }
 
-        $defsort_arr = array('field' => 'birthday', 'direction' => 'ASC');
+        $defsort_arr = array('field' => 'month,day', 'direction' => 'ASC');
         $text_arr = array(
             'has_menu'     => false,
             'has_extras'   => false,
@@ -682,9 +701,7 @@ class Birthday
             'help_url'     => ''
         );
         $filter = $filter_month == 0 ? '' : " AND month = $filter_month";
-        $sql = "SELECT " . self::YEAR . " as year, CONCAT(
-                    LPAD(b.month,2,0),LPAD(b.day,2,0)
-                ) as birthday, b.*, u.username, u.fullname
+        $sql = "SELECT " . self::YEAR . " as year, b.*, u.username, u.fullname
                 FROM {$_TABLES['birthdays']} b
                 LEFT JOIN {$_TABLES['users']} u
                     ON u.uid = b.uid
@@ -752,9 +769,7 @@ class Birthday
             ),
         );
 
-        $sql = "SELECT " . self::YEAR . " as year, CONCAT(
-                    LPAD(b.month,2,0),LPAD(b.day,2,0)
-                ) as birthday, b.*, u.username, u.fullname
+        $sql = "SELECT " . self::YEAR . " as year, b.*, u.username, u.fullname
                 FROM {$_TABLES['birthdays']} b
                 LEFT JOIN  {$_TABLES['users']} u
                     ON u.uid = b.uid";
@@ -869,10 +884,17 @@ class Birthday
             return;
         }
 
+        $db = Database::getInstance();
+
         // Borrow the email format function to create the message
         $msg = plugin_subscription_email_format_birthdays('birthday_card', '', $this->uid, '');
         $name = COM_getDisplayName($this->uid);
-        $email = DB_getItem($_TABLES['users'], 'email', "uid = $this->uid");
+        $email = $db->getItem(
+            $_TABLES['users'],
+            'email',
+            array('uid', $this->uid),
+            array(Database::INTEGER)
+        );
         if (empty($email)) {
             return;    // need a valid email
         }
@@ -887,7 +909,7 @@ class Birthday
             ),
         );
         COM_emailNotification($msgData);
-        Logger::Audit("Sent card to user {$this->uid} ({$name})");
+        Logger::audit("Sent card to user {$this->uid} ({$name})");
     }
 
 
@@ -911,8 +933,8 @@ class Birthday
                 array(Database::INTEGER, Database::INTEGER)
             );
             return $newval;
-        } catch (\Throwable $e) {
-            Log::write('system', Log::ERROR, $e->getMessage());
+        } catch (\Exception $e) {
+            Logger::logException($e);
             return $oldval;
         }
     }

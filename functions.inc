@@ -4,10 +4,10 @@
  *
  * @author      Lee Garner <lee@leegarner.com>
  * @author      Mike Lynn <mike@mlynn.com>
- * @copyright   Copyright (c) 2018-2021 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018-2022 Lee Garner <lee@leegarner.com>
  * @copyright   Copyright (c) 2002 Mike Lynn <mike@mlynn.com>
  * @package     birthdays
- * @version     v1.1.1
+ * @version     v1.2.0
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
@@ -41,6 +41,7 @@ spl_autoload_register(function($class)
         require $file;
     }
 });
+use glFusion\Database\Database;
 use Birthdays\Config;
 use Birthdays\MO;
 MO::init();
@@ -431,19 +432,36 @@ function plugin_enablestatechange_birthdays($enabled)
     global $_TABLES, $_PLUGINS;
 
     $enabled = $enabled == true ? 1 : 0;
+    $db = Database::getInstance();
 
     // If trying to enable the plugin but lgLib is not available,
     // take no action and return
     if ($enabled && !in_array('lglib', $_PLUGINS)) {
         // Re-disable the plugin
-        DB_change($_TABLES['plugins'], 'pi_enabled', 0, 'pi_name', Config::PI_NAME);
+        try {
+            $db->conn->executeUpdate(
+                "UPDATE {$_TABLES['plugins']} SET pi_enabled = 0 WHERE pi_name = ?",
+                array(Config::PI_NAME),
+                array(Database::STRING)
+            );
+        } catch (\Exception $e) {
+            Logger::logException($e);
+        }
         $enabled = 0;
     }
 
     if (!$enabled) {
         $blocks = array('birthdays', 'birthdays_week');
         foreach ($blocks as $block) {
-            DB_change($_TABLES['blocks'], 'is_enabled', $enabled, 'name', $block);
+            try {
+                $db->conn->executeUpdate(
+                    "UPDATE {$_TABLES['blocks']} SET is_enabled = ? WHERE name = ?",
+                    array($enabled, $block),
+                    array(Database::INTEGER, Database::STRING)
+                );
+            } catch (\Exception $e) {
+                Logger::logException($e);
+            }
         }
     }
 }
@@ -631,16 +649,23 @@ function plugin_runScheduledTask_birthdays()
         return;     // don't go through the loop if nothing will be sent
     }
 
+    $db = Database||getInstance();
     $dt = \Birthdays\Birthday::currentDate();
     $today = sprintf("%4d%02d%02d", $dt['year'], $dt['month'], $dt['day']);
     $lastrun = isset($_VARS['birthdays_lastrun']) ? $_VARS['birthdays_lastrun'] : '';
     if ($lastrun == $today) {
         return;     // run once daily only
     }
-    DB_query(
-        "INSERT INTO {$_TABLES['vars']} VALUES('birthdays_lastrun', '$today')
-        ON DUPLICATE KEY UPDATE value = '$today'"
-    );
+    try {
+        $db->conn->executeUpdate(
+            "INSERT INTO {$_TABLES['vars']} VALUES('birthdays_lastrun', '$today')
+            ON DUPLICATE KEY UPDATE value = '$today'",
+            array($today, $today),
+            array(Database::STRING, Database::STRING)
+        );
+    } catch (\Exception $e) {
+        Logger::logException($e);
+    }
 
     $BDays = Birthdays\Birthday::getAll($dt['month'], $dt['day']);
     foreach ($BDays as $BDay) {
@@ -819,11 +844,17 @@ function BD_configlist_groups() : array
             '-- ' . MO::_('Feature-Controlled') . ' --' => 0,
         );
 
-        $sql = "SELECT grp_id, grp_name FROM {$_TABLES['groups']}
-            ORDER BY grp_name ASC";
-        $res = DB_query($sql);
-        if ($res && DB_numRows($res) > 0) {
-            while ($row = DB_fetchArray($res, false)) {
+        try {
+            $stmt = $db->conn->executeQuery(
+                "SELECT grp_id, grp_name FROM {$_TABLES['groups']}
+                ORDER BY grp_name ASC"
+            );
+        } catch (\Exception $e) {
+            Logger::logException($e);
+            $stmt = NULL;
+        }
+        if ($stmt) {
+            while ($row = $stmt->fetch(Database::ASSOCIATIVE)) {
                 if ($row['grp_id'] == 2) {
                     // All Users group is meaningless, only registered users
                     // can submit birthdays

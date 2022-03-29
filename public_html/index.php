@@ -4,10 +4,10 @@
  *
  * @author      Lee Garner <lee@leegarner.com>
  * @author      Mike Lynn <mike@mlynn.com>
- * @copyright   Copyright (c) 2018-2020 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018-2022 Lee Garner <lee@leegarner.com>
  * @copyright   Copyright (c) 2002 Mike Lynn <mike@mlynn.com>
  * @package     birthdays
- * @version     v1.0.0
+ * @version     v1.2.0
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
@@ -20,6 +20,8 @@ if (!\Birthdays\Birthday::canView()) {
     exit;
 }
 use Birthdays\MO;
+use glFusion\Database\Database;
+use glFusion\Log\Log;
 USES_lib_admin();
 
 // MAIN
@@ -70,12 +72,20 @@ case 'unsub':
     // Unsubscribe from all birthday notifications
     $uid = Birthdays\Models\User::decrypt($actionval);
     if ($uid > 1) {
-        $sql = "DELETE FROM {$_TABLES['subscriptions']}
-            WHERE type = 'birthdays'
-            AND category = 'birthday_sub'
-            AND uid = $uid";
-        DB_query($sql, 1);
-        Birthdays\Logger::Audit("User {$uid} unsubscribed from birthday notifications");
+        try {
+            $db->conn->delete(
+                $_TABLES['subscriptions'],
+                array(
+                    'type' => 'birthdays',
+                    'category' => 'birthdays_sub',
+                    'uid' => '?'
+                ),
+                array(Database::INTEGER)
+            );
+        } catch (\Exception $e) {
+            Birthdays\Logger::logException($e);
+        }
+        Birthdays\Logger::audit("User {$uid} unsubscribed from birthday notifications");
     }
     COM_setMsg(MO::_('You have been unsubscribed from birthday notifications'));
     COM_refresh($_CONF['site_url'] . '/index.php');
