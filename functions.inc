@@ -43,6 +43,7 @@ spl_autoload_register(function($class)
 });
 use glFusion\Database\Database;
 use Birthdays\Config;
+use Birthdays\Logger;
 use Birthdays\MO;
 MO::init();
 require_once __DIR__ . '/language/lang_config.php';
@@ -445,7 +446,7 @@ function plugin_enablestatechange_birthdays($enabled)
                 array(Database::STRING)
             );
         } catch (\Exception $e) {
-            Logger::logException($e);
+            Logger::System(__FUNCTION__ . ': ' . $e->getMessage());
         }
         $enabled = 0;
     }
@@ -460,7 +461,7 @@ function plugin_enablestatechange_birthdays($enabled)
                     array(Database::INTEGER, Database::STRING)
                 );
             } catch (\Exception $e) {
-                Logger::logException($e);
+                Logger::System(__FUNCTION__ . ': ' . $e->getMessage());
             }
         }
     }
@@ -649,7 +650,7 @@ function plugin_runScheduledTask_birthdays()
         return;     // don't go through the loop if nothing will be sent
     }
 
-    $db = Database||getInstance();
+    $db = Database::getInstance();
     $dt = \Birthdays\Birthday::currentDate();
     $today = sprintf("%4d%02d%02d", $dt['year'], $dt['month'], $dt['day']);
     $lastrun = isset($_VARS['birthdays_lastrun']) ? $_VARS['birthdays_lastrun'] : '';
@@ -658,13 +659,13 @@ function plugin_runScheduledTask_birthdays()
     }
     try {
         $db->conn->executeUpdate(
-            "INSERT INTO {$_TABLES['vars']} VALUES('birthdays_lastrun', '$today')
-            ON DUPLICATE KEY UPDATE value = '$today'",
+            "INSERT INTO {$_TABLES['vars']} VALUES('birthdays_lastrun', ?)
+            ON DUPLICATE KEY UPDATE value = ?",
             array($today, $today),
             array(Database::STRING, Database::STRING)
         );
     } catch (\Exception $e) {
-        Logger::logException($e);
+        Logger::System(__FUNCTION__ . ': ' . $e->getMessage());
     }
 
     $BDays = Birthdays\Birthday::getAll($dt['month'], $dt['day']);
@@ -850,7 +851,7 @@ function BD_configlist_groups() : array
                 ORDER BY grp_name ASC"
             );
         } catch (\Exception $e) {
-            Logger::logException($e);
+            Logger::System(__FUNCTION__ . ': ' . $e->getMessage());
             $stmt = NULL;
         }
         if ($stmt) {
