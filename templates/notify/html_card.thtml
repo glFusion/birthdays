@@ -1,9 +1,0 @@
-<h2>
-    Happy Birthday from {site_name}!
-</h2>
-<p>
-You're receiving this message because you've entered your birthday at {site_url}.
-You can update your account settings there, unsubscribe by clicking
-<a href="{site_url}/birthdays/index.php?nocards={uid_code}">here</a>
-or contact {site_email} for assistance.
-</p>

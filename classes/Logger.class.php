@@ -12,6 +12,7 @@
  * @filesource
  */
 namespace Birthdays;
+use glFusion\Log\Log;
 
 
 /**
@@ -25,14 +26,13 @@ class Logger
      *
      * @param   string  $logentry   Text to log
      * @param   string  $logfile    Log filename
-     * @return  string      Logging error, if any
      */
-    private static function write(string $logentry, string $logfile) : string
+    private static function write(string $logentry, string $logfile) : void
     {
         global $_CONF, $_USER, $LANG01;
 
         if ($logentry == '') {
-            return '';
+            return;
         }
 
         // A little sanitizing
@@ -46,7 +46,10 @@ class Logger
 
         // Can't open the log file?  Return an error
         if (!$file = fopen($logfile, 'a')) {
-            return $LANG01[33] . $logfile . ' (' . $timestamp . ')' . PHBR;
+            Log::write('system', Log::ERROR,
+                "Birthdays Logger: " . $LANG01[33] . $logfile . ' (' . $timestamp . ')'
+            );
+            return;
         }
 
         // Get the user name if it's not anonymous
@@ -74,7 +77,7 @@ class Logger
      * @param   string  $msg        Message to log
      * @return  void
      */
-    public static function Audit(string $msg) : void
+    public static function audit(string $msg) : void
     {
         global $_CONF;
 
@@ -85,14 +88,13 @@ class Logger
 
     /**
      * Write an entry to the system log.
-     * Just a wrapper for COM_errorLog().
      *
      * @param   string  $msg        Message to log
      * @return  void
      */
     public static function System(string $msg) : void
     {
-        COM_errorLog($msg);
+        Log::write('system', Log::ERROR, $msg);
     }
 
 
@@ -108,6 +110,18 @@ class Logger
         if ((int)Config::get('log_level') <= 100) {
             self::System('DEBUG: ' . $msg);
         }
+    }
+
+
+    /**
+     * Log a thrown exception.
+     *
+     * @param   Exception   $e      PHP Exception object
+     */
+    public static function logException(\Exception $e) : void
+    {
+        $msg = $e->getFile() . ': ' . $e->getLine() . ':: ' . $e->getMessage();
+        self::System($msg);
     }
 
 }

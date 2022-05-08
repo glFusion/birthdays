@@ -1,4 +1,8 @@
 <h2>
 Dzisiaj są urodziny {firstname}!
 </h2>
-
+<p>
+Otrzymujesz tę wiadomość, ponieważ subskrybujesz powiadomienia o urodzinach na {site_url}.
+Możesz zaktualizować swoje subskrypcje na <a href="{site_url}/birthdays/index.php">{site_url}/birthdays/index.php</a> lub zrezygnować z subskrypcji wszystkich powiadomień o urodzinach, klikając
+<a href="{site_url}/birthdays/index.php?unsub={uid_code}">tutaj</a>.
+</p>

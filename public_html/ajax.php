@@ -3,9 +3,9 @@
  * Common AJAX functions.
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2018 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018-2022 Lee Garner <lee@leegarner.com>
  * @package     birthdays
- * @version     v0.0.1
+ * @version     v1.1.2
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
@@ -53,6 +53,21 @@ case 'toggleSub':
             MO::_('Error updating subscription'),
     );
     break;
+
+case 'toggleCards':
+    $oldval = (int)$_POST['oldval'];
+    $Bday = Birthdays\Birthday::getInstance($_POST['uid']);
+    $newval = $Bday->toggleCard($oldval);
+    COM_errorLog("value is now $newval");
+    $retval = array(
+        'uid'    => $_POST['uid'],
+        'newval' => $newval,
+        'statusMessage' => $newval != $oldval ? 
+            MO::_('Subscription has been updated') :
+            MO::_('Error updating subscription'),
+    );
+    COM_errorLog(var_export($retval,true));
+    break;
 }
 
 if (is_array($retval) && !empty($retval)) {
@@ -63,4 +78,3 @@ if (is_array($retval) && !empty($retval)) {
     echo json_encode($retval);
 }
 
-?>

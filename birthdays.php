@@ -6,10 +6,10 @@
  * glFusion configuration system, such as allowed file types.
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2017-2021 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2017-2022 Lee Garner <lee@leegarner.com>
  * @copyright   Copyright (c) 2002 Mike Lynn <mike@mlynn.com>
  * @package     birthdays
- * @version     v1.1.1
+ * @version     v1.2.0
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
@@ -21,8 +21,8 @@ if (!defined ('GVERSION')) {
 use Birthdays\Config;
 global $_DB_table_prefix, $_TABLES;
 
-Config::set('pi_version', '1.1.1');
-Config::set('gl_version', '1.7.8');
+Config::set('pi_version', '1.2.0');
+Config::set('gl_version', '2.0.1');
 
 $_TABLES['birthdays']      = $_DB_table_prefix . 'birthdays';
 

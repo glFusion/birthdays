@@ -1,17 +1,17 @@
 <?php
 /**
- * MySQL table definitions to be used in installing the Photocomp plugin.
+ * MySQL table definitions to be used in installing the Birthdays plugin.
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2009-2017 Lee Garner <lee@leegarner.com>
- * @package     photocomp
- * @version     v1.4.0
+ * @copyright   Copyright (c) 2018-2021 Lee Garner <lee@leegarner.com>
+ * @package     birthdays
+ * @version     v1.1.2
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
  */
 
-global $_SQL, $BD_UPGRADE;
+global $_TABLES, $_SQL, $BD_UPGRADE;
 
 $_SQL = array(
 'birthdays' => "CREATE TABLE {$_TABLES['birthdays']} (

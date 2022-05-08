@@ -15,6 +15,10 @@ if (!defined('GVERSION')) {
     die('This file can not be used on its own.');
 }
 use Birthdays\Config;
+use Birthdays\Logger;
+use glFusion\Database\Database;
+use glFusion\Log\Log;
+
 
 /**
  * Upgrade the plugin.
@@ -27,6 +31,7 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
     global $_TABLES, $_CONF, $_PLUGINS, $_PLUGIN_INFO, $BD_UPGRADE;
 
     include_once __DIR__ . '/sql/mysql_install.php';
+    $db = Database::getInstance();
 
     $installed_ver = $_PLUGIN_INFO[Config::PI_NAME]['pi_version'];
     $code_ver = plugin_chkVersion_birthdays();
@@ -44,16 +49,25 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
         $current_ver = '1.0.0';
 
         // Add the admin feature if not already done.
-        $ft_id = (int)DB_getItem($_TABLES['features'], 'ft_id', "ft_name = 'birthdays.admin'");
+        $ft_id = (int)$db->getItem(
+            $_TABLES['features'],
+            'ft_id',
+            array('ft_name', 'birthdays.admin')
+            array(Database::STRING)
+        );
         if ($ft_id == 0) {
-            $sql = "INSERT INTO {$_TABLES['features']} (ft_id, ft_name, ft_descr)
-                VALUES (0, 'birthdays.admin', 'Full access to the Birthdays plugin')";
-            $res = DB_query($sql);
-            if ($res) {
-                $ft_id = DB_insertId();
-                $sql = "INSERT INTO {$_TABLES['access']} (acc_ft_id, acc_grp_id)
-                    VALUES ($ft_id, 1)";
-                $res = DB_query($sql, 1);
+            $stmt = db->conn->executeUpdate(
+                "INSERT INTO {$_TABLES['features']} (ft_id, ft_name, ft_descr)
+                VALUES (0, 'birthdays.admin', 'Full access to the Birthdays plugin')"
+            );
+            if ($stmt) {
+                $ft_id = $db->conn->lastInsertId();
+                $db->conn->executeUpdate(
+                    "INSERT INTO {$_TABLES['access']} (acc_ft_id, acc_grp_id)
+                    VALUES (?, 1)",
+                    array($ft_id),
+                    array(Database::INTEGER)
+                );
             }
         }
         if (!BIRTHDAYS_do_set_version($current_ver)) return false;
@@ -62,42 +76,71 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
     if (!COM_checkVersion($current_ver, '1.1.0')) {
         $current_ver = '1.1.0';
         // Add the admin feature if not already done.
-        $ft_id = (int)DB_getItem($_TABLES['features'], 'ft_id', "ft_name = 'birthdays.admin'");
+        $ft_id = (int)$db->getItem(
+            $_TABLES['features'],
+            'ft_id',
+            array('ft_name', 'birthdays.admin')
+            array(Database::STRING)
+        );
         if ($ft_id == 0) {
-            $sql = "INSERT INTO {$_TABLES['features']} (ft_id, ft_name, ft_descr)
-                VALUES (0, 'birthdays.admin', 'Full access to the Birthdays plugin')";
-            $res = DB_query($sql);
-            if ($res) {
-                $ft_id = DB_insertId();
-                $sql = "INSERT INTO {$_TABLES['access']} (acc_ft_id, acc_grp_id)
-                    VALUES ($ft_id, 1)";
-                $res = DB_query($sql, 1);
+            $stmt = db->conn->executeUpdate(
+                "INSERT INTO {$_TABLES['features']} (ft_id, ft_name, ft_descr)
+                VALUES (0, 'birthdays.admin', 'Full access to the Birthdays plugin')"
+            );
+            if ($stmt) {
+                $ft_id = $db->conn->lastInsertId();
+                $db->conn->executeUpdate(
+                    "INSERT INTO {$_TABLES['access']} (acc_ft_id, acc_grp_id)
+                    VALUES (?, 1)",
+                    array($ft_id),
+                    array(Database::INTEGER)
+                );
             }
         }
+
         // Add the card feature if not already done.
-        $ft_id = (int)DB_getItem($_TABLES['features'], 'ft_id', "ft_name = 'birthdays.card'");
+        $ft_id = (int)$db->getItem(
+            $_TABLES['features'],
+            'ft_id',
+            array('ft_name', 'birthdays.card')
+            array(Database::STRING)
+        );
         if ($ft_id == 0) {
-            $sql = "INSERT INTO {$_TABLES['features']} (ft_id, ft_name, ft_descr)
-                VALUES (0, 'birthdays.card', 'Can receive birthday cards')";
-            $res = DB_query($sql);
-            if ($res) {
-                $ft_id = DB_insertId();
-                $sql = "INSERT INTO {$_TABLES['access']} (acc_ft_id, acc_grp_id)
-                    VALUES ($ft_id, 13)";
-                $res = DB_query($sql, 1);
+            $stmt = $db->conn->executeUpdate(
+                "INSERT INTO {$_TABLES['features']} (ft_id, ft_name, ft_descr)
+                VALUES (0, 'birthdays.card', 'Can receive birthday cards')"
+            );
+            if ($stmt) {
+                $ft_id = $db->conn->lastInsertId()
+                $db->conn->executeUpdate(
+                    "INSERT INTO {$_TABLES['access']} (acc_ft_id, acc_grp_id)
+                    VALUES (?, 13)",
+                    array($ft_id);
+                    array(Database::INTEGER)
+                );
             }
         }
+
         // Add the view feature if not already done.
-        $ft_id = (int)DB_getItem($_TABLES['features'], 'ft_id', "ft_name = 'birthdays.view'");
+        $ft_id = (int)$db->getItem(
+            $_TABLES['features'],
+            'ft_id',
+            array('ft_name', 'birthdays.view')
+            array(Database::STRING)
+        );
         if ($ft_id == 0) {
-            $sql = "INSERT INTO {$_TABLES['features']} (ft_id, ft_name, ft_descr)
-                VALUES (0, 'birthdays.view', 'View access to the Birthdays plugin')";
-            $res = DB_query($sql);
-            if ($res) {
-                $ft_id = DB_insertId();
-                $sql = "INSERT INTO {$_TABLES['access']} (acc_ft_id, acc_grp_id)
-                    VALUES ($ft_id, 13)";
-                $res = DB_query($sql, 1);
+            $stmt = $db->conn->executeUpdate(
+                "INSERT INTO {$_TABLES['features']} (ft_id, ft_name, ft_descr)
+                VALUES (0, 'birthdays.view', 'View access to the Birthdays plugin')"
+            );
+            if ($stmt) {
+                $ft_id = $db->conn->lastInsertId();
+                $db->conn->executeUpdate(
+                    "INSERT INTO {$_TABLES['access']} (acc_ft_id, acc_grp_id)
+                    VALUES (?, 13)",
+                    array($ft_id),
+                    array(Database::INTEGER)
+                );
             }
         }
         if (!BIRTHDAYS_do_upgrade_sql($current_ver, $dvlp)) return false;
@@ -146,13 +189,16 @@ function BIRTHDAYS_do_upgrade_sql($version, $ignore_error=false)
         return true;
     }
 
+    $db = Database::getInstance();
+
     // Execute SQL now to perform the upgrade
     COM_errorLog("--- Updating Birthdays to version $version", 1);
     foreach($BD_UPGRADE[$version] as $sql) {
-        COM_errorLOG("Birthdays Plugin $version update: Executing SQL => $sql");
-        DB_query($sql, '1');
-        if (DB_error()) {
-            COM_errorLog("SQL Error during Birthdays Plugin update", 1);
+        Log::write('system', Log::INFO, "Birthdays Plugin $version update: Executing SQL => $sql");
+        try {
+            $db->conn->executeUpdate($sql);
+        } catch (\Exception $e) {
+            Logger::logExceptoin($e);
             if (!$ignore_error){
                 return false;
             }
@@ -175,20 +221,25 @@ function BIRTHDAYS_do_set_version($ver)
 {
     global $_TABLES;
 
+    $db = Database::getInstance();
+
     // now update the current version number.
-    $sql = "UPDATE {$_TABLES['plugins']} SET
-            pi_version = '$ver',
+    try {
+        $db->conn->executeUpdate(
+            "UPDATE {$_TABLES['plugins']} SET
+            pi_version = ?'$ver',
             pi_gl_version = '" . Config::get('gl_version') . "',
             pi_homepage = '" . Config::get('pi_url') . "'
-        WHERE pi_name = '" . Config::PI_NAME . "'";
-    $res = DB_query($sql, 1);
-    if (DB_error()) {
-        COM_errorLog("Error updating the " . Config::get('pi_display_name') .
-            " Plugin version to $ver",1);
+            WHERE pi_name = '" . Config::PI_NAME . "'",
+            array($ver, Config::get('gl_version'), Config::get('pi_url'), Config::PI_NAME),
+            array(Database::STRING, Database::STRING, Database::STRING, Database::STRING)
+        );
+    } catch (\Exception $e) {
+        Log::write('system', Log::ERROR, "Error updating the " . Config::get('pi_display_name') .
+            " Plugin version to $ver"
+        );
         return false;
-    } else {
-        return true;
-    }
+    return true;
 }
 
 
@@ -204,6 +255,11 @@ function BIRTHDAYS_remove_old_files()
         __DIR__ => array(
             'classes/Date_Calc.class.php',
             'templates/phpblock_week.thtml',
+            // v1.1.2
+            'templates/notify/html_inner.thtml',
+            'templates/notify/html_outer.thtml',
+            'templates/notify/notifymessage_html.thtml',
+            'templates/notify/text.thtml',
         ),
         // public_html/birthdays
         $_CONF['path_html'] . 'birthdays' => array(

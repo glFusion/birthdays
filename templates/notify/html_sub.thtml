@@ -1,5 +1,0 @@
-<h2>
-It's {firstname}'s birthday today!
-</h2>
-<p>{lang_to_unsub} <a href="{site_url}/birthdays/index.php?unsub={uid_code}">{lang_this_link}</a>.</p>
-

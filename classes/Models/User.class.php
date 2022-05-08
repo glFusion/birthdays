@@ -3,9 +3,9 @@
  * Handle user account and privileges.
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2021 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2022 Lee Garner <lee@leegarner.com>
  * @package     birthdays
- * @version     v1.1.0
+ * @version     v1.2.0
  * @since       v1.1.0
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
@@ -14,6 +14,7 @@
 namespace Birthdays\Models;
 use Birthdays\MO;
 use Birthdays\Config;
+use glFusion\Database\Database;
 
 
 /**
@@ -62,13 +63,20 @@ class User
         if ($uid === NULL) {
             $uid = (int)$_USER['uid'];
         }
-
-        $sql = "SELECT uid, username, fullname, status, email
-            FROM `{$_TABLES['users']}`
-            WHERE uid = $uid";
-        $res = DB_query($sql);
-        if ($res && DB_numRows($res) == 1) {
-            $A = DB_fetchArray($res, false);
+        $db = Database::getInstance();
+        try {
+            $A = $db->conn->executeQuery(
+                "SELECT uid, username, fullname, status, email
+                FROM `{$_TABLES['users']}`
+                WHERE uid = ?"
+                array($uid),
+                array(Database::INTEGER)
+            )->fetch(Database::ASSOCIATIVE);
+        } catch (\Exception $e) {
+            Logger::logException($e);
+            $A = NULL;
+        }
+        if (is_array($A) && !empty($A)) {
             $this->uid = (int)$A['uid'];
             $this->username = $A['username'];
             $this->fullname = $A['fullname'];

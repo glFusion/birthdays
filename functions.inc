@@ -4,10 +4,10 @@
  *
  * @author      Lee Garner <lee@leegarner.com>
  * @author      Mike Lynn <mike@mlynn.com>
- * @copyright   Copyright (c) 2018-2021 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018-2022 Lee Garner <lee@leegarner.com>
  * @copyright   Copyright (c) 2002 Mike Lynn <mike@mlynn.com>
  * @package     birthdays
- * @version     v1.1.1
+ * @version     v1.2.0
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
@@ -41,7 +41,9 @@ spl_autoload_register(function($class)
         require $file;
     }
 });
+use glFusion\Database\Database;
 use Birthdays\Config;
+use Birthdays\Logger;
 use Birthdays\MO;
 MO::init();
 require_once __DIR__ . '/language/lang_config.php';
@@ -431,19 +433,36 @@ function plugin_enablestatechange_birthdays($enabled)
     global $_TABLES, $_PLUGINS;
 
     $enabled = $enabled == true ? 1 : 0;
+    $db = Database::getInstance();
 
     // If trying to enable the plugin but lgLib is not available,
     // take no action and return
     if ($enabled && !in_array('lglib', $_PLUGINS)) {
         // Re-disable the plugin
-        DB_change($_TABLES['plugins'], 'pi_enabled', 0, 'pi_name', Config::PI_NAME);
+        try {
+            $db->conn->executeUpdate(
+                "UPDATE {$_TABLES['plugins']} SET pi_enabled = 0 WHERE pi_name = ?",
+                array(Config::PI_NAME),
+                array(Database::STRING)
+            );
+        } catch (\Exception $e) {
+            Logger::System(__FUNCTION__ . ': ' . $e->getMessage());
+        }
         $enabled = 0;
     }
 
     if (!$enabled) {
         $blocks = array('birthdays', 'birthdays_week');
         foreach ($blocks as $block) {
-            DB_change($_TABLES['blocks'], 'is_enabled', $enabled, 'name', $block);
+            try {
+                $db->conn->executeUpdate(
+                    "UPDATE {$_TABLES['blocks']} SET is_enabled = ? WHERE name = ?",
+                    array($enabled, $block),
+                    array(Database::INTEGER, Database::STRING)
+                );
+            } catch (\Exception $e) {
+                Logger::System(__FUNCTION__ . ': ' . $e->getMessage());
+            }
         }
     }
 }
@@ -510,6 +529,10 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
     $properties = explode(',', $what);
     $props = array();
     $retval = array();
+
+    if (in_array('search_index', $properties)) {
+        return array();
+    }
 
     if ($id == '*') {
         $bdays = \Birthdays\Birthday::getAll();
@@ -579,7 +602,7 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
                 }
                 break;
             case 'search_index':
-                return NULL;        // Birthdays does not support searching
+                return array();
                 break;
             default:
                 $props[$p] = NULL;
@@ -627,21 +650,31 @@ function plugin_runScheduledTask_birthdays()
         return;     // don't go through the loop if nothing will be sent
     }
 
+    $db = Database::getInstance();
     $dt = \Birthdays\Birthday::currentDate();
     $today = sprintf("%4d%02d%02d", $dt['year'], $dt['month'], $dt['day']);
     $lastrun = isset($_VARS['birthdays_lastrun']) ? $_VARS['birthdays_lastrun'] : '';
     if ($lastrun == $today) {
         return;     // run once daily only
     }
-    DB_query(
-        "INSERT INTO {$_TABLES['vars']} VALUES('birthdays_lastrun', '$today')
-        ON DUPLICATE KEY UPDATE value = '$today'"
-    );
+    try {
+        $db->conn->executeUpdate(
+            "INSERT INTO {$_TABLES['vars']} VALUES('birthdays_lastrun', ?)
+            ON DUPLICATE KEY UPDATE value = ?",
+            array($today, $today),
+            array(Database::STRING, Database::STRING)
+        );
+    } catch (\Exception $e) {
+        Logger::System(__FUNCTION__ . ': ' . $e->getMessage());
+    }
 
     $BDays = Birthdays\Birthday::getAll($dt['month'], $dt['day']);
     foreach ($BDays as $BDay) {
         if (Config::get('enable_subs')) {
-            PLG_sendSubscriptionNotification('birthdays', 'birthday_sub', '', $BDay->getUid(), 0);
+            PLG_sendSubscriptionNotification(
+                'birthdays', 'birthday_sub',
+                $BDay->getUid(), 0, 0
+            );
         }
 
         $U = new Birthdays\Models\User($BDay->getUid());
@@ -696,13 +729,15 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
     $T = new Template(array(
         $_CONF['path_layout'] . 'email/',
         __DIR__ . '/templates/notify/' . MO::getLanguage(),
+        __DIR__ . '/templates/notify/english_utf-8',    // default language
         __DIR__ . '/templates/notify', // catch templates using language strings
     ) );
     $T->set_file (array(
-        'text_outer' => 'mailtemplate_text.thtml',
-        'html_outer' => 'mailtemplate_html.thtml',
-        'htmlcard'  => 'html_card.thtml',
-        'htmlsub'   => 'html_sub.thtml',
+        'header_tpl' => 'header.thtml',     // from templates/notify
+        'text_outer' => 'mailtemplate_text.thtml',  // from layout
+        'html_outer' => 'mailtemplate_html.thtml',  // from layout
+        'htmlcard'  => 'html_card.thtml',   // from templates/notify/lang
+        'htmlsub'   => 'html_sub.thtml',    // from templates/notify/lang
     ));
 
     $T->set_var(array(          // common text elements
@@ -730,6 +765,8 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
         $T->parse('htmlmessage', 'htmlcard');
     }
     $html_content = $T->finish($T->get_var('htmlmessage'));
+    $header = $T->parse('', 'header_tpl');
+    $html_content = $header . $html_content;
     $T->set_block('html_outer', 'content', 'contentblock');
     $T->set_var('content_text', $html_content);
     $T->parse('contentblock', 'content', true);
@@ -808,11 +845,17 @@ function BD_configlist_groups() : array
             '-- ' . MO::_('Feature-Controlled') . ' --' => 0,
         );
 
-        $sql = "SELECT grp_id, grp_name FROM {$_TABLES['groups']}
-            ORDER BY grp_name ASC";
-        $res = DB_query($sql);
-        if ($res && DB_numRows($res) > 0) {
-            while ($row = DB_fetchArray($res, false)) {
+        try {
+            $stmt = $db->conn->executeQuery(
+                "SELECT grp_id, grp_name FROM {$_TABLES['groups']}
+                ORDER BY grp_name ASC"
+            );
+        } catch (\Exception $e) {
+            Logger::System(__FUNCTION__ . ': ' . $e->getMessage());
+            $stmt = NULL;
+        }
+        if ($stmt) {
+            while ($row = $stmt->fetch(Database::ASSOCIATIVE)) {
                 if ($row['grp_id'] == 2) {
                     // All Users group is meaningless, only registered users
                     // can submit birthdays

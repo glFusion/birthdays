@@ -1,4 +1,8 @@
 <h2>
 Heute hat {firstname} Geburtstag!
 </h2>
-
+<p>
+Sie erhalten diese Nachricht, weil Sie Geburtstagsbenachrichtigungen unter {site_url} abonniert haben.
+Sie können Ihre Abonnements unter <a href="{site_url}/birthdays/index.php">{site_url}/birthdays/index.php</a> aktualisieren oder alle Geburtstagsbenachrichtigungen abbestellen, indem Sie auf klicken
+<a href="{site_url}/birthdays/index.php?unsub={uid_code}">hier</a>.
+</p>
