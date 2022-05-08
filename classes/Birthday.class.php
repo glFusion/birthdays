@@ -373,7 +373,7 @@ class Birthday
             'rnd' => rand(1,1000),
             'lang_send_cards' => _('Send birthday cards'),
             'cards_chk' => $this->sendcards ? 'checked="checked"' : '',
-            'is_current_user' => $this->uid == $_USER['uid'],
+            'is_current_user' => $this->uid == $_USER['uid'] || plugin_ismoderator_birthdays(),
         ) );
         $T->parse('output', 'edit');
         return $T->finish($T->get_var('output'));
