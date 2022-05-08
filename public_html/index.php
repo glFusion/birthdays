@@ -63,7 +63,8 @@ case 'addbday':
 case 'nocards':
     $uid = (int)Birthdays\Models\User::decrypt($actionval);
     if ($uid > 1) {
-        Birthdays\Birthday::getInstance($uid)->toggleCard(0);
+        // Change as if it was 1 to force it to go to zero.
+        Birthdays\Birthday::getInstance($uid)->toggleCard(1);
     }
     COM_setMsg(MO::_('You will no longer receive birthday cards'));
     COM_refresh($_CONF['site_url'] . '/index.php');
