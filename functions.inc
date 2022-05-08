@@ -673,7 +673,7 @@ function plugin_runScheduledTask_birthdays()
         if (Config::get('enable_subs')) {
             PLG_sendSubscriptionNotification(
                 'birthdays', 'birthday_sub',
-                $BDay->getUid(), 0, 0
+                $BDay->getUid(), $BDay->getUid(), 0
             );
         }
 

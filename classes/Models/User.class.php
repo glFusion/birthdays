@@ -68,7 +68,7 @@ class User
             $A = $db->conn->executeQuery(
                 "SELECT uid, username, fullname, status, email
                 FROM `{$_TABLES['users']}`
-                WHERE uid = ?"
+                WHERE uid = ?",
                 array($uid),
                 array(Database::INTEGER)
             )->fetch(Database::ASSOCIATIVE);

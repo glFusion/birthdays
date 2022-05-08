@@ -52,11 +52,11 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
         $ft_id = (int)$db->getItem(
             $_TABLES['features'],
             'ft_id',
-            array('ft_name', 'birthdays.admin')
+            array('ft_name', 'birthdays.admin'),
             array(Database::STRING)
         );
         if ($ft_id == 0) {
-            $stmt = db->conn->executeUpdate(
+            $stmt = $db->conn->executeUpdate(
                 "INSERT INTO {$_TABLES['features']} (ft_id, ft_name, ft_descr)
                 VALUES (0, 'birthdays.admin', 'Full access to the Birthdays plugin')"
             );
@@ -79,11 +79,11 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
         $ft_id = (int)$db->getItem(
             $_TABLES['features'],
             'ft_id',
-            array('ft_name', 'birthdays.admin')
+            array('ft_name', 'birthdays.admin'),
             array(Database::STRING)
         );
         if ($ft_id == 0) {
-            $stmt = db->conn->executeUpdate(
+            $stmt = $db->conn->executeUpdate(
                 "INSERT INTO {$_TABLES['features']} (ft_id, ft_name, ft_descr)
                 VALUES (0, 'birthdays.admin', 'Full access to the Birthdays plugin')"
             );
@@ -102,7 +102,7 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
         $ft_id = (int)$db->getItem(
             $_TABLES['features'],
             'ft_id',
-            array('ft_name', 'birthdays.card')
+            array('ft_name', 'birthdays.card'),
             array(Database::STRING)
         );
         if ($ft_id == 0) {
@@ -111,11 +111,11 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
                 VALUES (0, 'birthdays.card', 'Can receive birthday cards')"
             );
             if ($stmt) {
-                $ft_id = $db->conn->lastInsertId()
+                $ft_id = $db->conn->lastInsertId();
                 $db->conn->executeUpdate(
                     "INSERT INTO {$_TABLES['access']} (acc_ft_id, acc_grp_id)
                     VALUES (?, 13)",
-                    array($ft_id);
+                    array($ft_id),
                     array(Database::INTEGER)
                 );
             }
@@ -125,7 +125,7 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
         $ft_id = (int)$db->getItem(
             $_TABLES['features'],
             'ft_id',
-            array('ft_name', 'birthdays.view')
+            array('ft_name', 'birthdays.view'),
             array(Database::STRING)
         );
         if ($ft_id == 0) {
@@ -227,18 +227,17 @@ function BIRTHDAYS_do_set_version($ver)
     try {
         $db->conn->executeUpdate(
             "UPDATE {$_TABLES['plugins']} SET
-            pi_version = ?'$ver',
-            pi_gl_version = '" . Config::get('gl_version') . "',
-            pi_homepage = '" . Config::get('pi_url') . "'
-            WHERE pi_name = '" . Config::PI_NAME . "'",
+            pi_version = ?,
+            pi_gl_version = ?,
+            pi_homepage = ?
+            WHERE pi_name = ?",
             array($ver, Config::get('gl_version'), Config::get('pi_url'), Config::PI_NAME),
             array(Database::STRING, Database::STRING, Database::STRING, Database::STRING)
         );
     } catch (\Exception $e) {
-        Log::write('system', Log::ERROR, "Error updating the " . Config::get('pi_display_name') .
-            " Plugin version to $ver"
-        );
+        Log::write('system', Log::ERROR, __FUNCTION__ . ': ' . $e->getMessage());
         return false;
+    }
     return true;
 }
 

@@ -892,7 +892,7 @@ class Birthday
         $email = $db->getItem(
             $_TABLES['users'],
             'email',
-            array('uid', $this->uid),
+            array('uid' => $this->uid),
             array(Database::INTEGER)
         );
         if (empty($email)) {
@@ -924,7 +924,6 @@ class Birthday
         global $_TABLES;
 
         $newval = $oldval ? 0 : 1;  // toggle to opposite
-        COM_errorLog("changing to $newval");
         $db = Database::getInstance();
         try {
             $db->conn->executeUpdate(
