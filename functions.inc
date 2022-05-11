@@ -535,9 +535,9 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
     }
 
     if ($id == '*') {
-        $bdays = \Birthdays\Birthday::getAll();
+        $bdays = Birthdays\Birthday::getAll();
     } else {
-        $bdays = array(\Birthdays\Birthday::getInstance($id));
+        $bdays = array(Birthdays\Birthday::getInstance($id));
     }
 
     foreach ($bdays as $bday) {
@@ -601,6 +601,27 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
                     $props[$p] = 0;
                 }
                 break;
+            case 'perms':
+                $props['perms'] = array(
+                    'owner_id' => $bday->getUid(),
+                    'group_id' => 1,
+                    'perm_owner' => 2,
+                    'perm_group' => 2,
+                    'perm_members' => 1,
+                    'perm_anon' => 1,
+                );
+                $Grps = Group::withFeature('birthdays.view');
+                foreach ($Grps as $gid) {
+                    if ($gid == 13) {
+                        $props['perms']['perm_members'] = 2;
+                    } elseif ($gid == 2) {
+                        $props['perms']['perm_members'] = 2;
+                        $props['perms']['perm_anon'] = 2;
+                    } else {
+                        $props['perms']['group_id'] = $gid;
+                    }
+                }
+                break;
             case 'search_index':
                 return array();
                 break;
@@ -644,15 +665,14 @@ function plugin_getiteminfo_birthdays($id, $what, $uid=0, $options=array())
  */
 function plugin_runScheduledTask_birthdays()
 {
-    global $_TABLES, $_VARS, $_USER;
+    global $_TABLES, $_VARS, $_USER, $_CONF;
 
     if (!Config::get('enable_subs') && !Config::get('enable_cards')) {
         return;     // don't go through the loop if nothing will be sent
     }
 
     $db = Database::getInstance();
-    $dt = \Birthdays\Birthday::currentDate();
-    $today = sprintf("%4d%02d%02d", $dt['year'], $dt['month'], $dt['day']);
+    $today = $_CONF['_now']->format('Ymd', true);
     $lastrun = isset($_VARS['birthdays_lastrun']) ? $_VARS['birthdays_lastrun'] : '';
     if ($lastrun == $today) {
         return;     // run once daily only
