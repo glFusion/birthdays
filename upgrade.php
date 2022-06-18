@@ -61,7 +61,7 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
                     'ft_name' => 'birthdays.admin',
                     'ft_descr' => 'Full access to the Birthdays plugin',
                 ),
-                array(Database::STRING, Database::STRING);
+                array(Database::STRING, Database::STRING)
             );
             if ($stmt) {
                 $ft_id = $db->conn->lastInsertId();
@@ -111,8 +111,8 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
             array(Database::STRING)
         );
         if ($ft_id == 0) {
-            $stmt = $db->conn->(
-                $_TABLES['features']
+            $stmt = $db->conn->insert(
+                $_TABLES['features'],
                 array(
                     'ft_name' => 'birthdays.card',
                     'ft_descr' => 'Can receive birthday cards',
@@ -148,8 +148,8 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
             if ($stmt) {
                 $ft_id = $db->conn->lastInsertId();
                 $db->conn->insert(
-                    $_TABLES['access']
-                    array('acc_ft_id' => $ft_id, 'acc_grp_id' => 13)
+                    $_TABLES['access'],
+                    array('acc_ft_id' => $ft_id, 'acc_grp_id' => 13),
                     array(Database::INTEGER, Database::INTEGER)
                 );
             }
@@ -237,7 +237,7 @@ function BIRTHDAYS_do_set_version($ver)
     // now update the current version number.
     try {
         $db->conn->update(
-            $_TABLES['plugins']
+            $_TABLES['plugins'],
             array(
                 'pi_version' => $ver,
                 'pi_gl_version' => Config::get('gl_version'),
