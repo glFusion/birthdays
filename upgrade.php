@@ -15,7 +15,6 @@ if (!defined('GVERSION')) {
     die('This file can not be used on its own.');
 }
 use Birthdays\Config;
-use Birthdays\Logger;
 use glFusion\Database\Database;
 use glFusion\Log\Log;
 
@@ -56,17 +55,20 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
             array(Database::STRING)
         );
         if ($ft_id == 0) {
-            $stmt = $db->conn->executeUpdate(
-                "INSERT INTO {$_TABLES['features']} (ft_id, ft_name, ft_descr)
-                VALUES (0, 'birthdays.admin', 'Full access to the Birthdays plugin')"
+            $stmt = $db->conn->insert(
+                $_TABLES['features'],
+                array(
+                    'ft_name' => 'birthdays.admin',
+                    'ft_descr' => 'Full access to the Birthdays plugin',
+                ),
+                array(Database::STRING, Database::STRING);
             );
             if ($stmt) {
                 $ft_id = $db->conn->lastInsertId();
-                $db->conn->executeUpdate(
-                    "INSERT INTO {$_TABLES['access']} (acc_ft_id, acc_grp_id)
-                    VALUES (?, 1)",
-                    array($ft_id),
-                    array(Database::INTEGER)
+                $db->conn->insert(
+                    $_TABLES['access'],
+                    array('acc_ft_id' => $ft_id, 'acc_grp_id' => 1),
+                    array(Database::INTEGER, Database::INTEGER)
                 );
             }
         }
@@ -83,17 +85,20 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
             array(Database::STRING)
         );
         if ($ft_id == 0) {
-            $stmt = $db->conn->executeUpdate(
-                "INSERT INTO {$_TABLES['features']} (ft_id, ft_name, ft_descr)
-                VALUES (0, 'birthdays.admin', 'Full access to the Birthdays plugin')"
+            $stmt = $db->conn->insert(
+                $_TABLES['features'],
+                array(
+                    'ft_name' => 'birthdays.admin',
+                    'ft_descr' => 'Full access to the Birthdays plugin',
+                ),
+                array(Database::STRING, Database::STRING)
             );
             if ($stmt) {
                 $ft_id = $db->conn->lastInsertId();
-                $db->conn->executeUpdate(
-                    "INSERT INTO {$_TABLES['access']} (acc_ft_id, acc_grp_id)
-                    VALUES (?, 1)",
-                    array($ft_id),
-                    array(Database::INTEGER)
+                $db->conn->insert(
+                    $_TABLES['access'],
+                    array('acc_ft_id' => $ft_id, 'acc_grp_id' => 1),
+                    array(Database::INTEGER, Database::INTEGER)
                 );
             }
         }
@@ -106,17 +111,20 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
             array(Database::STRING)
         );
         if ($ft_id == 0) {
-            $stmt = $db->conn->executeUpdate(
-                "INSERT INTO {$_TABLES['features']} (ft_id, ft_name, ft_descr)
-                VALUES (0, 'birthdays.card', 'Can receive birthday cards')"
+            $stmt = $db->conn->(
+                $_TABLES['features']
+                array(
+                    'ft_name' => 'birthdays.card',
+                    'ft_descr' => 'Can receive birthday cards',
+                ),
+                array(Database::STRING, Database::STRING)
             );
             if ($stmt) {
                 $ft_id = $db->conn->lastInsertId();
-                $db->conn->executeUpdate(
-                    "INSERT INTO {$_TABLES['access']} (acc_ft_id, acc_grp_id)
-                    VALUES (?, 13)",
-                    array($ft_id),
-                    array(Database::INTEGER)
+                $db->conn->insert(
+                    $_TABLES['access'],
+                    array('acc_ft_id' => $ft_id, 'acc_grp_id' => 13),
+                    array(Database::INTEGER, Database::INTEGER)
                 );
             }
         }
@@ -129,17 +137,20 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
             array(Database::STRING)
         );
         if ($ft_id == 0) {
-            $stmt = $db->conn->executeUpdate(
-                "INSERT INTO {$_TABLES['features']} (ft_id, ft_name, ft_descr)
-                VALUES (0, 'birthdays.view', 'View access to the Birthdays plugin')"
+            $stmt = $db->conn->insert(
+                $_TABLES['features'],
+                array(
+                    'ft_name' => 'birthdays.view',
+                    'ft_descr' => 'View access to the Birthdays plugin',
+                ),
+                array(Database::STRING, Database::STRING)
             );
             if ($stmt) {
                 $ft_id = $db->conn->lastInsertId();
-                $db->conn->executeUpdate(
-                    "INSERT INTO {$_TABLES['access']} (acc_ft_id, acc_grp_id)
-                    VALUES (?, 13)",
-                    array($ft_id),
-                    array(Database::INTEGER)
+                $db->conn->insert(
+                    $_TABLES['access']
+                    array('acc_ft_id' => $ft_id, 'acc_grp_id' => 13)
+                    array(Database::INTEGER, Database::INTEGER)
                 );
             }
         }
@@ -196,9 +207,9 @@ function BIRTHDAYS_do_upgrade_sql($version, $ignore_error=false)
     foreach($BD_UPGRADE[$version] as $sql) {
         Log::write('system', Log::INFO, "Birthdays Plugin $version update: Executing SQL => $sql");
         try {
-            $db->conn->executeUpdate($sql);
+            $db->conn->executeStatement($sql);
         } catch (\Exception $e) {
-            Logger::logExceptoin($e);
+            Log::write('system', Log::ERROR, __FUNCTION__ . ': ' . $e->getMessage());
             if (!$ignore_error){
                 return false;
             }
@@ -225,13 +236,14 @@ function BIRTHDAYS_do_set_version($ver)
 
     // now update the current version number.
     try {
-        $db->conn->executeUpdate(
-            "UPDATE {$_TABLES['plugins']} SET
-            pi_version = ?,
-            pi_gl_version = ?,
-            pi_homepage = ?
-            WHERE pi_name = ?",
-            array($ver, Config::get('gl_version'), Config::get('pi_url'), Config::PI_NAME),
+        $db->conn->update(
+            $_TABLES['plugins']
+            array(
+                'pi_version' => $ver,
+                'pi_gl_version' => Config::get('gl_version'),
+                'pi_homepage' => Config::get('pi_url'),
+            ),
+            array('pi_name' => Config::PI_NAME),
             array(Database::STRING, Database::STRING, Database::STRING, Database::STRING)
         );
     } catch (\Exception $e) {
@@ -259,6 +271,8 @@ function BIRTHDAYS_remove_old_files()
             'templates/notify/html_outer.thtml',
             'templates/notify/notifymessage_html.thtml',
             'templates/notify/text.thtml',
+            // v1.2.0
+            'classes/Logger.class.php',
         ),
         // public_html/birthdays
         $_CONF['path_html'] . 'birthdays' => array(
@@ -268,7 +282,9 @@ function BIRTHDAYS_remove_old_files()
 
     foreach ($paths as $path=>$files) {
         foreach ($files as $file) {
-            @unlink("$path/$file");
+            if (file_exists("$path/$file")) {
+                @unlink("$path/$file");
+            }
         }
     }
 }

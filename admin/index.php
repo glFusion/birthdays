@@ -4,9 +4,9 @@
  *
  * @author      Lee Garner <lee@leegarner.com>
  * @author      Mike Lynn <mike@mlynn.com>
- * @copyright   Copyright (c) 2018-2021 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018-2022 Lee Garner <lee@leegarner.com>
  * @package     birthdays
- * @version     v1.0.0
+ * @version     v1.2.0
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
@@ -19,6 +19,7 @@ if (!plugin_ismoderator_birthdays()) {
 }
 USES_lib_admin();
 use Birthdays\Config;
+use Birthdays\Birthday;
 
 $expected = array(
     'syncall', 'delitem',
@@ -41,7 +42,7 @@ foreach($expected as $provided) {
 switch ($action) {
 case 'syncall':
     // Re-save all items to sync with other plugins
-    $Birthdays= \Birthdays\Birthday::getAll();
+    $Birthdays= Birthday::getAll();
     foreach ($Birthdays as $B) {
         PLG_itemSaved($B->getUid(), Config::PI_NAME);
     }
@@ -54,7 +55,7 @@ case 'delitem':
         $actionval = array($actionval);
     }
     foreach ($actionval as $val) {
-        \Birthdays\Birthday::Delete($val);
+        Birthday::Delete($val);
     }
     echo COM_refresh(Config::get('admin_url'));
     break;
@@ -104,4 +105,3 @@ function BIRTHDAYS_adminMenu()
     return $retval;
 }
 
-?>

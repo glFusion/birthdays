@@ -126,7 +126,7 @@ class Birthday
                 array(Database::INTEGER)
             )->fetch(Database::ASSOCIATIVE);
         } catch (\Exception $e) {
-            Logger::logException($e);
+            Log::write('system', Log::ERROR, __METHOD__ . ': ' . $e->getMessage());
             $data = NULL;
         }
         if (is_array($data)) {
@@ -191,11 +191,11 @@ class Birthday
                    ->where('uid = :uid')
                    ->execute();
             } catch (\Exception $e) {
-                Logger::logException($e);
+                Log::write('system', Log::ERROR, __METHOD__ . ': ' . $e->getMessage());
                 $error = true;
             }
         } catch (\Exception $e) {
-            Logger::logException($e);
+            Log::write('system', Log::ERROR, __METHOD__ . ': ' . $e->getMessage());
             $error = true;
         }
         if (!$error) {
@@ -251,8 +251,8 @@ class Birthday
                        ->execute()
                        ->fetchAll(Database::ASSOCIATIVE);
         } catch (\Exception $e) {
-            Logger::logException($e);
-            $data = NULL;
+            Log::write('system', Log::ERROR, __METHOD__ . ': ' . $e->getMessage());
+            $data = false;
         }
         $retval = array();
         if (is_array($data)) {
@@ -320,8 +320,8 @@ class Birthday
                 array(Database::PARAM_INT_ARRAY)
             );
         } catch (\Exception $e) {
-            Logger::logException($e);
-            $stmt = NULL;
+            Log::write('system', Log::ERROR, __METHOD__ . ': ' . $e->getMessage());
+            $stmt = false;
         }
         if ($stmt) {
             while ($A = $stmt->fetch(Database::ASSOCIATIVE)) {
@@ -909,7 +909,7 @@ class Birthday
             ),
         );
         COM_emailNotification($msgData);
-        Logger::audit("Sent card to user {$this->uid} ({$name})");
+        Log::write('birthdays', Log::INFO, "Sent card to user {$this->uid} ({$name})");
     }
 
 
@@ -926,14 +926,15 @@ class Birthday
         $newval = $oldval ? 0 : 1;  // toggle to opposite
         $db = Database::getInstance();
         try {
-            $db->conn->executeUpdate(
-                "UPDATE {$_TABLES['birthdays']} SET sendcards = ? WHERE uid = ?",
-                array($newval, $this->uid),
+            $db->conn->update(
+                $_TABLES['birthdays'],
+                array('sendcards' => $newval),
+                array('uid' => $this->uid),
                 array(Database::INTEGER, Database::INTEGER)
             );
             return $newval;
         } catch (\Exception $e) {
-            Logger::logException($e);
+            Log::write('system', Log::ERROR, __METHOD__ . ': ' . $e->getMessage());
             return $oldval;
         }
     }

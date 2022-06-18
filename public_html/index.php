@@ -84,9 +84,9 @@ case 'unsub':
                 array(Database::INTEGER)
             );
         } catch (\Exception $e) {
-            Birthdays\Logger::logException($e);
+            Log::write('system', Log::ERROR, __FILE__ . '/' . __LINE__ . ': ' . $e->getMessage());
         }
-        Birthdays\Logger::audit("User {$uid} unsubscribed from birthday notifications");
+        Log::write('birthdays', Log::INFO, "User {$uid} unsubscribed from birthday notifications");
     }
     COM_setMsg(MO::_('You have been unsubscribed from birthday notifications'));
     COM_refresh($_CONF['site_url'] . '/index.php');

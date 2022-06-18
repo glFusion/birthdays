@@ -15,6 +15,7 @@ namespace Birthdays\Models;
 use Birthdays\MO;
 use Birthdays\Config;
 use glFusion\Database\Database;
+use glFusion\Log\Log;
 
 
 /**
@@ -73,7 +74,7 @@ class User
                 array(Database::INTEGER)
             )->fetch(Database::ASSOCIATIVE);
         } catch (\Exception $e) {
-            Logger::logException($e);
+            Log::write('system', Log::ERROR, __METHOD__ . ': ' . $e->getMessage());
             $A = NULL;
         }
         if (is_array($A) && !empty($A)) {

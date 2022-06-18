@@ -42,8 +42,8 @@ spl_autoload_register(function($class)
     }
 });
 use glFusion\Database\Database;
+use glFusion\Log\Log;
 use Birthdays\Config;
-use Birthdays\Logger;
 use Birthdays\MO;
 MO::init();
 require_once __DIR__ . '/language/lang_config.php';
@@ -54,6 +54,15 @@ require_once __DIR__ . '/birthdays.php';
 if (is_file(__DIR__ . '/config.php')) {
     include_once __DIR__ . '/config.php';
 }
+
+Log::config(Config::PI_NAME,
+    array(
+      'type'  => 'file',
+      'path'  => $_CONF['path_log'],
+      'file'  => Config::PI_NAME . '.log',
+      'level' => Config::get('log_level'),
+    )
+);
 
 /**
  * Returns the items for this plugin that should appear on the main menu.
@@ -440,28 +449,30 @@ function plugin_enablestatechange_birthdays($enabled)
     if ($enabled && !in_array('lglib', $_PLUGINS)) {
         // Re-disable the plugin
         try {
-            $db->conn->executeUpdate(
-                "UPDATE {$_TABLES['plugins']} SET pi_enabled = 0 WHERE pi_name = ?",
-                array(Config::PI_NAME),
-                array(Database::STRING)
+            $db->conn->update(
+                $_TABLES['plugins'],
+                array('pi_enabled' => 0),
+                array('pi_name' => Config::PI_NAME),
+                array(Database::INTEGER, Database::STRING)
             );
         } catch (\Exception $e) {
-            Logger::System(__FUNCTION__ . ': ' . $e->getMessage());
+            Log::write('system', Log::ERROR, __FUNCTION__ . ': ' . $e->getMessage());
+            $enabled = 0;
         }
-        $enabled = 0;
     }
 
     if (!$enabled) {
         $blocks = array('birthdays', 'birthdays_week');
         foreach ($blocks as $block) {
             try {
-                $db->conn->executeUpdate(
-                    "UPDATE {$_TABLES['blocks']} SET is_enabled = ? WHERE name = ?",
-                    array($enabled, $block),
+                $db->conn->update(
+                    $_TABLES['blocks'],
+                    array('is_enabled' > $enabled),
+                    array('name' => $block),
                     array(Database::INTEGER, Database::STRING)
                 );
             } catch (\Exception $e) {
-                Logger::System(__FUNCTION__ . ': ' . $e->getMessage());
+                Log::write('system', Log::ERROR, __FUNCTION__ . ': ' . $e->getMessage());
             }
         }
     }
@@ -677,17 +688,30 @@ function plugin_runScheduledTask_birthdays()
     if ($lastrun == $today) {
         return;     // run once daily only
     }
-    try {
-        $db->conn->executeUpdate(
-            "INSERT INTO {$_TABLES['vars']} VALUES('birthdays_lastrun', ?)
-            ON DUPLICATE KEY UPDATE value = ?",
-            array($today, $today),
-            array(Database::STRING, Database::STRING)
-        );
-    } catch (\Exception $e) {
-        Logger::System(__FUNCTION__ . ': ' . $e->getMessage());
+    if (empty($lastrun)) {
+        try {
+            $db->conn->insert(
+                $_TABLES['vars'],
+                array('name' => 'birthdays_lastrun', 'value' => $today),
+                array(Database::STRING, Database::STRING)
+            );
+        } catch (\Exception $e) {
+            Log::write('system', Log::ERROR, __FUNCTION__ . ': ' . $e->getMessage());
+        }
+    } else {
+        try {
+            $db->conn->update(
+                $_TABLES['vars'],
+                array('value' => $today),
+                array('name' => 'birthdays_lastrun'),
+                array(Database::STRING, Database::STRING)
+            );
+        } catch (\Exception $e) {
+            Log::write('system', Log::ERROR, __FUNCTION__ . ': ' . $e->getMessage());
+        }
     }
 
+    $dt = Birthdays\Birthday::currentDate();
     $BDays = Birthdays\Birthday::getAll($dt['month'], $dt['day']);
     foreach ($BDays as $BDay) {
         if (Config::get('enable_subs')) {
@@ -871,8 +895,8 @@ function BD_configlist_groups() : array
                 ORDER BY grp_name ASC"
             );
         } catch (\Exception $e) {
-            Logger::System(__FUNCTION__ . ': ' . $e->getMessage());
-            $stmt = NULL;
+            Log::write('system', Log::ERROR, __FUNCTION__ . ': ' . $e->getMessage());
+            $stmt = false;
         }
         if ($stmt) {
             while ($row = $stmt->fetch(Database::ASSOCIATIVE)) {
