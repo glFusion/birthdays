@@ -61,6 +61,9 @@ class Zodiac
      */
     public static function getSign(int $month, int $day) : string
     {
+        if ($month == 0 || $day == 0) {
+            return '';
+        }
         self::init();
         $key = sprintf('%02d%02d', $month, $day);
         foreach (self::$SIGNS as $ends=>$sign) {
