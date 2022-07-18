@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-15 10:48-0700\n"
+"POT-Creation-Date: 2022-07-18 12:54-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,19 +25,21 @@ msgstr ""
 #: functions.inc:790 classes/Birthday.class.php:340
 #: classes/Birthday.class.php:350 functions.inc:792
 #: classes/Birthday.class.php:341 classes/Birthday.class.php:351
+#: classes/Birthday.class.php:355 classes/Birthday.class.php:365
 msgid "None"
 msgstr "Ei mitään"
 
 #: classes/Birthday.class.php:334 classes/Birthday.class.php:340
 #: classes/Birthday.class.php:343 classes/Birthday.class.php:348
 #: classes/Birthday.class.php:356 classes/Birthday.class.php:357
+#: classes/Birthday.class.php:371
 msgid "My Birthday"
 msgstr "Syntymäpäiväni"
 
 #: classes/Birthday.class.php:370 classes/Birthday.class.php:368
 #: classes/Birthday.class.php:377 classes/Birthday.class.php:380
 #: classes/Birthday.class.php:385 classes/Birthday.class.php:396
-#: classes/Birthday.class.php:397
+#: classes/Birthday.class.php:397 classes/Birthday.class.php:416
 msgid "All"
 msgstr "Kaikki"
 
@@ -49,6 +51,7 @@ msgstr "Kaikki"
 #: classes/Birthday.class.php:640 classes/Birthday.class.php:725
 #: classes/Birthday.class.php:646 classes/Birthday.class.php:731
 #: classes/Birthday.class.php:647 classes/Birthday.class.php:732
+#: classes/Birthday.class.php:666 classes/Birthday.class.php:749
 msgid "Name"
 msgstr "Päälläni"
 
@@ -62,7 +65,8 @@ msgstr "Päälläni"
 #: classes/Birthday.class.php:646 classes/Birthday.class.php:730
 #: functions.inc:269 classes/Birthday.class.php:652
 #: classes/Birthday.class.php:736 classes/Birthday.class.php:653
-#: classes/Birthday.class.php:737
+#: classes/Birthday.class.php:737 classes/Birthday.class.php:672
+#: classes/Birthday.class.php:754 functions.inc:280 functions.inc:283
 msgid "Birthday"
 msgstr "Syntymäpäivä"
 
@@ -71,6 +75,7 @@ msgstr "Syntymäpäivä"
 #: classes/Birthday.class.php:636 classes/Birthday.class.php:638
 #: classes/Birthday.class.php:651 classes/Birthday.class.php:662
 #: classes/Birthday.class.php:668 classes/Birthday.class.php:669
+#: classes/Birthday.class.php:688
 msgid "Subscribe"
 msgstr "Tilaa"
 
@@ -84,6 +89,8 @@ msgstr "Tilaa"
 #: classes/Birthday.class.php:662 public_html/index.php:92
 #: classes/Birthday.class.php:673 public_html/index.php:93
 #: classes/Birthday.class.php:679 classes/Birthday.class.php:680
+#: classes/Birthday.class.php:699 public_html/index.php:104 admin/index.php:97
+#: functions.inc:93 functions.inc:111 functions.inc:81 functions.inc:114
 msgid "Birthdays"
 msgstr "Syntymäpäivät"
 
@@ -91,13 +98,14 @@ msgstr "Syntymäpäivät"
 #: classes/Birthday.class.php:694 classes/Birthday.class.php:696
 #: classes/Birthday.class.php:709 classes/Birthday.class.php:720
 #: classes/Birthday.class.php:726 classes/Birthday.class.php:727
+#: classes/Birthday.class.php:744
 msgid "User ID"
 msgstr "käyttäjätunnus"
 
 #: classes/Birthday.class.php:767 functions.inc:727
 #: classes/Birthday.class.php:769 functions.inc:745 functions.inc:737
 #: functions.inc:694 functions.inc:703 functions.inc:705 functions.inc:714
-#: functions.inc:720
+#: functions.inc:720 functions.inc:793 functions.inc:796
 msgid "Unsubscribe"
 msgstr "Lopeta tilaus"
 
@@ -105,6 +113,7 @@ msgstr "Lopeta tilaus"
 #: classes/Birthday.class.php:793 classes/Birthday.class.php:802
 #: classes/Birthday.class.php:819 classes/Birthday.class.php:830
 #: classes/Birthday.class.php:836 classes/Birthday.class.php:845
+#: classes/Birthday.class.php:860
 msgid "Do you really want to delete this item?"
 msgstr "Haluatko todella poistaa tämän kohteen?"
 
@@ -113,16 +122,16 @@ msgstr "Haluatko todella poistaa tämän kohteen?"
 msgid "Description"
 msgstr "Tilaus"
 
-#: public_html/ajax.php:51 public_html/ajax.php:52
+#: public_html/ajax.php:51 public_html/ajax.php:52 public_html/ajax.php:66
 msgid "Subscription has been updated"
 msgstr "Tilaus on päivitetty."
 
-#: public_html/ajax.php:52 public_html/ajax.php:53
+#: public_html/ajax.php:52 public_html/ajax.php:53 public_html/ajax.php:67
 msgid "Error updating subscription"
 msgstr "Tilauksen päivittämisessä tapahtui virhe."
 
 #: public_html/index.php:80 public_html/index.php:69 public_html/index.php:91
-#: public_html/index.php:92
+#: public_html/index.php:92 public_html/index.php:103
 msgid "Select Month"
 msgstr "Valitse kuukausi"
 
@@ -134,11 +143,12 @@ msgstr "Syntymäpäivät tässä kuussa"
 msgid "Birthdays This Week"
 msgstr "Syntymäpäivät tällä viikolla"
 
-#: admin/index.php:82 admin/index.php:83 admin/index.php:84
+#: admin/index.php:82 admin/index.php:83 admin/index.php:84 admin/index.php:85
 msgid "Sync All"
 msgstr "Synkronoi kaikki"
 
 #: admin/index.php:99 admin/index.php:100 admin/index.php:101
+#: admin/index.php:102
 msgid ""
 "Sync All: Re-saves all birthday entries so other plugins will update their "
 "records if they use data from this plugin."
@@ -149,18 +159,20 @@ msgstr ""
 
 #: functions.inc:329 functions.inc:382 functions.inc:347 functions.inc:400
 #: functions.inc:337 functions.inc:390 functions.inc:305 functions.inc:358
-#: functions.inc:306 functions.inc:359
+#: functions.inc:306 functions.inc:359 functions.inc:317 functions.inc:370
+#: functions.inc:320 functions.inc:373
 msgid "View All"
 msgstr "Näytä kaikki"
 
 #: functions.inc:498 functions.inc:516 functions.inc:506 functions.inc:472
-#: functions.inc:473
+#: functions.inc:473 functions.inc:503
 #, php-format
 msgid "Happy Birthday, %s!"
 msgstr "Hyvää syntymäpäivää, %s!"
 
 #: functions.inc:573 functions.inc:591 functions.inc:581 functions.inc:546
 #: functions.inc:548 functions.inc:549 functions.inc:553 functions.inc:557
+#: functions.inc:587 functions.inc:590
 #, php-format
 msgid "%s's Birthday"
 msgstr "%sin Syntymäpäivä"
@@ -172,6 +184,7 @@ msgstr ""
 
 #: functions.inc:729 functions.inc:747 functions.inc:739 functions.inc:696
 #: functions.inc:706 functions.inc:708 functions.inc:717 functions.inc:723
+#: functions.inc:796 functions.inc:799
 msgid ""
 "This email was generated automatically. Please do not reply to this email."
 msgstr ""
@@ -213,13 +226,13 @@ msgstr "Ryhmä saa tarkastella syntymäpäiviä"
 
 #: language/lang_config.php:41 language/lang_config.php:42
 #: language/lang_config.php:43 language/lang_config.php:44
-#: language/lang_config.php:45
+#: language/lang_config.php:45 language/lang_config.php:46
 msgid "True"
 msgstr "Totta"
 
 #: language/lang_config.php:42 language/lang_config.php:43
 #: language/lang_config.php:44 language/lang_config.php:45
-#: language/lang_config.php:46
+#: language/lang_config.php:46 language/lang_config.php:47
 msgid "False"
 msgstr "Väärä"
 
@@ -227,6 +240,7 @@ msgstr "Väärä"
 #: classes/Birthday.class.php:709 classes/Birthday.class.php:711
 #: classes/Birthday.class.php:724 classes/Birthday.class.php:735
 #: classes/Birthday.class.php:741 classes/Birthday.class.php:748
+#: classes/Birthday.class.php:765
 msgid "Delete"
 msgstr "Poista"
 
@@ -281,32 +295,33 @@ msgstr "Joulukuu"
 #: classes/Birthday.class.php:767 classes/Birthday.class.php:776
 #: classes/Birthday.class.php:778 classes/Birthday.class.php:795
 #: classes/Birthday.class.php:806 classes/Birthday.class.php:812
-#: classes/Birthday.class.php:819
+#: classes/Birthday.class.php:819 classes/Birthday.class.php:834
 msgid "Click to Unsubscribe"
 msgstr "Peruuta tilaus napsauttamalla"
 
 #: classes/Birthday.class.php:771 classes/Birthday.class.php:780
 #: classes/Birthday.class.php:782 classes/Birthday.class.php:799
 #: classes/Birthday.class.php:810 classes/Birthday.class.php:816
-#: classes/Birthday.class.php:823
+#: classes/Birthday.class.php:823 classes/Birthday.class.php:838
 msgid "Click to Subscribe"
 msgstr "Tilaa napsauttamalla"
 
 #: classes/Birthday.class.php:341 classes/Birthday.class.php:344
 #: classes/Birthday.class.php:349 classes/Birthday.class.php:357
-#: classes/Birthday.class.php:358
+#: classes/Birthday.class.php:358 classes/Birthday.class.php:372
 msgid "Today"
 msgstr "Tänään"
 
 #: functions.inc:745 functions.inc:549 functions.inc:702 functions.inc:551
 #: functions.inc:713 functions.inc:552 functions.inc:715 functions.inc:556
-#: functions.inc:724 functions.inc:560 functions.inc:730
+#: functions.inc:724 functions.inc:560 functions.inc:730 functions.inc:590
+#: functions.inc:803 functions.inc:593 functions.inc:806
 #, php-format
 msgid "It's %s's birthday today!"
 msgstr "Tänään on %s:n syntymäpäivä!"
 
 #: functions.inc:749 functions.inc:706 functions.inc:718 functions.inc:720
-#: functions.inc:729 functions.inc:735
+#: functions.inc:729 functions.inc:735 functions.inc:808 functions.inc:811
 #, php-format
 msgid "Happy Birthday from %s"
 msgstr "Hyvää syntymäpäivää %s"
@@ -320,23 +335,25 @@ msgid "Astrological sign in calendar description?"
 msgstr "Astrologinen merkki kalenterin kuvauksessa?"
 
 #: classes/Models/Month.class.php:63 classes/Models/Month.class.php:80
-#: classes/Models/Zodiac.class.php:71
+#: classes/Models/Zodiac.class.php:71 classes/Models/Zodiac.class.php:74
 msgid "Unknown"
 msgstr "Tuntematon"
 
-#: public_html/index.php:65 public_html/index.php:66
+#: public_html/index.php:65 public_html/index.php:66 public_html/index.php:69
 msgid "You will no longer receive birthday cards"
 msgstr "Et saa enää syntymäpäiväkortteja"
 
-#: public_html/index.php:79 public_html/index.php:80
+#: public_html/index.php:79 public_html/index.php:80 public_html/index.php:91
 msgid "You have been unsubscribed from birthday notifications"
 msgstr "Olet peruuttanut syntymäpäiväilmoitusten tilauksen"
 
 #: functions.inc:704 functions.inc:706 functions.inc:715 functions.inc:721
+#: functions.inc:794 functions.inc:797
 msgid "To unsubscribe from these notifications, please click"
 msgstr "Peruuta näiden ilmoitusten tilaus napsauttamalla"
 
 #: functions.inc:705 functions.inc:707 functions.inc:716 functions.inc:722
+#: functions.inc:795 functions.inc:798
 msgid "this link"
 msgstr "tämä linkki"
 
@@ -348,6 +365,7 @@ msgstr "Lähetetäänkö kortit vain aktiivisille tileille?"
 #: classes/Birthday.class.php:654 functions.inc:557
 #: classes/Birthday.class.php:660 functions.inc:561
 #: classes/Birthday.class.php:661 functions.inc:565
+#: classes/Birthday.class.php:680 functions.inc:595 functions.inc:598
 msgid "Astrological Sign"
 msgstr "Astrologinen merkki"
 
@@ -399,7 +417,7 @@ msgstr "Skorpioni"
 msgid "Sagittarius"
 msgstr "Jousimies"
 
-#: functions.inc:808 functions.inc:816
+#: functions.inc:808 functions.inc:816 functions.inc:889 functions.inc:892
 msgid "Feature-Controlled"
 msgstr "Ominaisuusohjattu"
 
@@ -407,13 +425,17 @@ msgstr "Ominaisuusohjattu"
 msgid "Group allowed to receive cards"
 msgstr "Ryhmä saa vastaanottaa kortteja"
 
-#: classes/Birthday.class.php:360
+#: classes/Birthday.class.php:360 classes/Birthday.class.php:374
 msgid "Send birthday cards"
 msgstr "Lähetä syntymäpäiväkortteja"
 
-#: classes/Birthday.class.php:742
+#: classes/Birthday.class.php:742 classes/Birthday.class.php:759
 msgid "Send Cards"
 msgstr "Lähetä kortteja"
+
+#: language/lang_config.php:41
+msgid "Log Level"
+msgstr "Lokin taso"
 
 #~ msgid "Send me birthday cards"
 #~ msgstr "Lähetä minulle syntymäpäiväkortit"

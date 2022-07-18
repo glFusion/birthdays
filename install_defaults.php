@@ -15,6 +15,7 @@
 if (!defined ('GVERSION')) {
     die ('This file can not be used on its own.');
 }
+use glFusion\Log\Log;
 
 /** @var global config data */
 global $birthdaysConfigData;
@@ -125,6 +126,17 @@ $birthdaysConfigData = array(
         'subgroup' => 0,
         'fieldset' => 0,
         'selection_array' => 0,
+        'sort' => 80,
+        'set' => true,
+        'group' => 'birthdays',
+    ),
+    array(
+        'name' => 'log_level',
+        'default_value' => -1,
+        'type' => 'select',
+        'subgroup' => 0,
+        'fieldset' => 0,
+        'selection_array' => 1,
         'sort' => 80,
         'set' => true,
         'group' => 'birthdays',

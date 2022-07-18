@@ -6,6 +6,7 @@ Release TBD
 - Add customizable template header for notifications.
 - Add admin access to toggle user's preference to receive cards.
 - Fix parameters passed to `PLG_sendSubscriptionNotification`.
+- Add override log level setting.
 
 ## Version 1.1.1
 Release 2021-12-16

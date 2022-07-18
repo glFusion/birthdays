@@ -55,6 +55,9 @@ if (is_file(__DIR__ . '/config.php')) {
     include_once __DIR__ . '/config.php';
 }
 
+if (Config::get('log_level') < 0) {
+    Config::set('log_level', $_CONF['log_level']);
+}
 Log::config(Config::PI_NAME,
     array(
       'type'  => 'file',
@@ -889,6 +892,7 @@ function BD_configlist_groups() : array
             '-- ' . MO::_('Feature-Controlled') . ' --' => 0,
         );
 
+        $db = Database::getInstance();
         try {
             $stmt = $db->conn->executeQuery(
                 "SELECT grp_id, grp_name FROM {$_TABLES['groups']}

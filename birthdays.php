@@ -21,7 +21,7 @@ if (!defined ('GVERSION')) {
 use Birthdays\Config;
 global $_DB_table_prefix, $_TABLES;
 
-Config::set('pi_version', '1.1.3');
+Config::set('pi_version', '1.1.3.1');
 Config::set('gl_version', '2.0.1');
 
 $_TABLES['birthdays']      = $_DB_table_prefix . 'birthdays';

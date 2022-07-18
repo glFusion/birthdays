@@ -38,6 +38,7 @@ $LANG_confignames['birthdays'] = array(
     'show_upcoming' => MO::_('Show in upcoming events (evList)?'),
     'zodiac_in_dscp' => MO::_('Astrological sign in calendar description?'),
     'cards_only_active' => MO::_('Send cards only to active accounts?'),
+    'log_level' => MO::_('Log Level'),
 );
 
 $LANG_configselects['birthdays'] = array(
@@ -45,4 +46,16 @@ $LANG_configselects['birthdays'] = array(
         MO::_('True') => 1,
         MO::_('False') => 0,
     ),
+    1 => array(
+        -1 => 'System Level',
+        100 => 'DEBUG',
+        200 => 'INFO',
+        250 => 'NOTICE',
+        300 => 'WARNING',
+        400 => 'ERROR',
+        500 => 'CRITICAL',
+        550 => 'ALERT',
+        600 => 'EMERGENCY',
+    ),
+
 );
