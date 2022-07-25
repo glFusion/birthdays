@@ -3,9 +3,9 @@
  * Upgrade routines for the Birthdays plugin.
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2018 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018-2022 Lee Garner <lee@leegarner.com>
  * @package     birthdays
- * @version     v0.2.0
+ * @version     v1.2.0
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
@@ -159,7 +159,7 @@ function BIRTHDAYS_do_upgrade($dvlp = false)
     }
 
     // Final version update to catch any code-only updates
-    if (!COM_checkVersion($current_ver, $code_ver)) {
+    if ($current_ver != $code_ver) {
         if (!BIRTHDAYS_do_set_version($code_ver)) return false;
     }
 
@@ -196,14 +196,13 @@ function BIRTHDAYS_do_upgrade_sql($version, $ignore_error=false)
 
     // If no sql statements passed in, return success
     if (!isset($BD_UPGRADE[$version]) || !is_array($BD_UPGRADE[$version])) {
-        COM_errorLog("BD_UPGRADE[$version] doesn't exist");
         return true;
     }
 
     $db = Database::getInstance();
 
     // Execute SQL now to perform the upgrade
-    COM_errorLog("--- Updating Birthdays to version $version", 1);
+    Log::write('system', Log::INFO, "--- Updating Birthdays to version $version");
     foreach($BD_UPGRADE[$version] as $sql) {
         Log::write('system', Log::INFO, "Birthdays Plugin $version update: Executing SQL => $sql");
         try {
@@ -215,7 +214,7 @@ function BIRTHDAYS_do_upgrade_sql($version, $ignore_error=false)
             }
         }
     }
-    COM_errorLog("--- Birthdays plugin SQL update to version $version done", 1);
+    Log::write('system', Log::INFO, "--- Birthdays plugin SQL update to version $version done");
     return true;
 }
 

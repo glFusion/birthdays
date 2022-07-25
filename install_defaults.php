@@ -3,7 +3,7 @@
  * Configuration Defaults for the Birthdays plugin for glFusion.
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2018 Lee Garner
+ * @copyright   Copyright (c) 2018-2022 Lee Garner
  * @package     birthdays
  * @version     v0.1.0
  * @license     http://opensource.org/licenses/gpl-2.0.php
@@ -160,9 +160,8 @@ function plugin_initconfig_birthdays($group_id = 0)
             _addConfigItem($cfgItem);
         }
     } else {
-        COM_errorLog('initconfig error: Paypal config group already exists');
+        COM_errorLog(__FUNCTION__ . ': Birthdays config group already exists.');
     }
     return true;
 }
 
-?>

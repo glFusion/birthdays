@@ -25,6 +25,7 @@ require_once __DIR__ . '/birthdays.php';
 require_once __DIR__ . "/sql/{$_DB_dbms}_install.php";
 use Birthdays\MO;
 use Birthdays\Config;
+use glFusion\Log\Log;
 
 //  Plugin installation options
 $INSTALL_plugin[Config::PI_NAME] = array(
@@ -113,7 +114,7 @@ function plugin_install_birthdays()
 {
     global $INSTALL_plugin;
 
-    COM_errorLog("Attempting to install the " . Config::PI_NAME . " plugin", 1);
+    Log::write('system', Log::INFO, 'Attempting to install the ' . Config::PI_NAME . ' plugin.');
     $ret = INSTALLER_install($INSTALL_plugin[Config::PI_NAME]);
     if ($ret > 0) {
         return false;
