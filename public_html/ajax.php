@@ -42,8 +42,6 @@ case 'toggleSub':
     case 1:         // was subscribed, now unsubscribing
         $newval = PLG_unsubscribe('birthdays', 'birthday_sub', $_POST['uid'], $_USER['uid']) ? 0 : 1;
         break;
-    default:
-        COM_errorLog("oldval is {$_POST['oldval']}");
     }
     $retval = array(
         'uid'    => $_POST['uid'],
@@ -58,7 +56,6 @@ case 'toggleCards':
     $oldval = (int)$_POST['oldval'];
     $Bday = Birthdays\Birthday::getInstance($_POST['uid']);
     $newval = $Bday->toggleCard($oldval);
-    COM_errorLog("value is now $newval");
     $retval = array(
         'uid'    => $_POST['uid'],
         'newval' => $newval,
@@ -66,7 +63,6 @@ case 'toggleCards':
             MO::_('Subscription has been updated') :
             MO::_('Error updating subscription'),
     );
-    COM_errorLog(var_export($retval,true));
     break;
 }
 

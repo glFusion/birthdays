@@ -88,7 +88,7 @@ function service_profilefields_birthdays($args, &$output, &$svc_msg)
  * @return  string      HTML for field display
  */
 function birthdays_profilefield_birthday(
-    $fieldname, $fieldvalue, $A, $icon_arr, $extras
+    $fieldname, $fieldvalue, $A, $icon_arr=NULL, $extras=array()
 ) {
     global $LANG_MONTH;
     $retval = '';
