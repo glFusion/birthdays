@@ -13,6 +13,8 @@
  */
 namespace Birthdays;
 use Birthdays\phpGettext\phpGettext;
+use glFusion\Database\Database;
+use glFusion\Log\Log;
 
 
 /**
@@ -58,7 +60,7 @@ class MO
      * @access  public  so that notifications may set the language as needed.
      * @param   string  $lang   Language name, default is set by lib-common.php
      */
-    public static function init($lang = NULL)
+    public static function init(?string $lang = NULL) : void
     {
         global $_CONF, $LANG_LOCALE;
 
@@ -113,7 +115,7 @@ class MO
      * Called after processes that change the locale for a specific user,
      * such as system-generated notifications.
      */
-    public static function reset()
+    public static function reset() : void
     {
         global $_CONF;
 
@@ -137,7 +139,11 @@ class MO
         if ($uid == 0) {
             $uid = $_USER['uid'];
         }
-        $lang = DB_getItem($_TABLES['users'], 'language', 'uid = ' . (int)$uid);
+        $lang = Database::getInstance()->getItem(
+            $_TABLES['users'],
+            'language',
+            array('uid' => $uid)
+        );
         self::init($lang);
     }
 
@@ -171,13 +177,13 @@ class MO
      * @param   string  $plural     Plural language string
      * @return  string      Appropriate language string
      */
-    public static function dngettext($single, $plural, $number)
+    public static function dngettext(string $single, string $plural, int $number) : string
     {
         if (!self::$domain) self::init();
         return phpGettext::_dngettext(self::$domain, $single, $plural, $number);
         //return \dngettext(self::$domain, $single, $plural, $number);
     }
-    public static function _n($single, $plural, $number)
+    public static function _n(string $single, string $plural, int $number) : string
     {
         return self::dngettext($single, $plural, $number);
     }
@@ -189,7 +195,7 @@ class MO
      * @param   string  $txt        Text string
      * @return  string      Translated text
      */
-    public static function dgettext($txt)
+    public static function dgettext(string $txt) : string
     {
         if (!self::$domain) {
             self::init();
@@ -197,7 +203,7 @@ class MO
         return phpGettext::_dgettext(self::$domain, $txt);
         //return \dgettext(self::$domain, $txt);
     }
-    public static function _($txt)
+    public static function _(string $txt) : string
     {
         return self::dgettext($txt);
     }
@@ -213,7 +219,7 @@ class MO
  * @param   float   $number     Number used in the string
  * @return  string      Appropriate text string
  */
-function _n($single, $plural, $number)
+function _n(string $single, string $plural, int $number) : string
 {
     return MO::dngettext($single, $plural, $number);
 }
@@ -225,7 +231,7 @@ function _n($single, $plural, $number)
  * @param   string  $txt    Text to be translated
  * @return  string      Translated string
  */
-function _($txt)
+function _(string $txt) : string
 {
     return MO::dgettext($txt);
 }
