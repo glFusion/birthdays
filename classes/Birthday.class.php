@@ -15,6 +15,7 @@ use Birthdays\Models\Month;
 use Birthdays\Models\Zodiac;
 use glFusion\FieldList;
 use glFusion\Database\Database;
+use glFusion\Log\Log;
 
 
 /**
