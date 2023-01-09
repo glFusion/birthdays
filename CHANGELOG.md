@@ -7,6 +7,7 @@ Release TBD
 - Add admin access to toggle user's preference to receive cards.
 - Fix parameters passed to `PLG_sendSubscriptionNotification`.
 - Add override log level setting.
+- Enable sorting admin list by name or birthday.
 
 ## Version 1.1.1
 Release 2021-12-16

@@ -749,12 +749,12 @@ class Birthday
             array(
                 'text' => _('Name'),
                 'field' => 'fullname',
-                'sort' => false,
+                'sort' => true,
             ),
             array(
                 'text'  => _('Birthday'),
                 'field' => 'birthday',
-                'sort'  => false,
+                'sort'  => true,
             ),
             array(
                 'text' => _('Send Cards'),
@@ -770,7 +770,8 @@ class Birthday
             ),
         );
 
-        $sql = "SELECT " . self::YEAR . " as year, b.*, u.username, u.fullname
+        $sql = "SELECT " . self::YEAR . " as year, b.*, u.username, u.fullname,
+                    CONCAT(LPAD(b.month, 2, 0), LPAD(b.day, 2, 0)) AS birthday
                 FROM {$_TABLES['birthdays']} b
                 LEFT JOIN  {$_TABLES['users']} u
                     ON u.uid = b.uid";
