@@ -447,23 +447,6 @@ function plugin_enablestatechange_birthdays($enabled)
     $enabled = $enabled == true ? 1 : 0;
     $db = Database::getInstance();
 
-    // If trying to enable the plugin but lgLib is not available,
-    // take no action and return
-    if ($enabled && !in_array('lglib', $_PLUGINS)) {
-        // Re-disable the plugin
-        try {
-            $db->conn->update(
-                $_TABLES['plugins'],
-                array('pi_enabled' => 0),
-                array('pi_name' => Config::PI_NAME),
-                array(Database::INTEGER, Database::STRING)
-            );
-        } catch (\Exception $e) {
-            Log::write('system', Log::ERROR, __FUNCTION__ . ': ' . $e->getMessage());
-            $enabled = 0;
-        }
-    }
-
     if (!$enabled) {
         $blocks = array('birthdays', 'birthdays_week');
         foreach ($blocks as $block) {
@@ -769,7 +752,7 @@ function plugin_subscription_email_format_birthdays($category, $track_id, $uid, 
         $lname = $nameparts['lname'];
         $name = $fname;
     } else {
-        $fname = '';
+        $fname = $fullname;
         $lname = '';
     }
 
